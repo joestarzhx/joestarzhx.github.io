@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="虎桃不会振刀的个人博客，记录游戏、设计与江湖闲谈。"
+    />
+    <title>虎桃不会振刀 | 一卷桃花江湖</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="paper-noise" aria-hidden="true"></div>
+    <div class="petal-field" id="petalField" aria-hidden="true"></div>
+    <div class="ink-cursor" aria-hidden="true">
+      <span class="ink-cursor-ring"></span>
+      <span class="ink-cursor-dot"></span>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="返回首页">
+        <span class="brand-seal">虎桃</span>
+        <span class="brand-name">不会振刀</span>
+      </a>
+
+      <button class="menu-toggle" aria-expanded="false" aria-controls="siteNav">
+        <span></span><span></span>
+        <span class="sr-only">打开导航</span>
+      </button>
+
+      <nav class="site-nav" id="siteNav" aria-label="主导航">
+        <a class="active" href="#home">卷首</a>
+        <a href="#articles">游记</a>
+        <a href="#about">侠客志</a>
+        <a href="#message">留墨</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <img
+          class="hero-art"
+          src="./assets/hero-ink-wuxia.png"
+          alt="桃花树下的水墨武侠少女"
+        />
+        <div class="hero-wash" aria-hidden="true"></div>
+
+        <div class="hero-copy">
+          <p class="eyebrow">此间江湖 · 随笔一卷</p>
+          <h1>
+            <span>虎桃</span>
+            <span class="title-small">不会振刀</span>
+          </h1>
+          <p class="hero-verse">
+            振刀是不可能振的，<br />
+            只能在桃花树下写写东西。
+          </p>
+          <div class="hero-actions">
+            <a class="ink-button" href="#articles">
+              <span>入卷一观</span>
+              <span aria-hidden="true">↓</span>
+            </a>
+            <button class="text-button" id="summonPetals">唤一场桃花</button>
+          </div>
+        </div>
+
+        <div class="scroll-cue" aria-hidden="true">
+          <span>向下阅卷</span>
+          <i></i>
+        </div>
+        <div class="vertical-note" aria-hidden="true">
+          <span>丙午年</span>
+          <span>记于聚窟洲外</span>
+        </div>
+      </section>
+
+      <section class="section articles-section" id="articles">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow">Jianghu Notes</p>
+            <h2>近来游记</h2>
+          </div>
+          <p>游戏里的胜负很快，<br />值得记下的故事很慢。</p>
+        </div>
+
+        <div class="article-grid">
+          <article class="article-card featured reveal">
+            <div class="card-visual peach-mountain">
+              <span class="card-index">壹</span>
+              <div class="ink-mountain" aria-hidden="true"></div>
+            </div>
+            <div class="card-content">
+              <div class="article-meta">
+                <span>永劫闲谈</span>
+                <time datetime="2026-06-06">六月初六</time>
+              </div>
+              <h3>这一次，我依然没有振出那一刀</h3>
+              <p>
+                有些人博弈于毫秒之间，有些人在振刀键前反复横跳。关于一场落日寺里的、并不英勇的相遇。
+              </p>
+              <a href="#message">展开此卷 <span>→</span></a>
+            </div>
+          </article>
+
+          <article class="article-card reveal">
+            <div class="card-visual moon-lake">
+              <span class="card-index">贰</span>
+              <div class="moon" aria-hidden="true"></div>
+            </div>
+            <div class="card-content">
+              <div class="article-meta">
+                <span>浮生杂记</span>
+                <time datetime="2026-05-22">五月廿二</time>
+              </div>
+              <h3>春桃笑时，适合慢一点</h3>
+              <p>把急着赶路的日子放在门外，泡一壶茶，听檐角的风。</p>
+              <a href="#message">展开此卷 <span>→</span></a>
+            </div>
+          </article>
+
+          <article class="article-card reveal">
+            <div class="card-visual bamboo">
+              <span class="card-index">叁</span>
+              <div class="bamboo-stalks" aria-hidden="true"></div>
+            </div>
+            <div class="card-content">
+              <div class="article-meta">
+                <span>设计手札</span>
+                <time datetime="2026-05-10">五月初十</time>
+              </div>
+              <h3>在屏幕里留一寸空白</h3>
+              <p>水墨并不是黑与白，而是让没有落笔的地方也开始说话。</p>
+              <a href="#message">展开此卷 <span>→</span></a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="about-section" id="about">
+        <div class="ink-cloud cloud-one" aria-hidden="true"></div>
+        <div class="ink-cloud cloud-two" aria-hidden="true"></div>
+        <div class="portrait-panel reveal">
+          <div class="portrait-frame">
+            <img
+              src="./assets/hero-ink-wuxia.png"
+              alt="虎桃不会振刀的水墨形象"
+            />
+          </div>
+          <span class="portrait-seal">不振</span>
+        </div>
+
+        <div class="about-copy reveal">
+          <p class="eyebrow">About The Wanderer</p>
+          <h2>在下，虎桃不会振刀</h2>
+          <p class="about-lead">
+            一名不太会振刀的胡桃玩家，偶尔行走江湖，常常原地成盒。
+          </p>
+          <p>
+            喜欢福虎帽，也喜欢春桃笑。这里收藏游戏中的片刻、生活里的微光，以及一些没来得及说完的话。胜负交给下一局，故事留在这一页。
+          </p>
+          <div class="traits" aria-label="个人标签">
+            <span>胡桃单推</span>
+            <span>水墨审美</span>
+            <span>随缘更新</span>
+          </div>
+          <blockquote>
+            “刀未必接得住，桃花总能接住。”
+          </blockquote>
+        </div>
+      </section>
+
+      <section class="message-section" id="message">
+        <div class="message-inner reveal">
+          <p class="eyebrow">Leave A Mark</p>
+          <h2>雁过留声，侠过留墨</h2>
+          <p>留下一句话，等下一阵江湖风吹来时，我会看见。</p>
+
+          <form class="message-form" id="messageForm">
+            <label>
+              <span>江湖名号</span>
+              <input type="text" name="name" placeholder="如何称呼阁下" required />
+            </label>
+            <label>
+              <span>只言片语</span>
+              <textarea
+                name="message"
+                rows="3"
+                placeholder="落笔于此……"
+                required
+              ></textarea>
+            </label>
+            <button class="seal-button" type="submit">落印</button>
+          </form>
+          <p class="form-note" id="formNote" role="status"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2026 虎桃不会振刀</p>
+      <span>风来翻卷 · 桃落成诗</span>
+    </footer>
+
+    <button class="wind-toggle" id="windToggle" aria-pressed="false">
+      <span class="wind-icon" aria-hidden="true">〰</span>
+      <span class="wind-label">风止</span>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
