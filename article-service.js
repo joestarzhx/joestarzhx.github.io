@@ -334,19 +334,34 @@
     return data;
   }
 
-  async function toggleReaction(articleId, type) {
+  async function recordSiteVisit() {
+    const visitKey = "hutao-site-visit";
+    const alreadyVisited = sessionStorage.getItem(visitKey);
+    const { data, error } = await requireClient().rpc("record_site_visit", {
+      should_increment: !alreadyVisited,
+    });
+    if (error && /function .* does not exist|schema cache/i.test(error.message || "")) {
+      const articles = await listPublished();
+      return articles.reduce((total, article) => total + Number(article.view_count || 0), 0);
+    }
+    if (error) throw error;
+    sessionStorage.setItem(visitKey, "1");
+    return Number(data || 0);
+  }
+
+  async function toggleReaction(articleId) {
     const { data, error } = await requireClient().rpc("toggle_article_reaction", {
       target_article: articleId,
       target_token: getVisitorToken(),
-      target_type: type,
+      target_type: "like",
     });
     if (error) throw error;
-    localStorage.setItem(`hutao-${type}-${articleId}`, String(data.active));
+    localStorage.setItem(`hutao-like-${articleId}`, String(data.active));
     return data;
   }
 
-  function hasReaction(articleId, type) {
-    return localStorage.getItem(`hutao-${type}-${articleId}`) === "true";
+  function hasReaction(articleId) {
+    return localStorage.getItem(`hutao-like-${articleId}`) === "true";
   }
 
   window.articleService = {
@@ -380,6 +395,7 @@
     createMessage,
     deleteMessage,
     recordView,
+    recordSiteVisit,
     toggleReaction,
     hasReaction,
   };

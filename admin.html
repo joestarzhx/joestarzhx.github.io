@@ -9,8 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css?v=4" />
-    <link rel="stylesheet" href="./article-pages.css?v=4" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
+    <link rel="stylesheet" href="./styles.css?v=5" />
+    <link rel="stylesheet" href="./article-pages.css?v=5" />
   </head>
   <body class="inner-page">
     <div class="paper-noise" aria-hidden="true"></div>
@@ -36,7 +37,7 @@
         <section class="admin-dashboard" id="adminDashboard" aria-label="博客概览">
           <div><strong id="articleMetric">0</strong><span>文章</span></div>
           <div><strong id="viewMetric">0</strong><span>阅读</span></div>
-          <div><strong id="reactionMetric">0</strong><span>互动</span></div>
+            <div><strong id="reactionMetric">0</strong><span>点赞</span></div>
           <div><strong id="pendingMetric">0</strong><span>待处理</span></div>
         </section>
         <section class="admin-article-list">
@@ -73,7 +74,7 @@
             <label><span>发布状态</span><select name="published"><option value="true">发布</option><option value="false">保存草稿</option></select></label>
             <label><span>定时发布</span><input type="datetime-local" name="scheduledAt" /></label>
           </div>
-          <label><span>正文（Markdown）</span><textarea name="content" rows="16" required placeholder="# 标题&#10;&#10;支持列表、引用、链接、图片与代码块。"></textarea></label>
+          <label><span>正文（Markdown）</span><textarea name="content" rows="16" required placeholder="# 标题&#10;&#10;支持列表、引用、链接、图片、代码块与 LaTeX 公式。"></textarea></label>
           <section class="markdown-preview">
             <div class="admin-list-heading"><h2>实时预览</h2><span>Markdown</span></div>
             <div class="article-body" id="markdownPreview"></div>
@@ -87,9 +88,11 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./supabase-config.js"></script>
-    <script src="./article-service.js"></script>
-    <script src="./markdown.js"></script>
+    <script src="./article-service.js?v=5"></script>
+    <script src="./markdown.js?v=5"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
     <script src="./theme.js?v=4"></script>
-    <script src="./admin.js"></script>
+    <script src="./admin.js?v=5"></script>
   </body>
 </html>

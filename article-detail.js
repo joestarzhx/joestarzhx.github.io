@@ -1,5 +1,6 @@
 let currentArticle = null;
 let currentComments = [];
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function setMeta(name, content, property = false) {
   let element = document.head.querySelector(`meta[${property ? "property" : "name"}="${name}"]`);
@@ -34,6 +35,7 @@ function renderArticle(article) {
   const body = document.createElement("div");
   body.className = "article-body";
   body.innerHTML = window.blogMarkdown.render(article.content);
+  renderArticleMath(body);
 
   const attachments = article.attachments || [];
   const images = attachments.filter((file) => file.type?.startsWith("image/"));
@@ -68,6 +70,61 @@ function renderArticle(article) {
   const cover = articleService.firstImage(article);
   if (cover) setMeta("og:image", cover.url, true);
   createToc(body);
+}
+
+function renderArticleMath(root) {
+  const render = () => {
+    if (typeof window.renderMathInElement !== "function") return false;
+    window.renderMathInElement(root, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\[", right: "\\]", display: true },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "$", right: "$", display: false },
+      ],
+      ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
+      throwOnError: false,
+    });
+    return true;
+  };
+  if (!render()) window.addEventListener("load", render, { once: true });
+}
+
+function createLikeInkEffect(button) {
+  if (reducedMotion) return;
+  const burst = document.createElement("span");
+  burst.className = "like-ink-burst";
+  button.appendChild(burst);
+  const drops = Array.from({ length: 8 }, (_, index) => {
+    const drop = document.createElement("i");
+    drop.dataset.angle = String((index * 45 + Math.random() * 18 - 9) * Math.PI / 180);
+    drop.dataset.distance = String(22 + Math.random() * 20);
+    burst.appendChild(drop);
+    return drop;
+  });
+
+  if (window.gsap) {
+    gsap.fromTo(burst, { scale: 0.2, autoAlpha: 0.8 }, {
+      scale: 1.8,
+      autoAlpha: 0,
+      duration: 0.72,
+      ease: "power2.out",
+      onComplete: () => burst.remove(),
+    });
+    gsap.fromTo(drops, { scale: 0.2, autoAlpha: 0.9 }, {
+      x: (_, drop) => Math.cos(Number(drop.dataset.angle)) * Number(drop.dataset.distance),
+      y: (_, drop) => Math.sin(Number(drop.dataset.angle)) * Number(drop.dataset.distance),
+      scale: 0,
+      autoAlpha: 0,
+      duration: 0.62,
+      stagger: 0.025,
+      ease: "power2.out",
+    });
+    gsap.fromTo(button, { scale: 0.94 }, { scale: 1, duration: 0.35, ease: "back.out(2)" });
+  } else {
+    burst.classList.add("css-only");
+    burst.addEventListener("animationend", () => burst.remove(), { once: true });
+  }
 }
 
 function createToc(body) {
@@ -233,16 +290,18 @@ async function setupArticleExtras(article) {
   viewCount.textContent = `${views} 次阅读`;
 
   actions.querySelectorAll("[data-reaction]").forEach((button) => {
-    const type = button.dataset.reaction;
-    const count = type === "like" ? article.like_count : article.favorite_count;
-    button.querySelector("span").textContent = count || 0;
-    button.classList.toggle("active", articleService.hasReaction(article.id, type));
+    button.querySelector(".like-count").textContent = article.like_count || 0;
+    const active = articleService.hasReaction(article.id);
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
     button.addEventListener("click", async () => {
       button.disabled = true;
       try {
-        const result = await articleService.toggleReaction(article.id, type);
+        const result = await articleService.toggleReaction(article.id);
         button.classList.toggle("active", result.active);
-        button.querySelector("span").textContent = result.count;
+        button.setAttribute("aria-pressed", String(result.active));
+        button.querySelector(".like-count").textContent = result.count;
+        if (result.active) createLikeInkEffect(button);
       } catch {
         button.title = "请先执行最新的 Supabase 数据库迁移";
       } finally {

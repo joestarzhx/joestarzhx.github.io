@@ -116,6 +116,7 @@
 }
 
 .article-list-cover {
+  position: relative;
   min-height: 280px;
   overflow: hidden;
   background: #c6c0b2;
@@ -342,6 +343,91 @@
 .article-actions button.active {
   border-color: var(--cinnabar);
   color: var(--cinnabar);
+}
+
+.article-actions .like-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  overflow: visible;
+}
+
+.like-mark {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: var(--paper);
+  border-radius: 50% 46% 52% 42%;
+  background: var(--ink);
+  font-family: var(--brush);
+  font-size: 15px;
+  transform: rotate(-5deg);
+  transition: background-color 0.25s, transform 0.25s;
+}
+
+.like-button.active .like-mark {
+  background: var(--cinnabar);
+  transform: rotate(3deg) scale(1.08);
+}
+
+.like-count {
+  min-width: 1ch;
+  font-variant-numeric: tabular-nums;
+}
+
+.like-ink-burst {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 28px;
+  width: 42px;
+  height: 42px;
+  border-radius: 45% 55% 48% 52%;
+  background: radial-gradient(circle at 35% 38%, rgba(166, 52, 45, 0.92), rgba(91, 29, 25, 0.72) 52%, transparent 70%);
+  pointer-events: none;
+}
+
+.like-button > span:not(.like-ink-burst) {
+  position: relative;
+  z-index: 2;
+}
+
+.like-ink-burst i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 8px;
+  border-radius: 55% 45% 60% 40%;
+  background: var(--cinnabar);
+}
+
+.like-ink-burst.css-only {
+  animation: like-ink-fallback 0.72s ease-out forwards;
+}
+
+@keyframes like-ink-fallback {
+  from {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+}
+
+.katex-display {
+  margin: 1.6em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.4em 0;
+}
+
+.article-body .katex {
+  font-size: 1.05em;
 }
 
 .article-actions > span {

@@ -9,12 +9,23 @@
   }
 
   function inline(value) {
-    return escapeHtml(value)
+    const math = [];
+    const protectedValue = value.replace(
+      /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\s)(?:[^$\n]*\S)\$/g,
+      (expression) => {
+        const token = `HUTAOMATHTOKEN${math.length}END`;
+        math.push(expression);
+        return token;
+      },
+    );
+
+    return escapeHtml(protectedValue)
       .replace(/`([^`]+)`/g, "<code>$1</code>")
       .replace(/!\[([^\]]*)\]\((https?:\/\/[^)\s]+)\)/g, '<img src="$2" alt="$1" loading="lazy">')
       .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-      .replace(/\*([^*]+)\*/g, "<em>$1</em>");
+      .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+      .replace(/HUTAOMATHTOKEN(\d+)END/g, (_, index) => escapeHtml(math[Number(index)]));
   }
 
   function slugify(value, index) {

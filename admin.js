@@ -122,7 +122,7 @@ function renderArticleList() {
   document.querySelector("#articleMetric").textContent = articles.length;
   document.querySelector("#viewMetric").textContent = articles.reduce((sum, article) => sum + Number(article.view_count || 0), 0);
   document.querySelector("#reactionMetric").textContent = articles.reduce(
-    (sum, article) => sum + Number(article.like_count || 0) + Number(article.favorite_count || 0),
+    (sum, article) => sum + Number(article.like_count || 0),
     0,
   );
 }
@@ -408,10 +408,22 @@ function renderMarkdownPreview() {
   markdownPreview.innerHTML = window.blogMarkdown.render(articleForm.elements.content.value);
   if (!markdownPreview.textContent.trim()) {
     markdownPreview.innerHTML = '<p class="article-state">预览会随正文输入实时更新。</p>';
+  } else if (typeof window.renderMathInElement === "function") {
+    window.renderMathInElement(markdownPreview, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\[", right: "\\]", display: true },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "$", right: "$", display: false },
+      ],
+      ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
+      throwOnError: false,
+    });
   }
 }
 
 articleForm.elements.content.addEventListener("input", renderMarkdownPreview);
+window.addEventListener("load", renderMarkdownPreview, { once: true });
 
 logoutButton.addEventListener("click", async () => {
   try {

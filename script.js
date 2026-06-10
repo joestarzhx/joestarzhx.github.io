@@ -50,6 +50,10 @@ function createHomepageArticleCard(article, index) {
   badge.className = "card-index";
   badge.textContent = index === 0 ? "新" : "次";
   visual.prepend(badge);
+  const views = document.createElement("span");
+  views.className = "cover-view-count";
+  views.textContent = `${article.view_count || 0} 次阅读`;
+  visual.appendChild(views);
 
   const content = document.createElement("div");
   content.className = "card-content";
@@ -72,6 +76,20 @@ function createHomepageArticleCard(article, index) {
   content.append(meta, title, excerpt, link);
   card.append(visual, content);
   return card;
+}
+
+async function loadSiteVisitCount() {
+  const counter = document.querySelector("#siteVisitCount");
+  if (!counter || !articleService.configured) {
+    if (counter) counter.textContent = "总访问量 · 尚未配置";
+    return;
+  }
+  try {
+    const total = await articleService.recordSiteVisit();
+    counter.textContent = `总访问量 · ${total.toLocaleString("zh-CN")}`;
+  } catch {
+    counter.textContent = "总访问量 · 暂不可用";
+  }
 }
 
 async function loadHomepageArticles() {
@@ -538,4 +556,5 @@ if (hasGsap && !reducedMotion) {
 }
 
 loadHomepageArticles();
+loadSiteVisitCount();
 initializeGuestbook();

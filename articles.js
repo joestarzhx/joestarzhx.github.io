@@ -24,6 +24,10 @@ function createListCard(article) {
   } else {
     visual.innerHTML = '<span aria-hidden="true">文</span>';
   }
+  const views = document.createElement("span");
+  views.className = "cover-view-count";
+  views.textContent = `${article.view_count || 0} 次阅读`;
+  visual.appendChild(views);
 
   const copy = document.createElement("div");
   copy.className = "article-list-copy";
@@ -48,7 +52,7 @@ function createListCard(article) {
   });
   const stats = document.createElement("span");
   stats.className = "article-card-stats";
-  stats.textContent = `${article.view_count || 0} 阅 · ${article.like_count || 0} 赞`;
+  stats.textContent = `${article.like_count || 0} 人点赞`;
   copy.append(meta, title, excerpt, tags, stats);
   link.append(visual, copy);
   return link;

@@ -24,6 +24,17 @@ alter table public.articles add column if not exists view_count bigint not null 
 alter table public.articles add column if not exists like_count bigint not null default 0;
 alter table public.articles add column if not exists favorite_count bigint not null default 0;
 
+create table if not exists public.site_stats (
+  id boolean primary key default true check (id),
+  total_visits bigint not null default 0
+);
+
+insert into public.site_stats (id, total_visits)
+values (true, 0)
+on conflict (id) do nothing;
+
+alter table public.site_stats enable row level security;
+
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
@@ -241,6 +252,28 @@ begin
 end;
 $$;
 
+create or replace function public.record_site_visit(should_increment boolean default true)
+returns bigint
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare updated_count bigint;
+begin
+  if should_increment then
+    update public.site_stats
+    set total_visits = total_visits + 1
+    where id = true
+    returning total_visits into updated_count;
+  else
+    select total_visits into updated_count
+    from public.site_stats
+    where id = true;
+  end if;
+  return coalesce(updated_count, 0);
+end;
+$$;
+
 create or replace function public.toggle_article_reaction(
   target_article uuid,
   target_token text,
@@ -290,6 +323,7 @@ end;
 $$;
 
 grant execute on function public.record_article_view(uuid) to anon, authenticated;
+grant execute on function public.record_site_visit(boolean) to anon, authenticated;
 grant execute on function public.toggle_article_reaction(uuid, text, text) to anon, authenticated;
 
 insert into storage.buckets (id, name, public, file_size_limit)
