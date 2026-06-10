@@ -28,7 +28,7 @@ if (window.gsap && !reducedMotion) {
     .from(".kurumi-page-hero-copy .eyebrow", { x: -24, autoAlpha: 0, duration: 0.6 })
     .from(".kurumi-page-hero-copy h1", { y: 45, autoAlpha: 0, duration: 0.9 }, "-=0.25")
     .from(".kurumi-page-hero-copy > p:last-of-type", { y: 20, autoAlpha: 0, duration: 0.65 }, "-=0.45")
-    .from(".kurumi-page-hero-copy .ink-button", { y: 15, autoAlpha: 0, duration: 0.5 }, "-=0.3");
+    .from(".kurumi-page-hero-copy .ink-button", { y: 12, duration: 0.45 }, "-=0.45");
 
   const observer = new IntersectionObserver(
     (entries) => {
