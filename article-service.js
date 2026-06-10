@@ -153,6 +153,15 @@
     return data;
   }
 
+  async function listAllComments() {
+    const { data, error } = await requireClient()
+      .from("comments")
+      .select("*,articles(title)")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return data;
+  }
+
   async function uploadCommentFiles(files, articleId) {
     const uploaded = [];
     for (const file of files) {
@@ -185,6 +194,18 @@
     return data;
   }
 
+  async function deleteComment(id) {
+    const { error } = await requireClient().from("comments").delete().eq("id", id);
+    if (error) throw error;
+  }
+
+  async function removeCommentFiles(files) {
+    const paths = files.map((file) => file.path).filter(Boolean);
+    if (!paths.length) return;
+    const { error } = await requireClient().storage.from("comment-attachments").remove(paths);
+    if (error) throw error;
+  }
+
   async function listMessages(limit = 20) {
     const { data, error } = await requireClient()
       .from("guestbook_messages")
@@ -203,6 +224,11 @@
       .single();
     if (error) throw error;
     return data;
+  }
+
+  async function deleteMessage(id) {
+    const { error } = await requireClient().from("guestbook_messages").delete().eq("id", id);
+    if (error) throw error;
   }
 
   window.articleService = {
@@ -224,9 +250,13 @@
     updateArticle,
     deleteArticle,
     listComments,
+    listAllComments,
     uploadCommentFiles,
     createComment,
+    deleteComment,
+    removeCommentFiles,
     listMessages,
     createMessage,
+    deleteMessage,
   };
 })();

@@ -305,6 +305,12 @@
   border-bottom: 1px solid var(--line);
 }
 
+.admin-content-list {
+  margin: 0 0 38px;
+  padding-bottom: 35px;
+  border-bottom: 1px solid var(--line);
+}
+
 .admin-list-heading,
 .admin-article-row,
 .admin-row-actions,
@@ -321,6 +327,11 @@
   font-family: var(--brush);
   font-size: 34px;
   font-weight: 400;
+}
+
+.admin-list-heading > span {
+  color: var(--ink-soft);
+  font-size: 12px;
 }
 
 .admin-article-row {
@@ -341,6 +352,34 @@
 
 .text-button.danger {
   color: var(--cinnabar);
+}
+
+.admin-moderation-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.admin-moderation-row p {
+  margin: 0;
+}
+
+.admin-moderation-row > div > p:first-child,
+.admin-moderation-files {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.admin-moderation-body {
+  margin-top: 9px !important;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.admin-moderation-files {
+  margin-top: 8px !important;
 }
 
 .existing-attachments {
@@ -484,5 +523,13 @@ button:disabled {
   .admin-article-row {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .admin-moderation-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-moderation-row .text-button {
+    justify-self: start;
   }
 }
