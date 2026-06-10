@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css?v=9" />
+    <link rel="stylesheet" href="./styles.css?v=10" />
   </head>
   <body>
     <div class="paper-noise" aria-hidden="true"></div>
@@ -105,37 +105,85 @@
 
       <section class="section links-section" id="links">
         <div class="section-heading reveal">
-          <div><p class="eyebrow">Elsewhere Online</p><h2>江湖去处</h2></div>
-          <p>视频、短片与聚窟洲入口，<br />都收在这一页。</p>
+          <div><p class="eyebrow">Useful Links</p><h2>友情链接</h2></div>
+          <p>常用视频平台与 AI 工具，<br />一处抵达更大的数字江湖。</p>
         </div>
-        <div class="link-grid">
-          <a class="portal-card portal-bilibili reveal" href="https://space.bilibili.com/432932431?spm_id_from=333.1007.0.0" target="_blank" rel="noopener noreferrer">
-            <span class="portal-number">01</span>
-            <svg class="portal-icon" viewBox="0 0 64 64" aria-hidden="true">
-              <path d="M20 10l8 9m16-9-8 9M13 22h38a6 6 0 016 6v24a6 6 0 01-6 6H13a6 6 0 01-6-6V28a6 6 0 016-6z" />
-              <path d="M24 37v7m16-7v7M17 29h30" />
-            </svg>
-            <div><p>BILIBILI</p><h3>去 B 站看我的视频</h3><span class="portal-note">进入我的 B 站个人主页</span></div>
-            <span class="portal-arrow" aria-hidden="true">↗</span>
-          </a>
-          <a class="portal-card portal-douyin reveal" href="https://www.douyin.com/user/self?from_tab_name=main" target="_blank" rel="noopener noreferrer">
-            <span class="portal-number">02</span>
-            <svg class="portal-icon" viewBox="0 0 64 64" aria-hidden="true">
-              <path d="M37 9v31.5a12 12 0 11-10-11.8" />
-              <path d="M37 10c2 10 7.5 15 17 16" />
-            </svg>
-            <div><p>DOUYIN</p><h3>去抖音看我的短片</h3><span class="portal-note">进入我的抖音个人主页</span></div>
-            <span class="portal-arrow" aria-hidden="true">↗</span>
-          </a>
-          <a class="portal-card portal-naraka reveal" href="https://www.yjwujian.cn/" target="_blank" rel="noopener noreferrer">
-            <span class="portal-number">03</span>
-            <svg class="portal-icon portal-icon-naraka" viewBox="0 0 64 64" aria-hidden="true">
-              <path d="M12 51L25 12l8 23 9-23 10 39M18 38h28" />
-              <path d="M8 53h48" />
-            </svg>
-            <div><p>NARAKA: BLADEPOINT</p><h3>前往永劫无间官网</h3><span class="portal-note">新闻公告、游戏下载与英雄资料</span></div>
-            <span class="portal-arrow" aria-hidden="true">↗</span>
-          </a>
+        <div class="friend-group reveal">
+          <div class="friend-group-heading">
+            <div><span>01</span><h3>视频平台</h3></div>
+            <p>长视频、短视频与影视内容</p>
+          </div>
+          <div class="friend-grid">
+            <a class="friend-card" style="--brand:#00aeec" href="https://www.bilibili.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 8l6 7m14-7-6 7M9 17h30a4 4 0 014 4v18a4 4 0 01-4 4H9a4 4 0 01-4-4V21a4 4 0 014-4zM17 28v5m14-5v5"/></svg></span>
+              <span><strong>哔哩哔哩</strong><small>视频社区与创作平台</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#fe2c55" href="https://www.douyin.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M28 6v24a9 9 0 11-8-9m8-15c2 8 6 12 14 13"/></svg></span>
+              <span><strong>抖音</strong><small>短视频与直播平台</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#ff0033" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="10" width="40" height="28" rx="9"/><path class="filled" d="M21 18l11 6-11 6z"/></svg></span>
+              <span><strong>YouTube</strong><small>全球视频与创作者社区</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#25f4ee" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M28 6v24a9 9 0 11-8-9m8-15c2 8 6 12 14 13"/></svg></span>
+              <span><strong>TikTok</strong><small>全球短视频社区</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#ff6022" href="https://v.qq.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 7l31 17-31 17z"/><path d="M15 15l16 9-16 9z"/></svg></span>
+              <span><strong>腾讯视频</strong><small>影视、综艺与动漫</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#00be06" href="https://www.iqiyi.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo friend-logo-word">iQIYI</span>
+              <span><strong>爱奇艺</strong><small>电影、剧集与综艺</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#00a8ff" href="https://www.youku.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo friend-logo-word">YOUKU</span>
+              <span><strong>优酷</strong><small>剧集、电影与人文内容</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#ff4906" href="https://www.kuaishou.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="8" width="15" height="13" rx="6"/><rect x="7" y="27" width="15" height="13" rx="6"/><path d="M22 16l17-7v30l-17-7z"/></svg></span>
+              <span><strong>快手</strong><small>短视频与生活社区</small></span><i>↗</i>
+            </a>
+          </div>
+        </div>
+
+        <div class="friend-group reveal">
+          <div class="friend-group-heading">
+            <div><span>02</span><h3>AI 工具</h3></div>
+            <p>对话、研究、创作与编程助手</p>
+          </div>
+          <div class="friend-grid">
+            <a class="friend-card" style="--brand:#10a37f" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 7a9 9 0 0116 6 9 9 0 014 15 9 9 0 01-11 13 9 9 0 01-16-2 9 9 0 01-13-11A9 9 0 0114 13 9 9 0 0124 7z"/><path d="M16 18l16 9M16 30l16-9M24 12v24"/></svg></span>
+              <span><strong>ChatGPT</strong><small>OpenAI 通用 AI 助手</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#d97757" href="https://claude.ai/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5v38M5 24h38M10 10l28 28M38 10L10 38M15 6l18 36M6 15l36 18M33 6L15 42M42 15L6 33"/></svg></span>
+              <span><strong>Claude</strong><small>Anthropic 思考与写作助手</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#8e75ff" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5c2 12 7 17 19 19-12 2-17 7-19 19-2-12-7-17-19-19 12-2 17-7 19-19z"/></svg></span>
+              <span><strong>Gemini</strong><small>Google 多模态 AI 助手</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#4d6bfe" href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 27c8-1 10-7 18-7 7 0 10 5 18 4-3 11-11 17-21 17C12 41 7 36 6 27zM30 18c3-5 7-7 12-7-1 5-4 9-9 11"/><circle cx="17" cy="28" r="1.5" class="filled"/></svg></span>
+              <span><strong>DeepSeek</strong><small>深度求索推理与编程助手</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#111827" href="https://www.kimi.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo friend-logo-letter">K</span>
+              <span><strong>Kimi</strong><small>长文本、搜索与智能体</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#615ced" href="https://chat.qwen.ai/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo friend-logo-letter">Q</span>
+              <span><strong>通义千问</strong><small>阿里云 Qwen 智能助手</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#2f6bff" href="https://www.doubao.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 17c0-6 5-10 11-10h10c6 0 11 4 11 10v12c0 7-5 12-12 12H17C11 41 7 37 7 31c0-4 2-7 5-9-2-1-4-3-4-5z"/><circle cx="19" cy="24" r="2" class="filled"/><circle cx="30" cy="24" r="2" class="filled"/></svg></span>
+              <span><strong>豆包</strong><small>字节跳动 AI 创作助手</small></span><i>↗</i>
+            </a>
+          </div>
         </div>
       </section>
 
