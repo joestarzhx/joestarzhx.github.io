@@ -5,24 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex,nofollow" />
     <link rel="icon" type="image/png" href="./assets/icon.png" />
-    <title>文章管理 | 虎桃不会振刀</title>
+    <title>站长工作台 | 虎桃不会振刀</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
-    <link rel="stylesheet" href="./article-pages.css?v=5" />
+    <link rel="stylesheet" href="./styles.css?v=6" />
+    <link rel="stylesheet" href="./article-pages.css?v=6" />
   </head>
   <body class="inner-page">
     <div class="paper-noise" aria-hidden="true"></div>
     <header class="site-header scrolled">
       <a class="brand" href="./index.html"><img class="brand-icon" src="./assets/icon.png" alt="" /><span class="brand-name">不会振刀</span></a>
-      <nav class="inner-nav"><a href="./index.html">首页</a><a href="./articles.html">文章</a></nav>
+      <nav class="inner-nav"><a href="./index.html">首页</a><a href="./articles.html">文章</a><a href="./videos.html">视频</a></nav>
     </header>
     <main class="admin-shell">
       <section class="auth-panel" id="authPanel">
-        <p class="eyebrow">Owner Only</p>
-        <h1>站长登录</h1>
+        <p class="eyebrow">Owner Only</p><h1>站长登录</h1>
         <form id="loginForm" class="editor-form">
           <label><span>邮箱</span><input type="email" name="email" autocomplete="username" required /></label>
           <label><span>密码</span><input type="password" name="password" autocomplete="current-password" required /></label>
@@ -31,68 +30,107 @@
       </section>
       <section class="editor-panel" id="editorPanel" hidden>
         <div class="editor-heading">
-          <div><p class="eyebrow">Owner Console</p><h1 id="editorTitle">写文章</h1></div>
+          <div><p class="eyebrow">Owner Console</p><h1>站长工作台</h1></div>
           <button class="text-button" id="logoutButton" type="button">退出登录</button>
         </div>
-        <section class="admin-dashboard" id="adminDashboard" aria-label="博客概览">
-          <div><strong id="articleMetric">0</strong><span>文章</span></div>
-          <div><strong id="viewMetric">0</strong><span>阅读</span></div>
+
+        <nav class="admin-tabs" aria-label="后台功能">
+          <button class="active" type="button" data-admin-target="overviewPanel">概览</button>
+          <button type="button" data-admin-target="worksPanel">作品管理</button>
+          <button type="button" data-admin-target="interactionPanel">互动管理</button>
+          <button type="button" data-admin-target="editorWorkPanel">新建作品</button>
+        </nav>
+
+        <section class="admin-tab-panel active" id="overviewPanel">
+          <div class="admin-dashboard" aria-label="博客概览">
+            <div><strong id="articleMetric">0</strong><span>文章</span></div>
+            <div><strong id="videoMetric">0</strong><span>视频</span></div>
+            <div><strong id="viewMetric">0</strong><span>浏览 / 播放</span></div>
             <div><strong id="reactionMetric">0</strong><span>点赞</span></div>
-          <div><strong id="pendingMetric">0</strong><span>待处理</span></div>
+            <div><strong id="pendingMetric">0</strong><span>待处理评论</span></div>
+          </div>
+          <div class="admin-guide">
+            <h2>快捷操作</h2>
+            <button class="ink-button" type="button" data-new-work="article">写文章</button>
+            <button class="ink-button secondary" type="button" data-new-work="video">发视频</button>
+          </div>
         </section>
-        <section class="admin-article-list">
+
+        <section class="admin-tab-panel" id="worksPanel">
           <div class="admin-list-heading">
-            <h2>文章管理</h2>
-            <button class="text-button" id="newArticleButton" type="button">新建文章</button>
+            <div><p class="eyebrow">Works</p><h2>作品管理</h2></div>
+            <div class="admin-row-actions">
+              <button class="text-button" type="button" data-new-work="article">新建文章</button>
+              <button class="text-button" type="button" data-new-work="video">上传视频</button>
+            </div>
           </div>
-          <div id="adminArticleList"><p class="article-state">正在读取文章……</p></div>
+          <div class="admin-filter-bar">
+            <button class="active" type="button" data-work-filter="all">全部</button>
+            <button type="button" data-work-filter="article">文章</button>
+            <button type="button" data-work-filter="video">视频</button>
+          </div>
+          <div id="adminArticleList"><p class="article-state">正在读取作品……</p></div>
         </section>
-        <section class="admin-content-list">
-          <div class="admin-list-heading">
-            <h2>评论管理</h2>
-            <span id="commentCount"></span>
-          </div>
-          <div id="adminCommentList"><p class="article-state">正在读取评论……</p></div>
-        </section>
-        <section class="admin-content-list">
-          <div class="admin-list-heading">
-            <h2>留言管理</h2>
-            <span id="messageCount"></span>
-          </div>
-          <div id="adminMessageList"><p class="article-state">正在读取留言……</p></div>
-        </section>
-        <form id="articleForm" class="editor-form">
-          <input type="hidden" name="articleId" />
-          <label><span>标题</span><input type="text" name="title" maxlength="120" required /></label>
-          <label><span>网址标识</span><input type="text" name="slug" maxlength="120" placeholder="例如：my-first-article" required /><small>只能使用小写字母、数字和连字符。</small></label>
-          <label><span>摘要</span><textarea name="excerpt" rows="3" maxlength="300" required></textarea></label>
-          <div class="editor-split-fields">
-            <label><span>分类</span><input type="text" name="category" maxlength="30" value="随笔" required /></label>
-            <label><span>标签</span><input type="text" name="tags" maxlength="160" placeholder="胡桃, 攻略, 随笔" /></label>
-          </div>
-          <div class="editor-split-fields">
-            <label><span>发布状态</span><select name="published"><option value="true">发布</option><option value="false">保存草稿</option></select></label>
-            <label><span>定时发布</span><input type="datetime-local" name="scheduledAt" /></label>
-          </div>
-          <label><span>正文（Markdown）</span><textarea name="content" rows="16" required placeholder="# 标题&#10;&#10;支持列表、引用、链接、图片、代码块与 LaTeX 公式。"></textarea></label>
-          <section class="markdown-preview">
-            <div class="admin-list-heading"><h2>实时预览</h2><span>Markdown</span></div>
-            <div class="article-body" id="markdownPreview"></div>
+
+        <section class="admin-tab-panel" id="interactionPanel">
+          <section class="admin-content-list">
+            <div class="admin-list-heading"><h2>评论管理</h2><span id="commentCount"></span></div>
+            <div id="adminCommentList"><p class="article-state">正在读取评论……</p></div>
           </section>
-          <label><span>图片与附件</span><input type="file" name="attachments" multiple /><small>首张图片会作为文章封面；单个文件建议不超过 10 MB。</small></label>
-          <div class="existing-attachments" id="existingAttachments" hidden></div>
-          <button class="ink-button publish-button" type="submit">发布文章</button>
-        </form>
+          <section class="admin-content-list">
+            <div class="admin-list-heading"><h2>留言管理</h2><span id="messageCount"></span></div>
+            <div id="adminMessageList"><p class="article-state">正在读取留言……</p></div>
+          </section>
+        </section>
+
+        <section class="admin-tab-panel" id="editorWorkPanel">
+          <form id="articleForm" class="editor-form">
+            <div class="admin-list-heading">
+              <div><p class="eyebrow">Editor</p><h2 id="editorTitle">新建文章</h2></div>
+              <button class="text-button" id="cancelEditButton" type="button">清空编辑器</button>
+            </div>
+            <input type="hidden" name="articleId" />
+            <div class="work-type-picker" role="group" aria-label="作品类型">
+              <label><input type="radio" name="contentType" value="article" checked /><span>文章</span></label>
+              <label><input type="radio" name="contentType" value="video" /><span>视频</span></label>
+            </div>
+            <label><span>标题</span><input type="text" name="title" maxlength="120" required /></label>
+            <label><span>网址标识</span><input type="text" name="slug" maxlength="120" placeholder="例如：my-first-work" required /><small>只能使用小写字母、数字和连字符。</small></label>
+            <label><span>摘要</span><textarea name="excerpt" rows="3" maxlength="300" required></textarea></label>
+            <div class="editor-split-fields">
+              <label><span>分类</span><input type="text" name="category" maxlength="30" value="随笔" required /></label>
+              <label><span>标签</span><input type="text" name="tags" maxlength="160" placeholder="胡桃, 攻略, 随笔" /></label>
+            </div>
+            <div class="editor-split-fields">
+              <label><span>发布状态</span><select name="published"><option value="true">发布</option><option value="false">保存草稿</option></select></label>
+              <label><span>定时发布</span><input type="datetime-local" name="scheduledAt" /></label>
+            </div>
+            <div class="video-editor-fields" id="videoEditorFields" hidden>
+              <label><span>上传视频</span><input type="file" name="videoFile" accept="video/mp4,video/webm,video/ogg" /><small>支持 MP4、WebM、OGG，单个文件不超过 50 MB。</small></label>
+              <label><span>或填写视频直链</span><input type="url" name="videoUrl" placeholder="https://example.com/video.mp4" /></label>
+              <label><span>封面图片地址</span><input type="url" name="videoPoster" placeholder="可留空，或使用附件中的首张图片" /></label>
+              <p class="current-video" id="currentVideo" hidden></p>
+            </div>
+            <label><span id="contentFieldLabel">正文（Markdown）</span><textarea name="content" rows="16" required placeholder="# 标题&#10;&#10;支持列表、引用、链接、图片、代码块与 LaTeX 公式。"></textarea></label>
+            <section class="markdown-preview">
+              <div class="admin-list-heading"><h2>实时预览</h2><span>Markdown</span></div>
+              <div class="article-body" id="markdownPreview"></div>
+            </section>
+            <label><span>图片与附件</span><input type="file" name="attachments" multiple /><small>首张图片可作为作品封面；单个文件不超过 10 MB。</small></label>
+            <div class="existing-attachments" id="existingAttachments" hidden></div>
+            <button class="ink-button publish-button" type="submit">发布文章</button>
+          </form>
+        </section>
       </section>
       <p class="admin-status" id="adminStatus" role="status"></p>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./supabase-config.js"></script>
-    <script src="./article-service.js?v=5"></script>
+    <script src="./article-service.js?v=6"></script>
     <script src="./markdown.js?v=5"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
     <script src="./theme.js?v=4"></script>
-    <script src="./admin.js?v=5"></script>
+    <script src="./admin.js?v=6"></script>
   </body>
 </html>

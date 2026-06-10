@@ -23,6 +23,15 @@ alter table public.articles add column if not exists scheduled_at timestamptz;
 alter table public.articles add column if not exists view_count bigint not null default 0;
 alter table public.articles add column if not exists like_count bigint not null default 0;
 alter table public.articles add column if not exists favorite_count bigint not null default 0;
+alter table public.articles add column if not exists content_type text not null default 'article';
+alter table public.articles add column if not exists video_url text;
+alter table public.articles add column if not exists video_poster text;
+alter table public.articles add column if not exists video_path text;
+alter table public.articles add column if not exists video_name text;
+
+alter table public.articles drop constraint if exists articles_content_type_check;
+alter table public.articles
+add constraint articles_content_type_check check (content_type in ('article', 'video'));
 
 create table if not exists public.site_stats (
   id boolean primary key default true check (id),
@@ -387,5 +396,43 @@ on storage.objects for delete
 to authenticated
 using (
   bucket_id = 'comment-attachments'
+  and auth.uid() = '35bd70b7-54c4-4238-b583-e4fbcd2fea52'::uuid
+);
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'video-assets',
+  'video-assets',
+  true,
+  52428800,
+  array['video/mp4', 'video/webm', 'video/ogg']
+)
+on conflict (id) do update
+set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "Public can read video assets" on storage.objects;
+create policy "Public can read video assets"
+on storage.objects for select
+using (bucket_id = 'video-assets');
+
+drop policy if exists "Owner can upload video assets" on storage.objects;
+create policy "Owner can upload video assets"
+on storage.objects for insert
+to authenticated
+with check (
+  bucket_id = 'video-assets'
+  and auth.uid() = '35bd70b7-54c4-4238-b583-e4fbcd2fea52'::uuid
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
+
+drop policy if exists "Owner can delete video assets" on storage.objects;
+create policy "Owner can delete video assets"
+on storage.objects for delete
+to authenticated
+using (
+  bucket_id = 'video-assets'
   and auth.uid() = '35bd70b7-54c4-4238-b583-e4fbcd2fea52'::uuid
 );

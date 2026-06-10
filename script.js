@@ -114,6 +114,52 @@ async function loadHomepageArticles() {
   }
 }
 
+function createHomepageVideoCard(video) {
+  const card = document.createElement("a");
+  card.className = "home-video-card reveal";
+  card.href = articleService.articleUrl(video);
+  const visual = document.createElement("div");
+  visual.className = "home-video-visual";
+  const poster = video.video_poster || articleService.firstImage(video)?.url;
+  if (poster) {
+    const image = document.createElement("img");
+    image.src = poster;
+    image.alt = "";
+    image.loading = "lazy";
+    visual.appendChild(image);
+  }
+  const play = document.createElement("span");
+  play.textContent = "▶";
+  play.setAttribute("aria-hidden", "true");
+  visual.appendChild(play);
+  const copy = document.createElement("div");
+  const meta = document.createElement("small");
+  meta.textContent = `${video.category || "视频"} · ${video.view_count || 0} 次播放`;
+  const title = document.createElement("h3");
+  title.textContent = video.title;
+  const excerpt = document.createElement("p");
+  excerpt.textContent = video.excerpt;
+  copy.append(meta, title, excerpt);
+  card.append(visual, copy);
+  return card;
+}
+
+async function loadHomepageVideos() {
+  const container = document.querySelector("#latestVideos");
+  if (!container || !articleService.configured) return;
+  try {
+    const videos = await articleService.listPublished(2, { contentType: "video" });
+    container.replaceChildren();
+    if (!videos.length) {
+      container.innerHTML = '<p class="article-state">还没有发布视频，第一段影像正在路上。</p>';
+      return;
+    }
+    videos.forEach((video) => container.appendChild(createHomepageVideoCard(video)));
+  } catch (error) {
+    container.innerHTML = `<p class="article-state">视频读取失败：${error.message}</p>`;
+  }
+}
+
 function createClickEffect(x, y) {
   if (!hasGsap || reducedMotion) return;
 
@@ -556,5 +602,6 @@ if (hasGsap && !reducedMotion) {
 }
 
 loadHomepageArticles();
+loadHomepageVideos();
 loadSiteVisitCount();
 initializeGuestbook();

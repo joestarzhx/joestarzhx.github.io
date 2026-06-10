@@ -30,6 +30,10 @@
     return `./article.html?slug=${encodeURIComponent(article.slug)}`;
   }
 
+  function contentLabel(item) {
+    return item.content_type === "video" ? "视频" : "文章";
+  }
+
   function isOwner(session) {
     return Boolean(session?.user?.id && session.user.id === config.ownerUserId);
   }
@@ -42,7 +46,8 @@
     return /column .* does not exist|schema cache/i.test(error?.message || "");
   }
 
-  async function listPublishedLegacy(limit) {
+  async function listPublishedLegacy(limit, filters = {}) {
+    if (filters.contentType === "video") return [];
     let query = requireClient()
       .from("articles")
       .select("id,title,slug,excerpt,attachments,published_at,created_at")
@@ -58,6 +63,11 @@
       view_count: 0,
       like_count: 0,
       favorite_count: 0,
+      content_type: "article",
+      video_url: null,
+      video_poster: null,
+      video_path: null,
+      video_name: null,
     }));
   }
 
@@ -74,12 +84,13 @@
   async function listPublished(limit, filters = {}) {
     let query = requireClient()
       .from("articles")
-      .select("id,title,slug,excerpt,attachments,category,tags,published_at,created_at,view_count,like_count,favorite_count")
+      .select("id,title,slug,excerpt,attachments,category,tags,published_at,created_at,view_count,like_count,favorite_count,content_type,video_url,video_poster,video_path,video_name")
       .eq("published", true)
       .or(`scheduled_at.is.null,scheduled_at.lte.${new Date().toISOString()}`)
       .order("published_at", { ascending: false });
 
     if (filters.category) query = query.eq("category", filters.category);
+    if (filters.contentType) query = query.eq("content_type", filters.contentType);
     if (filters.search) {
       const search = filters.search.replace(/[%_,()]/g, " ").trim();
       if (search) query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%`);
@@ -87,7 +98,7 @@
     if (filters.tag) query = query.contains("tags", [filters.tag]);
     if (limit) query = query.limit(limit);
     const { data, error } = await query;
-    if (error && isSchemaMismatch(error)) return listPublishedLegacy(limit);
+    if (error && isSchemaMismatch(error)) return listPublishedLegacy(limit, filters);
     if (error) throw error;
     return data;
   }
@@ -113,6 +124,11 @@
         data.view_count = 0;
         data.like_count = 0;
         data.favorite_count = 0;
+        data.content_type = "article";
+        data.video_url = null;
+        data.video_poster = null;
+        data.video_path = null;
+        data.video_name = null;
       }
     }
     if (error) throw error;
@@ -131,6 +147,11 @@
       view_count: 0,
       like_count: 0,
       favorite_count: 0,
+      content_type: "article",
+      video_url: null,
+      video_poster: null,
+      video_path: null,
+      video_name: null,
       ...article,
     }));
   }
@@ -138,9 +159,10 @@
   async function listRelated(article, limit = 3) {
     let query = requireClient()
       .from("articles")
-      .select("id,title,slug,excerpt,attachments,category,tags,published_at")
+      .select("id,title,slug,excerpt,attachments,category,tags,published_at,content_type,video_url,video_poster")
       .eq("published", true)
       .neq("id", article.id)
+      .eq("content_type", article.content_type || "article")
       .or(`scheduled_at.is.null,scheduled_at.lte.${new Date().toISOString()}`)
       .order("published_at", { ascending: false })
       .limit(limit);
@@ -197,6 +219,29 @@
     if (error) throw error;
   }
 
+  async function uploadVideo(file, userId) {
+    const cleanName = file.name.replace(/[^\w.\-]+/g, "-") || "video";
+    const path = `${userId}/${crypto.randomUUID()}-${cleanName}`;
+    const { error } = await requireClient().storage
+      .from("video-assets")
+      .upload(path, file, { contentType: file.type, upsert: false });
+    if (error) throw error;
+    const { data } = requireClient().storage.from("video-assets").getPublicUrl(path);
+    return {
+      name: file.name,
+      path,
+      url: data.publicUrl,
+      type: file.type,
+      size: file.size,
+    };
+  }
+
+  async function removeVideo(video) {
+    if (!video?.path) return;
+    const { error } = await requireClient().storage.from("video-assets").remove([video.path]);
+    if (error) throw error;
+  }
+
   async function publishArticle(article) {
     const { data, error } = await requireClient()
       .from("articles")
@@ -236,7 +281,7 @@
   async function listAllComments() {
     const { data, error } = await requireClient()
       .from("comments")
-      .select("*,articles(title)")
+      .select("*,articles(title,content_type)")
       .order("created_at", { ascending: false });
     if (error) throw error;
     return data;
@@ -369,6 +414,7 @@
     configured,
     formatDate,
     articleUrl,
+    contentLabel,
     isOwner,
     firstImage,
     getVisitorToken,
@@ -381,6 +427,8 @@
     signOut,
     uploadFiles,
     removeFiles,
+    uploadVideo,
+    removeVideo,
     publishArticle,
     updateArticle,
     deleteArticle,

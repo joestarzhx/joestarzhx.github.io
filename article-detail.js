@@ -34,7 +34,23 @@ function renderArticle(article) {
 
   const body = document.createElement("div");
   body.className = "article-body";
-  body.innerHTML = window.blogMarkdown.render(article.content);
+  if (article.content_type === "video") {
+    const player = document.createElement("video");
+    player.className = "work-video-player";
+    player.controls = true;
+    player.preload = "metadata";
+    player.playsInline = true;
+    player.src = article.video_url;
+    if (article.video_poster) player.poster = article.video_poster;
+    player.setAttribute("aria-label", article.title);
+    body.appendChild(player);
+    const description = document.createElement("div");
+    description.className = "video-description";
+    description.innerHTML = window.blogMarkdown.render(article.content || article.excerpt);
+    body.appendChild(description);
+  } else {
+    body.innerHTML = window.blogMarkdown.render(article.content);
+  }
   renderArticleMath(body);
 
   const attachments = article.attachments || [];
@@ -62,7 +78,7 @@ function renderArticle(article) {
   }
   root.append(header, body);
 
-  document.title = `${article.title} | 虎桃不会振刀`;
+  document.title = `${article.title} | ${article.content_type === "video" ? "视频" : "文章"} | 虎桃不会振刀`;
   setMeta("description", article.excerpt);
   setMeta("og:title", article.title, true);
   setMeta("og:description", article.excerpt, true);
@@ -319,14 +335,14 @@ async function setupArticleExtras(article) {
     }
   });
 
-  const all = await articleService.listPublished();
+  const all = await articleService.listPublished(null, { contentType: article.content_type || "article" });
   const index = all.findIndex((item) => item.id === article.id);
   const neighbors = document.querySelector("#articleNeighbors");
   const previous = all[index + 1];
   const next = all[index - 1];
   if (previous || next) {
-    if (previous) neighbors.appendChild(neighborLink(previous, "上一篇"));
-    if (next) neighbors.appendChild(neighborLink(next, "下一篇"));
+    if (previous) neighbors.appendChild(neighborLink(previous, article.content_type === "video" ? "上一个视频" : "上一篇"));
+    if (next) neighbors.appendChild(neighborLink(next, article.content_type === "video" ? "下一个视频" : "下一篇"));
     neighbors.hidden = false;
   }
   const related = await articleService.listRelated(article);
