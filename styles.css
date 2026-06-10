@@ -222,13 +222,27 @@ button {
   z-index: 98;
   top: 0;
   left: 0;
-  width: 7px;
-  height: 5px;
-  border-radius: 58% 42% 65% 35%;
-  background: color-mix(in srgb, var(--ink) 62%, transparent);
-  filter: blur(0.35px);
+  width: var(--trail-length, 20px);
+  height: var(--trail-width, 5px);
+  border-radius: 100% 15% 100% 20%;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ink) 72%, transparent), color-mix(in srgb, var(--ink) 8%, transparent));
+  filter: blur(0.45px);
   pointer-events: none;
+  transform-origin: left center;
   will-change: transform, opacity;
+}
+
+.ink-cursor-trail::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 8%;
+  width: 38%;
+  height: 160%;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 17%, transparent);
+  filter: blur(3px);
+  transform: translateY(-50%);
 }
 
 .ink-cursor.is-interactive .ink-cursor-ring {
@@ -394,6 +408,61 @@ button {
   object-position: center;
   filter: saturate(0.92) contrast(1.02);
   transform: scale(1.025);
+}
+
+.flowing-landscape {
+  position: absolute;
+  inset: auto -8% 0;
+  z-index: -1;
+  height: 48%;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.72;
+  mix-blend-mode: multiply;
+}
+
+.landscape-layer {
+  position: absolute;
+  bottom: -2px;
+  left: -4%;
+  width: 108%;
+  height: 100%;
+  fill: var(--ink);
+  will-change: transform, opacity;
+}
+
+.landscape-far {
+  opacity: 0.12;
+  filter: blur(1.2px);
+}
+
+.landscape-near {
+  bottom: -10%;
+  opacity: 0.18;
+  filter: blur(0.35px);
+}
+
+.landscape-mist {
+  position: absolute;
+  width: 58%;
+  height: 62px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  filter: blur(22px);
+  will-change: transform, opacity;
+}
+
+.mist-one {
+  right: 5%;
+  bottom: 29%;
+  opacity: 0.6;
+}
+
+.mist-two {
+  left: 8%;
+  bottom: 17%;
+  width: 44%;
+  opacity: 0.42;
 }
 
 .hero-wash {
@@ -1466,6 +1535,19 @@ footer {
   filter: saturate(0.8) brightness(0.7) contrast(1.08);
 }
 
+[data-theme="dark"] .flowing-landscape {
+  opacity: 0.44;
+  mix-blend-mode: screen;
+}
+
+[data-theme="dark"] .landscape-layer {
+  fill: #8fa29a;
+}
+
+[data-theme="dark"] .landscape-mist {
+  background: rgba(126, 144, 135, 0.2);
+}
+
 [data-theme="dark"] .hero-verse {
   color: var(--ink-soft);
 }
@@ -1500,6 +1582,11 @@ footer {
     min-height: max(760px, 100svh);
   }
 
+  .flowing-landscape {
+    height: 38%;
+    opacity: 0.42;
+  }
+
   .hero-copy {
     top: auto;
     bottom: 54px;
@@ -1528,6 +1615,11 @@ footer {
 @media (max-width: 560px) {
   .site-search-shell {
     padding: 16px;
+  }
+
+  .flowing-landscape {
+    inset-inline: -32%;
+    height: 34%;
   }
 
   .site-search-results > a {

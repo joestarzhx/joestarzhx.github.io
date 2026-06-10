@@ -18,6 +18,7 @@ let ownerSession = null;
 const pieces = new Set();
 const pointer = { x: -1000, y: -1000 };
 let lastCursorTrailAt = 0;
+let lastTrailPoint = null;
 
 const random = (min, max) => Math.random() * (max - min) + min;
 
@@ -382,30 +383,67 @@ function createClickEffect(x, y) {
 
 function createCursorTrail(x, y) {
   const now = performance.now();
-  if (now - lastCursorTrailAt < 38) return;
+  if (now - lastCursorTrailAt < 34) return;
   lastCursorTrailAt = now;
+
+  const previous = lastTrailPoint || { x, y };
+  const dx = x - previous.x;
+  const dy = y - previous.y;
+  const distance = Math.hypot(dx, dy);
+  const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+  lastTrailPoint = { x, y };
+  if (distance < 2) return;
 
   const trail = document.createElement("i");
   trail.className = "ink-cursor-trail";
+  trail.style.setProperty("--trail-length", `${Math.min(34, Math.max(12, distance * 0.82))}px`);
+  trail.style.setProperty("--trail-width", `${Math.min(6, Math.max(3, 3 + distance * 0.05))}px`);
   document.body.appendChild(trail);
 
   gsap.set(trail, {
-    x: x + random(-3, 3),
-    y: y + random(-2, 2),
-    xPercent: -50,
+    x: previous.x + random(-1.5, 1.5),
+    y: previous.y + random(-1.5, 1.5),
+    xPercent: 0,
     yPercent: -50,
-    rotation: random(-35, 35),
-    scale: random(0.65, 1.05),
-    opacity: 0.42,
+    rotation: angle + random(-4, 4),
+    scaleX: 0.45,
+    scaleY: random(0.82, 1.16),
+    opacity: 0.48,
   });
   gsap.to(trail, {
-    x: `-=${random(5, 12)}`,
-    y: `+=${random(4, 10)}`,
-    scale: 0.2,
+    x: previous.x - dx * 0.12,
+    y: previous.y - dy * 0.12 + random(2, 6),
+    scaleX: 1,
+    scaleY: 0.3,
     opacity: 0,
-    duration: 0.58,
+    duration: 0.66,
     ease: "power2.out",
     onComplete: () => trail.remove(),
+  });
+}
+
+function setupFlowingLandscape() {
+  if (!hasGsap || reducedMotion) return;
+  const hero = document.querySelector(".hero");
+  const far = document.querySelector(".landscape-far");
+  const near = document.querySelector(".landscape-near");
+  const mists = document.querySelectorAll(".landscape-mist");
+  if (!hero || !far || !near) return;
+
+  const motion = gsap.timeline({ repeat: -1, yoyo: true, defaults: { ease: "sine.inOut" } });
+  motion
+    .to(far, { xPercent: -2.2, yPercent: 1.2, scaleX: 1.025, duration: 16 }, 0)
+    .to(near, { xPercent: 2.8, yPercent: -1.5, scaleX: 1.035, duration: 13 }, 0)
+    .to(mists, { xPercent: (index) => index ? 16 : -12, autoAlpha: (index) => index ? 0.28 : 0.5, duration: 11, stagger: 1.2 }, 0);
+
+  const visibilityObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting && !document.hidden) motion.resume();
+    else motion.pause();
+  }, { threshold: 0.05 });
+  visibilityObserver.observe(hero);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) motion.pause();
+    else if (hero.getBoundingClientRect().bottom > 0) motion.resume();
   });
 }
 
@@ -757,6 +795,7 @@ if (hasGsap && !reducedMotion) {
     });
 
     document.documentElement.addEventListener("mouseleave", () => {
+      lastTrailPoint = null;
       gsap.to(cursor, { autoAlpha: 0, duration: 0.2 });
     });
   }
@@ -811,3 +850,4 @@ loadSiteVisitCount();
 initializeGuestbook();
 setupAchievements();
 setupInkHoverEffects();
+setupFlowingLandscape();

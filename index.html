@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css?v=10" />
+    <link rel="stylesheet" href="./styles.css?v=11" />
   </head>
   <body>
     <div class="paper-noise" aria-hidden="true"></div>
@@ -45,6 +45,16 @@
     <main>
       <section class="hero" id="home">
         <img class="hero-art" src="./assets/ink-hero.png" alt="水墨浪潮与红衣胡桃" />
+        <div class="flowing-landscape" aria-hidden="true">
+          <svg class="landscape-layer landscape-far" viewBox="0 0 1600 520" preserveAspectRatio="none">
+            <path d="M0 420C130 350 210 370 330 280C425 208 500 320 610 250C730 170 810 250 905 195C1020 125 1115 250 1230 205C1360 155 1450 245 1600 150V520H0Z" />
+          </svg>
+          <svg class="landscape-layer landscape-near" viewBox="0 0 1600 520" preserveAspectRatio="none">
+            <path d="M0 445C120 390 205 410 315 335C410 270 515 385 650 310C760 250 835 365 970 290C1090 220 1190 350 1315 275C1420 215 1510 275 1600 235V520H0Z" />
+          </svg>
+          <span class="landscape-mist mist-one"></span>
+          <span class="landscape-mist mist-two"></span>
+        </div>
         <div class="hero-wash" aria-hidden="true"></div>
         <div class="hero-copy">
           <p class="eyebrow">此间江湖 · 随笔一卷</p>
@@ -185,6 +195,31 @@
             </a>
           </div>
         </div>
+
+        <div class="friend-group reveal">
+          <div class="friend-group-heading">
+            <div><span>03</span><h3>AI 音视频创作</h3></div>
+            <p>视频生成、视觉创作与智能配音</p>
+          </div>
+          <div class="friend-grid">
+            <a class="friend-card" style="--brand:#6c55ff" href="https://kling.ai/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M11 7v34M37 7L14 24l23 17"/><path d="M20 21l17-14M20 27l17 14"/></svg></span>
+              <span><strong>可灵 AI</strong><small>文生视频、图生视频与音效</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#ff4d6d" href="https://jimeng.jianying.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 34c8-2 9-11 17-17 5-4 10-5 15-4-1 6-3 11-8 15-7 6-15 5-24 6z"/><path d="M14 32c7-5 13-9 22-14"/><circle cx="36" cy="12" r="3"/></svg></span>
+              <span><strong>即梦 AI</strong><small>图片、视频与音乐创作</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#ff6b35" href="https://hailuoai.com/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 31c5-8 10-11 16-11s11 3 16 11"/><path d="M11 36c4-5 8-7 13-7s9 2 13 7M17 15c2-5 5-8 7-8s5 3 7 8"/><circle cx="24" cy="20" r="2" class="filled"/></svg></span>
+              <span><strong>海螺视频</strong><small>文本与图片生成 AI 视频</small></span><i>↗</i>
+            </a>
+            <a class="friend-card" style="--brand:#12b8a6" href="https://fish.audio/" target="_blank" rel="noopener noreferrer">
+              <span class="friend-logo"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M7 25c8-9 18-11 29-4l6-5v16l-6-5c-11 7-21 5-29-2z"/><circle cx="29" cy="22" r="1.5" class="filled"/><path d="M12 20c2 3 2 7 0 10"/></svg></span>
+              <span><strong>Fish Audio</strong><small>AI 配音、声音克隆与音频生成</small></span><i>↗</i>
+            </a>
+          </div>
+        </div>
       </section>
 
       <section class="about-section" id="about">
@@ -259,6 +294,6 @@
     <script src="./article-service.js?v=8"></script>
     <script src="./theme.js?v=6"></script>
     <script src="./ai-assistant.js?v=1"></script>
-    <script src="./script.js?v=9"></script>
+    <script src="./script.js?v=10"></script>
   </body>
 </html>
