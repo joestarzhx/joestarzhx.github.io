@@ -19,7 +19,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css?v=13" />
-    <link rel="stylesheet" href="./pet.css?v=1" />
+    <link rel="stylesheet" href="./pet.css?v=2" />
   </head>
   <body class="pet-page">
     <div class="paper-noise" aria-hidden="true"></div>
@@ -73,7 +73,7 @@
 
         <aside class="pet-status-panel" aria-label="桌宠状态">
           <div class="pet-level-row">
-            <span class="pet-avatar"><img src="./assets/hutao-pet.png" alt="" /></span>
+            <span class="pet-avatar"><img src="./assets/hutao.png" alt="" /></span>
             <div><small>亲密等级</small><strong>Lv.<span id="petLevel">1</span> 小桃</strong></div>
             <span class="pet-coins" title="桃花币">✿ <b id="petCoins">20</b></span>
           </div>
@@ -115,7 +115,21 @@
           >
             <span class="pet-aura" aria-hidden="true"></span>
             <span class="pet-visual" id="petVisual">
-              <img src="./assets/hutao-pet.png" alt="穿着舞狮新年服装的胡桃桌宠" draggable="false" />
+              <span class="pet-rig" id="petRig" aria-hidden="true">
+                <span class="pet-canvas" id="petCanvas"></span>
+                <img
+                  class="pet-rig-fallback"
+                  src="./assets/hutao.png"
+                  alt=""
+                  draggable="false"
+                />
+                <span class="face-control eye-control eye-left"><i></i></span>
+                <span class="face-control eye-control eye-right"><i></i></span>
+                <span class="face-control mouth-control"></span>
+                <span class="face-control cheek-control cheek-left"></span>
+                <span class="face-control cheek-control cheek-right"></span>
+              </span>
+              <span class="sr-only">穿着舞狮新年服装的胡桃桌宠</span>
               <span class="sleep-mark" aria-hidden="true">Z</span>
             </span>
           </button>
@@ -129,6 +143,9 @@
           <button type="button" data-action="dance"><span>舞</span><strong>跳舞</strong><small>心情 +10</small></button>
           <button type="button" data-action="sleep"><span>眠</span><strong>休息</strong><small>恢复精力</small></button>
           <button type="button" data-action="talk"><span>言</span><strong>聊聊</strong><small>随机对话</small></button>
+          <button type="button" data-action="wave"><span>挥</span><strong>招手</strong><small>手臂骨骼</small></button>
+          <button type="button" data-action="nod"><span>颔</span><strong>点头</strong><small>头颈骨骼</small></button>
+          <button type="button" data-action="surprise"><span>惊</span><strong>惊喜</strong><small>五官联动</small></button>
         </div>
 
         <div class="pet-room-tools" aria-label="桌宠设置">
@@ -174,8 +191,10 @@
 
     <footer><p>© 2026 虎桃不会振刀</p><a href="./index.html">返回卷首</a></footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@7.4.2/dist/pixi.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
     <script src="./theme.js?v=7"></script>
-    <script src="./pet.js?v=1"></script>
+    <script src="./pet-rig.js?v=1"></script>
+    <script src="./pet.js?v=2"></script>
   </body>
 </html>

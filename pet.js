@@ -134,6 +134,7 @@
   let pointerStart = null;
   let positionStart = null;
   let actionLocked = false;
+  let rig = null;
 
   function saveState() {
     state.lastVisit = Date.now();
@@ -269,6 +270,9 @@
       sleep: [440, 330],
       reward: [523, 659, 784, 1046],
       talk: [590],
+      wave: [523, 659],
+      nod: [440, 554],
+      surprise: [659, 988],
     }[type] || [520];
 
     notes.forEach((frequency, index) => {
@@ -319,17 +323,17 @@
 
   function startIdle() {
     idleTimeline?.kill();
+    rig?.setMotion(state.motion);
     if (!window.gsap || reducedMotion || !state.motion || dragging || actionLocked) return;
     idleTimeline = gsap.timeline({ repeat: -1, yoyo: true, defaults: { ease: "sine.inOut" } });
     idleTimeline
-      .to(visual, { y: -6, scaleY: 1.008, scaleX: 0.996, duration: 1.8 })
-      .to(visual, { rotation: 0.7, x: 2, duration: 1.5 }, 0)
       .to(shadow, { scaleX: 0.94, autoAlpha: 0.78, duration: 1.8 }, 0);
   }
 
   function stopActionTimeline() {
     actionTimeline?.kill();
     actionTimeline = null;
+    rig?.stop();
     if (window.gsap) {
       gsap.set(visual, { clearProps: "transform" });
       gsap.set(shadow, { clearProps: "transform,opacity" });
@@ -355,6 +359,9 @@
       dance: { delta: { hunger: -3, mood: 10, energy: -7, xp: 11 }, line: "dance", particles: ["♪", "✦", "舞"] },
       sleep: { delta: { hunger: -2, mood: 2, energy: 18, xp: 6 }, line: "sleep", particles: ["Z", "·", "Z"] },
       talk: { delta: { mood: 2, xp: 4 }, line: "idle", particles: ["…", "♡", "♪"] },
+      wave: { delta: { mood: 3, xp: 3 }, line: "idle", particles: ["嗨", "♡", "✦"] },
+      nod: { delta: { mood: 2, xp: 3 }, line: "idle", particles: ["嗯", "♪", "·"] },
+      surprise: { delta: { mood: 4, energy: -2, xp: 5 }, line: "idle", particles: ["！", "✦", "♡"] },
     }[type];
 
     if (!config) return;
@@ -381,41 +388,21 @@
       actionButtons.forEach((button) => { button.disabled = false; });
       startIdle();
     };
-    actionTimeline = gsap.timeline({ defaults: { ease: "power2.out" }, onComplete: done });
-
-    if (type === "pet" || type === "talk") {
-      actionTimeline
-        .to(visual, { scaleY: 0.965, scaleX: 1.025, y: 8, duration: 0.18 })
-        .to(visual, { scaleY: 1.02, scaleX: 0.99, y: -4, duration: 0.24, ease: "back.out(2)" })
-        .to(visual, { scale: 1, y: 0, duration: 0.24 });
-    } else if (type === "feed") {
-      actionTimeline
-        .to(visual, { rotation: -3, scale: 1.025, duration: 0.2 })
-        .to(visual, { rotation: 3, scaleY: 0.98, duration: 0.18 })
-        .to(visual, { rotation: 0, scale: 1, duration: 0.28, ease: "back.out(1.8)" });
-    } else if (type === "play") {
-      actionTimeline
-        .to(visual, { y: 18, scaleY: 0.94, scaleX: 1.05, duration: 0.18, ease: "power2.in" })
-        .to(visual, { y: -78, scaleY: 1.04, scaleX: 0.97, rotation: -5, duration: 0.34, ease: "power3.out" })
-        .to(visual, { y: 0, rotation: 4, duration: 0.38, ease: "bounce.out" })
-        .to(visual, { rotation: 0, scale: 1, duration: 0.2 }, "-=0.1");
-      actionTimeline
+    actionTimeline = rig?.play(type, done);
+    if (type === "play") {
+      gsap.timeline()
         .to(shadow, { scaleX: 0.58, autoAlpha: 0.42, duration: 0.3 }, 0.18)
-        .to(shadow, { scaleX: 1, autoAlpha: 1, duration: 0.35 }, 0.48);
-    } else if (type === "dance") {
-      actionTimeline
-        .to(visual, { rotation: -7, x: -18, y: -10, duration: 0.22 })
-        .to(visual, { rotation: 7, x: 18, y: 0, duration: 0.26 })
-        .to(visual, { rotation: -6, x: -14, y: -12, duration: 0.24 })
-        .to(visual, { rotation: 6, x: 14, y: 0, duration: 0.24 })
-        .to(visual, { rotation: 0, x: 0, y: 0, duration: 0.3, ease: "back.out(1.7)" });
-    } else if (type === "sleep") {
-      actionTimeline
-        .to(visual, { rotation: 3, y: 14, scaleY: 0.97, duration: 0.45, ease: "sine.inOut" })
+        .to(shadow, { scaleX: 1, autoAlpha: 1, duration: 0.35 });
+    }
+    if (type === "sleep") {
+      gsap.timeline()
         .to(".sleep-mark", { autoAlpha: 1, y: -22, duration: 0.6, ease: "sine.out" }, 0.25)
-        .to(".sleep-mark", { autoAlpha: 0, y: -50, duration: 0.55 }, ">")
-        .to(visual, { rotation: -2, y: 8, duration: 0.45 })
-        .to(visual, { rotation: 0, y: 0, scaleY: 1, duration: 0.35 });
+        .to(".sleep-mark", { autoAlpha: 0, y: -50, duration: 0.55 });
+    }
+    if (!actionTimeline) {
+      actionTimeline = gsap.timeline({ onComplete: done })
+        .to(visual, { y: -10, scale: 1.025, duration: 0.24, ease: "back.out(1.8)" })
+        .to(visual, { y: 0, scale: 1, duration: 0.3 });
     }
   }
 
@@ -442,6 +429,7 @@
     positionStart = { ...state.position };
     character.setPointerCapture(event.pointerId);
     idleTimeline?.pause();
+    rig?.setDragging(true);
     if (window.gsap && state.motion && !reducedMotion) {
       gsap.to(visual, { scale: 1.035, rotation: -1, duration: 0.18 });
       gsap.to(shadow, { scaleX: 0.86, autoAlpha: 0.72, duration: 0.18 });
@@ -459,6 +447,7 @@
   function finishDrag(event) {
     if (!dragging) return;
     dragging = false;
+    rig?.setDragging(false);
     if (character.hasPointerCapture(event.pointerId)) character.releasePointerCapture(event.pointerId);
     saveState();
     if (window.gsap && state.motion && !reducedMotion) {
@@ -474,6 +463,7 @@
   character.addEventListener("pointercancel", finishDrag);
   character.addEventListener("click", (event) => event.preventDefault());
   actionButtons.forEach((button) => button.addEventListener("click", () => runAction(button.dataset.action)));
+  room.addEventListener("pointermove", (event) => rig?.trackPointer(event.clientX, event.clientY), { passive: true });
 
   soundToggle.addEventListener("click", () => {
     state.sound = !state.sound;
@@ -483,6 +473,7 @@
 
   motionToggle.addEventListener("click", () => {
     state.motion = !state.motion;
+    rig?.setMotion(state.motion);
     updateUI();
     if (state.motion) startIdle();
     else {
@@ -537,7 +528,15 @@
     }
   });
 
-  function init() {
+  async function init() {
+    if (window.HutaoRig) {
+      rig = await window.HutaoRig.create(
+        document.querySelector("#petCanvas"),
+        document.querySelector("#petVisual"),
+        { reducedMotion },
+      );
+      rig.setMotion(state.motion);
+    }
     updateClock();
     window.setInterval(updateClock, 30000);
     checkAchievements();

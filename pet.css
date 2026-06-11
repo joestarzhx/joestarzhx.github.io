@@ -497,6 +497,17 @@
 }
 
 .pet-visual {
+  --blink: 0;
+  --blink-offset: -112%;
+  --gaze-x: 0px;
+  --gaze-y: 0px;
+  --mouth: 0;
+  --mouth-height: 0.7%;
+  --mouth-alpha: 0;
+  --mouth-y: 0px;
+  --mouth-scale: 1;
+  --cheeks: 0;
+  --cheek-alpha: 0;
   position: absolute;
   inset: 0;
   display: block;
@@ -504,12 +515,120 @@
   will-change: transform;
 }
 
-.pet-visual img {
+.pet-rig {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: visible;
+}
+
+.pet-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.pet-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 12px rgba(75, 33, 33, 0.19));
+  pointer-events: none;
+}
+
+.pet-rig-fallback {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 16px 12px rgba(75, 33, 33, 0.19));
   pointer-events: none;
+}
+
+.pet-rig.rig-ready .pet-rig-fallback {
+  visibility: hidden;
+}
+
+.face-control {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  pointer-events: none;
+}
+
+.eye-control {
+  top: 34.3%;
+  width: 12.7%;
+  height: 9.8%;
+  overflow: hidden;
+  border-radius: 44% 44% 52% 52%;
+}
+
+.eye-left {
+  left: 26.7%;
+}
+
+.eye-right {
+  right: 26.5%;
+}
+
+.eye-control::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: -4% -5% 0;
+  border-bottom: 4px solid #6a1720;
+  border-radius: 48% 48% 52% 52%;
+  background: linear-gradient(#f7d7c5 12%, #f6cbb9 100%);
+  transform: translateY(var(--blink-offset));
+  will-change: transform;
+}
+
+.eye-control i {
+  position: absolute;
+  z-index: 3;
+  top: 34%;
+  left: 46%;
+  width: 12%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 249, 224, 0.92);
+  box-shadow: 0 0 5px rgba(255, 221, 118, 0.8);
+  transform: translate(var(--gaze-x), var(--gaze-y));
+  will-change: transform;
+}
+
+.mouth-control {
+  top: 49.2%;
+  left: 47.4%;
+  width: 6.1%;
+  height: var(--mouth-height);
+  border: 2px solid #721e26;
+  border-top: 0;
+  border-radius: 0 0 50% 50%;
+  background: rgba(126, 36, 45, var(--mouth-alpha));
+  transform: translateY(var(--mouth-y)) scaleX(var(--mouth-scale));
+  transform-origin: center top;
+}
+
+.cheek-control {
+  top: 43.2%;
+  width: 10%;
+  height: 3.5%;
+  border-radius: 50%;
+  background: #ef8390;
+  filter: blur(5px);
+  opacity: var(--cheek-alpha);
+}
+
+.cheek-left {
+  left: 20.5%;
+}
+
+.cheek-right {
+  right: 20.5%;
 }
 
 .pet-aura {
@@ -607,7 +726,7 @@
   bottom: 24px;
   left: 26px;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(9, 1fr);
   gap: 8px;
   padding: 10px;
   border: 1px solid rgba(111, 50, 43, 0.16);
@@ -624,11 +743,11 @@
 
 .pet-action-dock button {
   display: grid;
-  grid-template-columns: 38px 1fr;
+  grid-template-columns: 32px 1fr;
   grid-template-rows: auto auto;
   align-items: center;
   min-height: 62px;
-  padding: 8px 12px;
+  padding: 8px;
   border: 1px solid transparent;
   border-radius: 12px 3px 12px 3px;
   color: inherit;
@@ -654,8 +773,8 @@
 .pet-action-dock button > span {
   grid-row: 1 / 3;
   display: grid;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   place-items: center;
   border-radius: 50%;
   color: #fff8ea;
@@ -1035,7 +1154,7 @@
   }
 
   .pet-room {
-    min-height: 1010px;
+    min-height: 1120px;
     border-radius: 18px 3px 18px 3px;
   }
 
@@ -1046,9 +1165,9 @@
   }
 
   .pet-room-tools {
-    top: 345px;
+    top: 320px;
     left: 15px;
-    grid-template-columns: repeat(2, 48px);
+    grid-template-columns: repeat(4, 48px);
   }
 
   .room-window {
@@ -1063,7 +1182,7 @@
   }
 
   .pet-dialogue {
-    top: 495px;
+    top: 390px;
     left: 14px;
     width: calc(100% - 28px);
     min-height: 80px;
@@ -1075,7 +1194,7 @@
 
   .pet-stage {
     right: calc(50% - 135px);
-    bottom: 248px;
+    bottom: 260px;
     width: 270px;
     height: 410px;
   }
