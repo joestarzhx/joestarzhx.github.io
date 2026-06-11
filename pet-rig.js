@@ -76,7 +76,8 @@
         mouth: this.host.querySelector(".mouth-part"),
         hat: this.host.querySelector(".hat-part"),
       };
-      this.host.closest(".pet-rig")?.classList.add("rig-ready", "layered-rig");
+      this.rigRoot = this.host.closest(".pet-rig");
+      this.rigRoot?.classList.add("rig-ready", "layered-rig");
       this.startIdle();
       this.scheduleBlink();
     }
@@ -193,6 +194,7 @@
       this.actionTimeline = null;
       this.idleTimeline?.kill();
       this.idleTimeline = null;
+      this.rigRoot?.classList.remove("rig-active");
       this.resetParts(0);
     }
 
@@ -205,10 +207,12 @@
       }
 
       const p = this.parts;
+      this.rigRoot?.classList.add("rig-active");
       const timeline = gsap.timeline({
         defaults: { ease: "power2.out" },
         onComplete: () => {
           this.actionTimeline = null;
+          this.rigRoot?.classList.remove("rig-active");
           this.startIdle();
           onComplete?.();
         },

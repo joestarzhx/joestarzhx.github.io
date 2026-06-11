@@ -536,10 +536,12 @@
   object-fit: contain;
   filter: drop-shadow(0 16px 12px rgba(75, 33, 33, 0.19));
   pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.12s ease;
 }
 
 .pet-rig.rig-ready .pet-rig-fallback {
-  visibility: hidden;
+  visibility: visible;
 }
 
 .puppet,
@@ -551,9 +553,24 @@
 }
 
 .puppet {
-  inset: 0;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1276 / 1892;
+  translate: 0 -50%;
   filter: drop-shadow(0 16px 12px rgba(75, 33, 33, 0.19));
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.pet-rig.rig-active .pet-rig-fallback {
+  opacity: 0;
+}
+
+.pet-rig.rig-active .puppet {
+  opacity: 1;
 }
 
 .puppet-part {
@@ -568,86 +585,83 @@
 
 .body-bone {
   z-index: 5;
-  top: 47.8%;
-  left: 25.2%;
-  width: 49.6%;
-  height: 33.4%;
+  top: 55.34%;
+  left: 25.24%;
+  width: 44.2%;
+  height: 27.96%;
   transform-origin: 50% 12%;
 }
 
 .head-bone {
   z-index: 10;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60.5%;
-  transform-origin: 50% 84%;
+  inset: 0;
+  transform-origin: 50% 55%;
 }
 
 .head-bone .face-part {
   z-index: 1;
-  top: 33%;
-  left: 20%;
-  width: 60%;
-  height: 59%;
+  top: 26.06%;
+  left: 19.44%;
+  width: 59.64%;
+  height: 30.29%;
 }
 
 .head-bone .eye-part {
   z-index: 3;
-  top: 51.5%;
-  width: 15.5%;
-  height: 22%;
+  top: 32.35%;
+  width: 15.99%;
+  height: 13.16%;
   transform-origin: 50% 58%;
 }
 
 .head-bone .eye-part-left {
-  left: 28.2%;
+  left: 22.26%;
 }
 
 .head-bone .eye-part-right {
-  right: 28.2%;
+  left: 54.7%;
 }
 
 .head-bone .mouth-part {
   z-index: 4;
-  top: 76%;
-  left: 46.1%;
-  width: 8.2%;
-  height: 2.8%;
+  top: 48.89%;
+  left: 41.69%;
+  width: 7.92%;
+  height: 1.48%;
   transform-origin: 50% 50%;
 }
 
 .head-bone .hair-part {
   z-index: 5;
-  top: 24.5%;
-  left: 10.5%;
-  width: 79%;
-  height: 66%;
+  top: 19.24%;
+  left: 19.67%;
+  width: 70.3%;
+  height: 36.1%;
 }
 
 .head-bone .hat-part {
   z-index: 7;
   top: 0;
-  left: 1.5%;
-  width: 97%;
-  height: 67%;
-  transform-origin: 50% 70%;
+  left: 0.08%;
+  width: 99.45%;
+  height: 64.32%;
+  transform-origin: 50% 58%;
 }
 
 .arm-bone {
-  z-index: 6;
-  top: 51.5%;
-  width: 18%;
-  height: 21%;
+  z-index: 4;
+  top: 56.03%;
+  width: 14.89%;
+  height: 15.86%;
 }
 
 .arm-left {
-  left: 26.8%;
+  left: 25.86%;
   transform-origin: 72% 14%;
 }
 
 .arm-right {
-  right: 26.8%;
+  right: 25.86%;
   transform-origin: 28% 14%;
 }
 
@@ -656,35 +670,36 @@
 }
 
 .forearm-bone {
-  top: 54%;
-  width: 100%;
-  height: 82%;
+  z-index: 2;
+  top: 75%;
+  width: 100.53%;
+  height: 71.67%;
 }
 
 .arm-left .forearm-bone {
-  left: -34%;
+  left: -33.68%;
   transform-origin: 73% 11%;
 }
 
 .arm-right .forearm-bone {
-  right: -34%;
+  right: -33.68%;
   transform-origin: 27% 11%;
 }
 
 .leg-bone {
   z-index: 3;
-  top: 69.5%;
-  width: 14.5%;
-  height: 13.5%;
+  top: 80.07%;
+  width: 10.34%;
+  height: 7.61%;
   transform-origin: 50% 10%;
 }
 
 .leg-left {
-  left: 35.5%;
+  left: 34.72%;
 }
 
 .leg-right {
-  right: 35.5%;
+  left: 50.7%;
 }
 
 .leg-bone .thigh-part {
@@ -692,11 +707,18 @@
 }
 
 .calf-bone {
-  top: 68%;
-  left: -20%;
-  width: 140%;
-  height: 134%;
+  top: 39.58%;
+  width: 185.61%;
+  height: 222.22%;
   transform-origin: 50% 8%;
+}
+
+.leg-left .calf-bone {
+  left: -57.58%;
+}
+
+.leg-right .calf-bone {
+  left: -9.85%;
 }
 
 .face-control {
