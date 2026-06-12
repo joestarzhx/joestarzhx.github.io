@@ -553,7 +553,8 @@
 }
 
 .puppet,
-.puppet-bone {
+.puppet-bone,
+.eye-rig {
   position: absolute;
   display: block;
   transform-origin: center;
@@ -562,109 +563,22 @@
 
 .puppet {
   top: 50%;
-  left: 0;
+  left: 50%;
   width: 100%;
-  height: auto;
-  aspect-ratio: 1276 / 1892;
-  translate: 0 -50%;
+  aspect-ratio: 1122 / 1402;
+  translate: -50% -50%;
   filter: drop-shadow(0 16px 12px rgba(75, 33, 33, 0.19));
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.12s ease;
+  transition: opacity 0.15s ease;
 }
 
-.pet-rig.rig-active .pet-rig-fallback {
+.pet-rig.layered-rig .pet-rig-fallback {
+  opacity: 0;
+}
+
+.pet-rig.layered-rig .puppet {
   opacity: 1;
-}
-
-.pet-rig.rig-active .puppet {
-  opacity: 0;
-}
-
-.facial-rig {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  aspect-ratio: 1276 / 1892;
-  translate: 0 -50%;
-  pointer-events: none;
-}
-
-.eye-control,
-.mouth-control {
-  position: absolute;
-  display: block;
-  pointer-events: none;
-}
-
-.eye-control {
-  top: 32.35%;
-  width: 15.99%;
-  height: 13.16%;
-  overflow: hidden;
-  border-radius: 48% 48% 44% 44%;
-}
-
-.eye-control-left {
-  left: 22.26%;
-}
-
-.eye-control-right {
-  left: 54.7%;
-}
-
-.gaze-pupil {
-  position: absolute;
-  z-index: 2;
-  top: 39%;
-  left: 42%;
-  width: 17%;
-  aspect-ratio: 0.78;
-  border-radius: 50%;
-  background: radial-gradient(circle at 38% 30%, rgba(255, 220, 150, 0.2), rgba(87, 22, 21, 0.62) 62%, rgba(55, 12, 18, 0.7));
-  mix-blend-mode: multiply;
-  opacity: 0.54;
-  will-change: transform;
-}
-
-.blink-lid {
-  position: absolute;
-  z-index: 3;
-  top: 4%;
-  left: -5%;
-  width: 110%;
-  height: 92%;
-  border-bottom: 2px solid #6f2930;
-  border-radius: 48% 48% 52% 52%;
-  background: linear-gradient(155deg, #ffe0c8 10%, #ffd1bb 62%, #f6b7aa);
-  box-shadow: inset 0 -7px 10px rgba(213, 111, 99, 0.12);
-  transform: scaleY(0);
-  transform-origin: 50% 0;
-  will-change: transform;
-}
-
-.mouth-control {
-  top: 48.55%;
-  left: 41.15%;
-  width: 9%;
-  height: 2.7%;
-}
-
-.mouth-open {
-  position: absolute;
-  inset: 0;
-  border: 2px solid #6f2930;
-  border-radius: 50%;
-  background:
-    radial-gradient(ellipse at 50% 18%, #fff2e5 0 18%, transparent 20%),
-    radial-gradient(ellipse at 50% 76%, #e5777b 0 24%, transparent 26%),
-    #671f2a;
-  box-shadow: 0 0 0 3px rgba(255, 209, 189, 0.82);
-  opacity: 0;
-  transform: scale(0.72, 0.12);
-  transform-origin: 50% 50%;
-  will-change: transform, opacity;
 }
 
 .puppet-part {
@@ -678,166 +592,301 @@
 }
 
 .body-bone {
-  z-index: 5;
-  top: 55.34%;
-  left: 25.24%;
-  width: 44.2%;
-  height: 27.96%;
-  transform-origin: 50% 12%;
+  z-index: 4;
+  top: 30.1%;
+  left: 35.2%;
+  width: 29.6%;
+  height: 32.1%;
+  transform-origin: 50% 14%;
+}
+
+.body-bone .costume-front {
+  inset: 0;
 }
 
 .head-bone {
-  z-index: 10;
+  z-index: 7;
   inset: 0;
-  transform-origin: 50% 55%;
+  transform-origin: 50% 32%;
 }
 
-.head-bone .face-part {
+.head-bone .back-hair {
+  z-index: 0;
+  top: 15.7%;
+  left: 35.8%;
+  width: 28.5%;
+  height: 21.1%;
+}
+
+.head-bone .ear {
   z-index: 1;
-  top: 26.06%;
-  left: 19.44%;
-  width: 59.64%;
-  height: 30.29%;
+  top: 24.2%;
+  width: 6.1%;
+  height: 5.1%;
 }
 
-.head-bone .eye-part {
+.head-bone .ear-left {
+  left: 34.5%;
+}
+
+.head-bone .ear-right {
+  right: 34.5%;
+}
+
+.head-bone .head-base {
+  z-index: 2;
+  top: 15.8%;
+  left: 35%;
+  width: 30%;
+  height: 21.7%;
+}
+
+.eye-rig {
+  z-index: 4;
+  top: 22.55%;
+  width: 10.1%;
+  height: 8.7%;
+}
+
+.eye-L {
+  left: 39.35%;
+}
+
+.eye-R {
+  left: 50.55%;
+}
+
+.eye-rig .eye-white {
+  inset: 2% 0 0;
+}
+
+.eye-rig .eye-iris {
+  z-index: 1;
+  top: 5%;
+  left: 14%;
+  width: 72%;
+  height: 91%;
+  will-change: transform;
+}
+
+.eye-rig .eye-highlight {
+  z-index: 2;
+  top: 16%;
+  left: 17%;
+  width: 70%;
+  height: 43%;
+}
+
+.eye-rig .eye-upper-lash {
+  z-index: 4;
+  top: -4%;
+  left: -13%;
+  width: 126%;
+  height: 59%;
+}
+
+.eye-rig .eye-lower-lash {
   z-index: 3;
-  top: 32.35%;
-  width: 15.99%;
-  height: 13.16%;
-  transform-origin: 50% 58%;
+  top: 67%;
+  left: 3%;
+  width: 94%;
+  height: 27%;
 }
 
-.head-bone .eye-part-left {
-  left: 22.26%;
+.eye-rig .eye-state {
+  z-index: 6;
+  inset: -2% -3%;
+  width: 106%;
+  height: 104%;
+  opacity: 0;
 }
 
-.head-bone .eye-part-right {
-  left: 54.7%;
+.eye-rig .eye-state-closed {
+  top: 27%;
+  left: -7%;
+  width: 114%;
+  height: 52%;
+}
+
+.eye-rig .eye-state-smile {
+  top: 25%;
+  left: 7%;
+  width: 86%;
+  height: 48%;
+}
+
+.head-bone .eyebrow {
+  z-index: 5;
+  top: 20.45%;
+  width: 9.8%;
+  height: 2.7%;
+}
+
+.head-bone .eyebrow-left {
+  left: 39.35%;
+}
+
+.head-bone .eyebrow-right {
+  right: 39.35%;
 }
 
 .head-bone .mouth-part {
-  z-index: 4;
-  top: 48.89%;
-  left: 41.69%;
-  width: 7.92%;
-  height: 1.48%;
+  z-index: 5;
+  top: 32.4%;
+  left: 46.55%;
+  width: 7%;
+  height: 3.1%;
   transform-origin: 50% 50%;
 }
 
-.head-bone .hair-part {
-  z-index: 5;
-  top: 19.24%;
-  left: 19.67%;
-  width: 70.3%;
-  height: 36.1%;
+.head-bone .side-hair {
+  z-index: 6;
+  top: 18.2%;
+  width: 10.5%;
+  height: 21.8%;
+}
+
+.head-bone .side-hair-left {
+  left: 34.3%;
+}
+
+.head-bone .side-hair-right {
+  right: 33.7%;
+}
+
+.head-bone .bang {
+  z-index: 7;
+  top: 14.6%;
+  left: 34.45%;
+  width: 31.1%;
+  height: 22.8%;
+  transform-origin: 50% 10%;
+}
+
+.head-bone .ahoge {
+  z-index: 8;
+  top: 11.2%;
+  left: 47.2%;
+  width: 8.3%;
+  height: 7.5%;
+  transform-origin: 24% 88%;
 }
 
 .head-bone .hat-part {
-  z-index: 7;
-  top: 0;
-  left: 0.08%;
-  width: 99.45%;
-  height: 64.32%;
+  z-index: 9;
+  top: 0.7%;
+  left: 31.6%;
+  width: 36.8%;
+  height: 27.4%;
   transform-origin: 50% 58%;
 }
 
 .arm-bone {
-  z-index: 4;
-  top: 56.03%;
-  width: 14.89%;
-  height: 15.86%;
+  z-index: 3;
+  top: 36.2%;
+  width: 11.6%;
+  height: 14.6%;
 }
 
 .arm-left {
-  left: 25.86%;
-  transform-origin: 72% 14%;
+  left: 33.5%;
+  transform-origin: 72% 13%;
 }
 
 .arm-right {
-  right: 25.86%;
-  transform-origin: 28% 14%;
+  right: 33.5%;
+  transform-origin: 28% 13%;
 }
 
-.arm-bone .upper-arm-part {
+.arm-bone .arm-upper-part {
   inset: 0;
 }
 
 .forearm-bone {
   z-index: 2;
-  top: 75%;
-  width: 100.53%;
-  height: 71.67%;
+  top: 70%;
+  width: 97.7%;
+  height: 107.8%;
 }
 
 .arm-left .forearm-bone {
-  left: -33.68%;
-  transform-origin: 73% 11%;
+  left: -24%;
+  transform-origin: 72% 8%;
 }
 
 .arm-right .forearm-bone {
-  right: -33.68%;
-  transform-origin: 27% 11%;
+  right: -24%;
+  transform-origin: 28% 8%;
+}
+
+.hand-bone {
+  z-index: 3;
+  top: 76%;
+  width: 115%;
+  height: 69.7%;
+}
+
+.arm-left .hand-bone {
+  left: -35%;
+  transform-origin: 68% 11%;
+}
+
+.arm-right .hand-bone {
+  right: -35%;
+  transform-origin: 32% 11%;
 }
 
 .leg-bone {
-  z-index: 3;
-  top: 80.07%;
-  width: 10.34%;
-  height: 7.61%;
-  transform-origin: 50% 10%;
+  z-index: 2;
+  top: 57%;
+  width: 10.2%;
+  height: 15%;
+  transform-origin: 50% 9%;
 }
 
 .leg-left {
-  left: 34.72%;
+  left: 40.2%;
 }
 
 .leg-right {
-  left: 50.7%;
+  left: 49.6%;
 }
 
-.leg-bone .thigh-part {
+.leg-bone .leg-upper-part {
   inset: 0;
 }
 
-.calf-bone {
-  top: 39.58%;
-  width: 185.61%;
-  height: 222.22%;
+.lower-leg-bone {
+  z-index: 1;
+  top: 69%;
+  left: 27%;
+  width: 46%;
+  height: 81.5%;
+  transform-origin: 50% 7%;
+}
+
+.foot-bone {
+  z-index: 2;
+  top: 77%;
+  width: 148%;
+  height: 117%;
   transform-origin: 50% 8%;
 }
 
-.leg-left .calf-bone {
-  left: -57.58%;
+.leg-left .foot-bone {
+  left: -20%;
 }
 
-.leg-right .calf-bone {
-  left: -9.85%;
+.leg-right .foot-bone {
+  right: -20%;
 }
 
-.face-control {
-  position: absolute;
-  z-index: 2;
-  display: block;
-  pointer-events: none;
-}
-
-.cheek-control {
-  top: 43.2%;
-  width: 10%;
-  height: 3.5%;
-  border-radius: 50%;
-  background: #ef8390;
-  filter: blur(5px);
-  opacity: var(--cheek-alpha);
-}
-
-.cheek-left {
-  left: 20.5%;
-}
-
-.cheek-right {
-  right: 20.5%;
+.pet-rig:not([data-eye-state="open"]) .eye-white,
+.pet-rig:not([data-eye-state="open"]) .eye-iris,
+.pet-rig:not([data-eye-state="open"]) .eye-highlight,
+.pet-rig:not([data-eye-state="open"]) .eye-upper-lash,
+.pet-rig:not([data-eye-state="open"]) .eye-lower-lash {
+  opacity: 0;
 }
 
 .pet-aura {

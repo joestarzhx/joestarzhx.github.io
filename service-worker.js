@@ -1,4 +1,4 @@
-const CACHE_NAME = "hutao-blog-v19";
+const CACHE_NAME = "hutao-blog-v20";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -29,21 +29,7 @@ const APP_SHELL = [
   "./assets/kurumi-mountains.png",
   "./assets/kurumi-vertical.png",
   "./assets/hutao.png",
-  "./assets/hutao-rig/body.png",
-  "./assets/hutao-rig/calf-left.png",
-  "./assets/hutao-rig/calf-right.png",
-  "./assets/hutao-rig/eye-left.png",
-  "./assets/hutao-rig/eye-right.png",
-  "./assets/hutao-rig/face.png",
-  "./assets/hutao-rig/forearm-left.png",
-  "./assets/hutao-rig/forearm-right.png",
-  "./assets/hutao-rig/hair.png",
-  "./assets/hutao-rig/hat.png",
-  "./assets/hutao-rig/mouth.png",
-  "./assets/hutao-rig/thigh-left.png",
-  "./assets/hutao-rig/thigh-right.png",
-  "./assets/hutao-rig/upper-arm-left.png",
-  "./assets/hutao-rig/upper-arm-right.png"
+  "./assets/live2d/reference_sheets/character_full_reference.png"
 ];
 
 self.addEventListener("install", (event) => {
