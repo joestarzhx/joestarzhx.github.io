@@ -11,11 +11,38 @@
     <title>胡桃小屋 | 虎桃不会振刀</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="image" href="./assets/hutao-house-intro.webp" type="image/webp" fetchpriority="high" />
     <link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css?v=13" />
-    <link rel="stylesheet" href="./pet.css?v=8" />
+    <link rel="stylesheet" href="./pet.css?v=20260613-3d-intro" />
   </head>
-  <body class="pet-page">
+  <body class="pet-page pet-entry-active">
+    <div class="pet-entry" id="petEntry" aria-label="正在进入胡桃小屋" aria-live="polite">
+      <div class="ink3d-world" aria-hidden="true">
+        <div class="ink3d-camera">
+          <div class="ink3d-backdrop"></div>
+          <div class="ink3d-cliff ink3d-cliff-left"></div>
+          <div class="ink3d-cliff ink3d-cliff-right"></div>
+          <div class="ink3d-water"></div>
+          <div class="ink3d-cabin"></div>
+          <div class="ink3d-boat"></div>
+          <span class="ink3d-mist mist-far"></span>
+          <span class="ink3d-mist mist-near"></span>
+        </div>
+      </div>
+      <div class="pet-entry-ink" aria-hidden="true"></div>
+      <div class="pet-entry-title">
+        <span>循水入山 · 寻灯访客</span>
+        <h1>胡桃小屋</h1>
+        <p>轻舟过千山，前方便是山中木屋</p>
+      </div>
+      <div class="pet-entry-loader">
+        <span id="petEntryStatus">水墨山河正在展开</span>
+        <div><i id="petEntryBar"></i></div>
+        <b id="petEntryNumber">0</b>
+      </div>
+      <button class="pet-entry-skip" id="petEntrySkip" type="button">跳过入境</button>
+    </div>
     <header class="site-header scrolled pet-header">
       <a class="brand" href="./index.html" aria-label="返回首页">
         <img class="brand-icon" src="./assets/icon.png" alt="" />
@@ -135,6 +162,6 @@
     <script src="./assets/vendor/pixi-live2d-display.min.js"></script>
     <script src="./theme.js?v=13"></script>
     <script src="./pet-rig.js?v=14"></script>
-    <script src="./pet.js?v=8"></script>
+    <script src="./pet.js?v=20260613-3d-intro"></script>
   </body>
 </html>

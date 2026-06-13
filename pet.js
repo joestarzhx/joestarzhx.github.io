@@ -7,6 +7,66 @@
   const $ = (selector) => document.querySelector(selector);
   const $$ = (selector) => [...document.querySelectorAll(selector)];
 
+  function setupEntryScene() {
+    const entry = $("#petEntry");
+    if (!entry) return () => {};
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const bar = $("#petEntryBar");
+    const number = $("#petEntryNumber");
+    const status = $("#petEntryStatus");
+    const skip = $("#petEntrySkip");
+    const startedAt = performance.now();
+    const minimumDuration = reducedMotion ? 700 : 7600;
+    let assetsReady = false;
+    let finished = false;
+    let progress = 0;
+
+    const leave = () => {
+      if (finished) return;
+      finished = true;
+      bar.style.width = "100%";
+      number.textContent = "100";
+      status.textContent = "已到胡桃小屋";
+      entry.classList.add("is-leaving");
+      document.body.classList.remove("pet-entry-active");
+      window.setTimeout(() => entry.remove(), 1200);
+    };
+
+    const tick = () => {
+      if (finished) return;
+      const elapsed = performance.now() - startedAt;
+      const cinematicTarget = Math.min(99.2, 6 + (elapsed / minimumDuration) * 93.2);
+      const target = assetsReady ? cinematicTarget : Math.min(90, cinematicTarget);
+      progress += Math.max(0.22, (target - progress) * 0.06);
+      progress = Math.min(target, progress);
+      const rounded = Math.floor(progress);
+      bar.style.width = `${progress}%`;
+      number.textContent = String(rounded);
+
+      if (rounded > 76) status.textContent = "木屋灯火已经可见";
+      else if (rounded > 48) status.textContent = "轻舟驶入云水深处";
+      else if (rounded > 20) status.textContent = "穿过远山与墨雾";
+
+      if (assetsReady && elapsed >= minimumDuration && progress > 98.4) {
+        leave();
+        return;
+      }
+      window.requestAnimationFrame(tick);
+    };
+
+    skip.addEventListener("click", leave);
+    window.setTimeout(() => {
+      assetsReady = true;
+    }, 12000);
+    window.requestAnimationFrame(tick);
+    return () => {
+      assetsReady = true;
+    };
+  }
+
+  const markEntryReady = setupEntryScene();
+
   const defaults = {
     hunger: 78,
     mood: 84,
@@ -222,6 +282,8 @@
       status.classList.add("is-error");
       status.querySelector("span").textContent = "Live2D 加载失败 · 已启用备用形象";
       speak("模型暂时没有醒来，请刷新页面再试一次。");
+    } finally {
+      markEntryReady();
     }
   }
 
