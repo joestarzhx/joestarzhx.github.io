@@ -12,6 +12,75 @@ const cursorRing = document.querySelector(".ink-cursor-ring");
 const cursorDot = document.querySelector(".ink-cursor-dot");
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+function setupHouseIntro() {
+  const intro = document.querySelector("#houseIntro");
+  if (!intro) return;
+
+  const forceIntro = new URLSearchParams(window.location.search).has("intro");
+  const seenIntro = sessionStorage.getItem("hutao-house-intro-seen") === "1";
+  const bar = document.querySelector("#houseIntroBar");
+  const number = document.querySelector("#houseIntroNumber");
+  const status = document.querySelector("#houseIntroStatus");
+  const skip = document.querySelector("#houseIntroSkip");
+  const startedAt = performance.now();
+  const minimumDuration = reducedMotion ? 600 : 5200;
+  let progress = 0;
+  let finished = false;
+  let pageLoaded = document.readyState === "complete";
+
+  const removeIntro = () => {
+    if (finished) return;
+    finished = true;
+    progress = 100;
+    bar.style.width = "100%";
+    number.textContent = "100";
+    status.textContent = "已到小屋";
+    sessionStorage.setItem("hutao-house-intro-seen", "1");
+    intro.classList.add("is-leaving");
+    document.body.classList.remove("intro-active");
+    window.setTimeout(() => intro.remove(), 1200);
+  };
+
+  if (seenIntro && !forceIntro) {
+    intro.remove();
+    document.body.classList.remove("intro-active");
+    return;
+  }
+
+  const updateProgress = () => {
+    if (finished) return;
+    const elapsed = performance.now() - startedAt;
+    const cinematicTarget = Math.min(99.2, 8 + (elapsed / minimumDuration) * 91.2);
+    const target = pageLoaded ? cinematicTarget : Math.min(92, cinematicTarget);
+    progress += Math.max(0.35, (target - progress) * 0.075);
+    progress = Math.min(target, progress);
+    const rounded = Math.floor(progress);
+    bar.style.width = `${progress}%`;
+    number.textContent = String(rounded);
+
+    if (rounded > 76) status.textContent = "小屋灯火已近";
+    else if (rounded > 42) status.textContent = "轻舟穿过云岚";
+    else if (rounded > 18) status.textContent = "墨山渐次展开";
+
+    if (pageLoaded && elapsed >= minimumDuration && progress > 98.5) {
+      removeIntro();
+      return;
+    }
+    window.requestAnimationFrame(updateProgress);
+  };
+
+  window.addEventListener("load", () => {
+    pageLoaded = true;
+  }, { once: true });
+  window.setTimeout(() => {
+    pageLoaded = true;
+  }, 10000);
+  skip.addEventListener("click", removeIntro);
+  window.requestAnimationFrame(updateProgress);
+}
+
+setupHouseIntro();
+
 let windActive = false;
 let windStrength = 0;
 let ownerSession = null;

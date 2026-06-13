@@ -1,4 +1,4 @@
-const CACHE_NAME = "hutao-blog-v28";
+const CACHE_NAME = "hutao-blog-v29";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -30,6 +30,7 @@ const APP_SHELL = [
   "./assets/models/Hutao/Hutao.1024/texture_00.png",
   "./assets/icon.png",
   "./assets/ink-hero.png",
+  "./assets/hutao-house-intro.webp",
   "./assets/ink-scroll.png",
   "./assets/kurumi-portrait-red-moon.png",
   "./assets/kurumi-tiger.png",
