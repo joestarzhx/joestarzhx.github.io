@@ -2,6 +2,7 @@
   "use strict";
 
   const STORAGE_KEY = "hutao-desktop-pet-v1";
+  const STATE_VERSION = 2;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const room = document.querySelector("#petRoom");
   const stage = document.querySelector("#petStage");
@@ -50,6 +51,7 @@
     lastGift: "",
     position: { x: 0, y: 0 },
     unlocked: [],
+    stateVersion: STATE_VERSION,
   };
 
   function loadState() {
@@ -61,6 +63,10 @@
   }
 
   const state = loadState();
+  if (Number(state.stateVersion || 0) < STATE_VERSION) {
+    state.motion = true;
+    state.stateVersion = STATE_VERSION;
+  }
   state.position = { ...defaultState.position, ...(state.position || {}) };
   state.unlocked = Array.isArray(state.unlocked) ? state.unlocked : [];
 

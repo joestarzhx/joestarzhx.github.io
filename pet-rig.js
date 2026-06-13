@@ -17,7 +17,10 @@
       this.blinkTimer = null;
       this.expressionTimer = null;
       this.gaze = { x: 0, y: 0 };
+      this.display = { x: 0, y: 0, rotation: 0, scale: 1 };
+      this.frameCount = 0;
       this.applyParameters = () => this.updateParameters();
+      this.applyDisplay = () => this.updateDisplay();
       this.values = this.defaults();
     }
 
@@ -78,6 +81,7 @@
         this.resizeObserver = new ResizeObserver(() => this.fitModel());
         this.resizeObserver.observe(this.host);
         this.model.internalModel.on("beforeModelUpdate", this.applyParameters);
+        this.app.ticker.add(this.applyDisplay);
         this.ready = true;
         this.host.closest(".pet-rig")?.classList.add("rig-ready", "live2d-ready");
         this.scheduleBlink();
@@ -97,8 +101,10 @@
         this.host.clientWidth / modelWidth,
         this.host.clientHeight / modelHeight,
       ) * 1.48;
-      this.model.scale.set(scale);
-      this.model.position.set(this.host.clientWidth / 2, this.host.clientHeight / 2);
+      this.baseScale = scale;
+      this.baseX = this.host.clientWidth / 2;
+      this.baseY = this.host.clientHeight / 2;
+      this.updateDisplay();
     }
 
     setParameter(id, value) {
@@ -107,6 +113,7 @@
 
     updateParameters() {
       if (!this.ready) return;
+      this.frameCount += 1;
       const value = this.values;
       const idle = this.motion && !this.dragging && !this.actionTimeline
         ? Math.sin(performance.now() / 900)
@@ -137,10 +144,31 @@
       this.setParameter("ParamLeg", value.leg);
       this.setParameter("ParamArmRA", value.armR);
       this.setParameter("ParamArmLB", value.armL);
+      this.host.dataset.live2dFrames = String(this.frameCount);
+      this.host.dataset.gazeX = this.gaze.x.toFixed(3);
+      this.host.dataset.gazeY = this.gaze.y.toFixed(3);
+      this.host.dataset.motion = String(this.motion);
+    }
+
+    updateDisplay() {
+      if (!this.model || !this.baseScale) return;
+      const idleTime = performance.now() / 1000;
+      const idle = this.motion && !this.dragging && !this.actionTimeline && !this.reducedMotion;
+      const bob = idle ? Math.sin(idleTime * 1.8) * 3.2 : 0;
+      const sway = idle ? Math.sin(idleTime * 1.05) * 0.75 : 0;
+      this.model.position.set(
+        this.baseX + this.display.x + this.gaze.x * 2.5,
+        this.baseY + this.display.y + bob,
+      );
+      this.model.rotation = (this.display.rotation + sway + this.gaze.x * 1.2) * Math.PI / 180;
+      this.model.scale.set(this.baseScale * this.display.scale);
+      this.host.dataset.displayY = (this.display.y + bob).toFixed(2);
+      this.host.dataset.displayRotation = (this.display.rotation + sway).toFixed(2);
     }
 
     setMotion(enabled) {
       this.motion = enabled;
+      this.host.dataset.motion = String(enabled);
       if (enabled) this.scheduleBlink();
       else this.stop();
     }
@@ -185,7 +213,7 @@
     }
 
     trackPointer(clientX, clientY) {
-      if (!this.motion || this.dragging || this.actionTimeline || !window.gsap) return;
+      if (!this.motion || this.dragging || this.actionTimeline) return;
       const rect = this.host.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height * 0.34;
@@ -193,6 +221,12 @@
       const rangeY = Math.max(window.innerHeight * 0.42, rect.height);
       const x = clamp((clientX - centerX) / rangeX);
       const y = clamp((clientY - centerY) / rangeY);
+      this.model?.focus(clientX - rect.left, clientY - rect.top);
+      if (!window.gsap) {
+        this.gaze.x = x;
+        this.gaze.y = y;
+        return;
+      }
       gsap.to(this.gaze, {
         x,
         y,
@@ -246,6 +280,19 @@
       } else {
         Object.assign(this.values, target);
       }
+      if (window.gsap && duration) {
+        gsap.to(this.display, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          scale: 1,
+          duration,
+          overwrite: true,
+          ease: "back.out(1.2)",
+        });
+      } else {
+        Object.assign(this.display, { x: 0, y: 0, rotation: 0, scale: 1 });
+      }
       this.setExpression("default");
     }
 
@@ -260,7 +307,7 @@
     }
 
     play(type, onComplete) {
-      if (!window.gsap || this.reducedMotion || !this.motion || !this.ready) {
+      if (!window.gsap || !this.motion || !this.ready) {
         onComplete?.();
         return null;
       }
@@ -279,37 +326,52 @@
       if (type === "pet") {
         this.setExpression("happy");
         timeline.to(value, { angleY: -10, bodyY: -5, duration: 0.18 })
-          .to(value, { angleY: 5, bodyY: 2, duration: 0.24 });
+          .to(this.display, { y: 7, scale: 1.025, duration: 0.18 }, 0)
+          .to(value, { angleY: 5, bodyY: 2, duration: 0.24 })
+          .to(this.display, { y: 0, scale: 1, duration: 0.24 }, "<");
       } else if (type === "feed") {
         this.setExpression("eat");
         timeline.to(value, { angleZ: -7, mouthOpen: 0.15, duration: 0.18 })
+          .to(this.display, { rotation: -2.5, duration: 0.18 }, 0)
           .to(value, { angleZ: 7, mouthOpen: 0.8, duration: 0.18, repeat: 2, yoyo: true })
+          .to(this.display, { rotation: 2.5, duration: 0.18, repeat: 2, yoyo: true }, "<")
           .add(() => this.setExpression("happy"));
       } else if (type === "play" || type === "surprise") {
         this.setExpression("surprised");
         timeline.to(value, { bodyY: -8, leg: 1, shoulder: 1, duration: 0.18 })
+          .to(this.display, { y: 12, scale: 0.96, duration: 0.16 }, 0)
           .to(value, { bodyY: 12, angleY: -10, duration: 0.2, ease: "back.out(2)" })
+          .to(this.display, { y: -42, scale: 1.04, duration: 0.24, ease: "power3.out" }, "<")
           .to(value, { bodyY: 0, angleY: 0, duration: 0.3, ease: "bounce.out" });
+        timeline.to(this.display, { y: 0, scale: 1, duration: 0.32, ease: "bounce.out" }, "<");
       } else if (type === "dance") {
         this.setExpression("star");
         timeline.to(value, { bodyX: -8, bodyZ: -8, angleZ: 8, armR: 1, duration: 0.24 })
+          .to(this.display, { x: -12, rotation: -5, duration: 0.24 }, 0)
           .to(value, { bodyX: 8, bodyZ: 8, angleZ: -8, armR: -1, armL: 1, duration: 0.28 })
+          .to(this.display, { x: 12, rotation: 5, duration: 0.28 }, "<")
           .to(value, { bodyX: -6, bodyZ: -6, angleZ: 6, armL: -1, duration: 0.24 });
+        timeline.to(this.display, { x: -8, rotation: -3, duration: 0.24 }, "<");
       } else if (type === "sleep") {
         this.setExpression("sleep");
         timeline.to(value, { angleZ: 12, bodyZ: 6, angleY: 8, duration: 0.42 })
+          .to(this.display, { y: 10, rotation: 5, scale: 0.985, duration: 0.42 }, 0)
           .to(value, { breath: 1, duration: 0.75, repeat: 1, yoyo: true, ease: "sine.inOut" });
       } else if (type === "wave") {
         this.setExpression("happy");
         timeline.to(value, { armR: 1, angleZ: -6, duration: 0.25 })
+          .to(this.display, { rotation: -3, duration: 0.25 }, 0)
           .to(value, { armR: -1, duration: 0.16, repeat: 4, yoyo: true });
       } else if (type === "nod") {
         this.setExpression("happy");
         timeline.to(value, { angleY: -18, duration: 0.17 })
+          .to(this.display, { y: 6, duration: 0.17 }, 0)
           .to(value, { angleY: 8, duration: 0.19 })
+          .to(this.display, { y: -2, duration: 0.19 }, "<")
           .to(value, { angleY: -12, duration: 0.16 });
       } else if (type === "talk") {
         timeline.to(value, { mouthOpen: 0.65, mouthForm: 0.45, angleZ: -4, duration: 0.16 })
+          .to(this.display, { rotation: -2, duration: 0.16 }, 0)
           .to(value, { mouthOpen: 0.1, angleZ: 4, duration: 0.14, repeat: 3, yoyo: true });
       }
 
