@@ -1,4 +1,4 @@
-const CACHE_NAME = "hutao-blog-v27";
+const CACHE_NAME = "hutao-blog-v28";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -41,7 +41,11 @@ const APP_SHELL = [
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.allSettled(APP_SHELL.map((asset) => cache.add(asset))),
+    ),
+  );
   self.skipWaiting();
 });
 

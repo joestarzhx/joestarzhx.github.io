@@ -1,382 +1,299 @@
 (() => {
   "use strict";
 
-  const MODEL_URL = "./assets/models/Hutao/Hutao.model3.json";
-  const clamp = (value, min = -1, max = 1) => Math.min(max, Math.max(min, value));
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const lerp = (from, to, amount) => from + (to - from) * amount;
+  const easeOut = (value) => 1 - Math.pow(1 - value, 3);
 
   class HutaoRig {
-    constructor(host, faceRoot, options = {}) {
+    constructor(host, options = {}) {
       this.host = host;
-      this.faceRoot = faceRoot;
-      this.reducedMotion = Boolean(options.reducedMotion);
-      this.motion = true;
-      this.dragging = false;
+      this.options = options;
+      this.canvasHost = host.querySelector("#petCanvas") || host;
+      this.modelUrl = options.modelUrl || "./assets/models/Hutao/Hutao.model3.json";
+      this.app = null;
+      this.model = null;
       this.ready = false;
-      this.actionTimeline = null;
-      this.blinkTimeline = null;
-      this.blinkTimer = null;
-      this.expressionTimer = null;
+      this.enabled = true;
+      this.time = 0;
+      this.frame = 0;
       this.gaze = { x: 0, y: 0 };
-      this.display = { x: 0, y: 0, rotation: 0, scale: 1 };
-      this.frameCount = 0;
-      this.applyParameters = () => this.updateParameters();
-      this.applyDisplay = () => this.updateDisplay();
-      this.values = this.defaults();
-    }
-
-    static async create(host, faceRoot, options) {
-      const rig = new HutaoRig(host, faceRoot, options);
-      await rig.init();
-      return rig;
-    }
-
-    defaults() {
-      return {
-        angleX: 0,
-        angleY: 0,
-        angleZ: 0,
-        bodyX: 0,
-        bodyY: 0,
-        bodyZ: 0,
-        eyeX: 0,
-        eyeY: 0,
-        eyeOpen: 1,
-        eyeSmile: 0,
-        browY: 0,
-        browAngle: 0,
-        mouthForm: 0,
-        mouthOpen: 0,
-        cheek: 0,
-        breath: 0,
-        shoulder: 0,
-        leg: 0,
-        armR: 0,
-        armL: 0,
-      };
+      this.gazeTarget = { x: 0, y: 0 };
+      this.action = null;
+      this.nextBlink = 2.2;
+      this.blinkTime = 0;
+      this.resizeObserver = null;
+      this.tick = this.tick.bind(this);
+      this.applyParameters = this.applyParameters.bind(this);
     }
 
     async init() {
-      if (!this.host || !window.PIXI?.live2d?.Live2DModel) return;
+      if (!window.PIXI || !window.PIXI.live2d?.Live2DModel) {
+        throw new Error("Live2D runtime is unavailable");
+      }
 
       const canvas = document.createElement("canvas");
       canvas.className = "live2d-canvas";
-      this.host.replaceChildren(canvas);
+      canvas.setAttribute("aria-hidden", "true");
+      this.canvasHost.replaceChildren(canvas);
 
-      try {
-        this.app = new PIXI.Application({
-          view: canvas,
-          resizeTo: this.host,
-          autoDensity: true,
-          antialias: true,
-          backgroundAlpha: 0,
-          resolution: Math.min(window.devicePixelRatio || 1, 2),
-        });
-        this.model = await PIXI.live2d.Live2DModel.from(MODEL_URL, {
-          autoInteract: false,
-        });
-        this.model.anchor.set(0.5, 0.5);
-        this.app.stage.addChild(this.model);
-        this.host.hutaoRig = this;
-        this.fitModel();
-        this.resizeObserver = new ResizeObserver(() => this.fitModel());
-        this.resizeObserver.observe(this.host);
-        this.model.internalModel.on("beforeModelUpdate", this.applyParameters);
-        this.app.ticker.add(this.applyDisplay);
-        this.ready = true;
-        this.host.closest(".pet-rig")?.classList.add("rig-ready", "live2d-ready");
-        this.scheduleBlink();
-      } catch (error) {
-        console.error("Live2D model failed to load:", error);
-        this.app?.destroy(true);
-        this.host.replaceChildren();
-      }
+      this.app = new PIXI.Application({
+        view: canvas,
+        resizeTo: this.canvasHost,
+        autoDensity: true,
+        antialias: true,
+        backgroundAlpha: 0,
+        resolution: Math.min(window.devicePixelRatio || 1, 2),
+      });
+
+      const Live2DModel = PIXI.live2d.Live2DModel;
+      this.model = await Live2DModel.from(this.modelUrl, {
+        autoInteract: false,
+        autoUpdate: true,
+      });
+      this.model.anchor.set(0.5, 0.52);
+      this.app.stage.addChild(this.model);
+      this.fit();
+
+      this.model.internalModel?.on("beforeModelUpdate", this.applyParameters);
+      this.app.ticker.add(this.tick);
+      this.resizeObserver = new ResizeObserver(() => this.fit());
+      this.resizeObserver.observe(this.canvasHost);
+
+      this.ready = true;
+      this.host.classList.add("is-live2d-ready");
+      this.host.dataset.live2d = "ready";
+      this.host.dispatchEvent(new CustomEvent("hutao:ready"));
+      return this;
     }
 
-    fitModel() {
-      if (!this.model || !this.host.clientWidth || !this.host.clientHeight) return;
+    fit() {
+      if (!this.model || !this.canvasHost.clientWidth || !this.canvasHost.clientHeight) return;
       this.model.scale.set(1);
-      const modelWidth = this.model.width;
-      const modelHeight = this.model.height;
       const scale = Math.min(
-        this.host.clientWidth / modelWidth,
-        this.host.clientHeight / modelHeight,
-      ) * 1.48;
-      this.baseScale = scale;
-      this.baseX = this.host.clientWidth / 2;
-      this.baseY = this.host.clientHeight / 2;
-      this.updateDisplay();
-    }
-
-    setParameter(id, value) {
-      this.model?.internalModel?.coreModel?.setParameterValueById(id, value);
-    }
-
-    updateParameters() {
-      if (!this.ready) return;
-      this.frameCount += 1;
-      const value = this.values;
-      const idle = this.motion && !this.dragging && !this.actionTimeline
-        ? Math.sin(performance.now() / 900)
-        : 0;
-      value.breath = this.motion ? (idle + 1) / 2 : 0;
-
-      this.setParameter("ParamAngleX", value.angleX + this.gaze.x * 25);
-      this.setParameter("ParamAngleY", value.angleY - this.gaze.y * 19);
-      this.setParameter("ParamAngleZ", value.angleZ - this.gaze.x * this.gaze.y * 7);
-      this.setParameter("ParamBodyAngleX", value.bodyX + this.gaze.x * 4);
-      this.setParameter("ParamBodyAngleY", value.bodyY - this.gaze.y * 2);
-      this.setParameter("ParamBodyAngleZ", value.bodyZ + idle * 1.4);
-      this.setParameter("ParamEyeBallX", value.eyeX + this.gaze.x);
-      this.setParameter("ParamEyeBallY", value.eyeY - this.gaze.y);
-      this.setParameter("ParamEyeLOpen", value.eyeOpen);
-      this.setParameter("ParamEyeROpen", value.eyeOpen);
-      this.setParameter("ParamEyeLSmile", value.eyeSmile);
-      this.setParameter("ParamEyeRSmile", value.eyeSmile);
-      this.setParameter("ParamBrowLY", value.browY);
-      this.setParameter("ParamBrowRY", value.browY);
-      this.setParameter("ParamBrowLAngle", value.browAngle);
-      this.setParameter("ParamBrowRAngle", -value.browAngle);
-      this.setParameter("ParamMouthForm", value.mouthForm);
-      this.setParameter("ParamMouthOpenY", value.mouthOpen);
-      this.setParameter("ParamCheek", value.cheek);
-      this.setParameter("ParamBreath", value.breath);
-      this.setParameter("ParamShoulder", value.shoulder);
-      this.setParameter("ParamLeg", value.leg);
-      this.setParameter("ParamArmRA", value.armR);
-      this.setParameter("ParamArmLB", value.armL);
-      this.host.dataset.live2dFrames = String(this.frameCount);
-      this.host.dataset.gazeX = this.gaze.x.toFixed(3);
-      this.host.dataset.gazeY = this.gaze.y.toFixed(3);
-      this.host.dataset.motion = String(this.motion);
-    }
-
-    updateDisplay() {
-      if (!this.model || !this.baseScale) return;
-      const idleTime = performance.now() / 1000;
-      const idle = this.motion && !this.dragging && !this.actionTimeline && !this.reducedMotion;
-      const bob = idle ? Math.sin(idleTime * 1.8) * 3.2 : 0;
-      const sway = idle ? Math.sin(idleTime * 1.05) * 0.75 : 0;
-      this.model.position.set(
-        this.baseX + this.display.x + this.gaze.x * 2.5,
-        this.baseY + this.display.y + bob,
+        this.canvasHost.clientWidth / this.model.width,
+        this.canvasHost.clientHeight / this.model.height,
       );
-      this.model.rotation = (this.display.rotation + sway + this.gaze.x * 1.2) * Math.PI / 180;
-      this.model.scale.set(this.baseScale * this.display.scale);
-      this.host.dataset.displayY = (this.display.y + bob).toFixed(2);
-      this.host.dataset.displayRotation = (this.display.rotation + sway).toFixed(2);
+      this.baseScale = scale * 1.44;
+      this.baseX = this.canvasHost.clientWidth * 0.5;
+      this.baseY = this.canvasHost.clientHeight * 0.57;
+      this.model.scale.set(this.baseScale);
+      this.model.position.set(this.baseX, this.baseY);
     }
 
-    setMotion(enabled) {
-      this.motion = enabled;
-      this.host.dataset.motion = String(enabled);
-      if (enabled) this.scheduleBlink();
-      else this.stop();
-    }
+    tick(deltaTime) {
+      if (!this.model) return;
+      const measuredDelta = this.app?.ticker?.deltaMS;
+      const fallbackDelta = typeof deltaTime === "number" ? deltaTime * (1000 / 60) : 1000 / 60;
+      const dt = Math.min((Number.isFinite(measuredDelta) ? measuredDelta : fallbackDelta) / 1000, 0.05);
+      this.time += dt;
+      this.frame += 1;
 
-    setDragging(dragging) {
-      this.dragging = dragging;
-      if (window.gsap) {
-        gsap.to(this.gaze, {
-          x: 0,
-          y: dragging ? -0.18 : 0,
-          duration: 0.25,
-          overwrite: true,
-        });
+      const follow = 1 - Math.exp(-dt * 10);
+      this.gaze.x = lerp(this.gaze.x, this.gazeTarget.x, follow);
+      this.gaze.y = lerp(this.gaze.y, this.gazeTarget.y, follow);
+
+      this.blinkTime += dt;
+      if (this.time >= this.nextBlink) {
+        this.blinkTime = 0;
+        this.nextBlink = this.time + 2.4 + Math.random() * 3.2;
+      }
+
+      const pose = this.getPose(dt);
+      const idleAmount = this.enabled ? 1 : 0;
+      const idleX = Math.sin(this.time * 0.72) * 3.2 * idleAmount;
+      const idleY = Math.sin(this.time * 1.55) * 5.4 * idleAmount;
+      const idleRotation = Math.sin(this.time * 0.55) * 0.9 * idleAmount;
+      const scale = this.baseScale * (1 + Math.sin(this.time * 1.55) * 0.004 * idleAmount + pose.scale);
+
+      this.model.position.set(this.baseX + idleX + pose.x, this.baseY + idleY + pose.y);
+      this.model.rotation = ((idleRotation + pose.rotation) * Math.PI) / 180;
+      this.model.scale.set(scale * (1 + pose.scaleX), scale * (1 + pose.scaleY));
+
+      if (this.frame % 6 === 0) {
+        this.host.dataset.live2dFrames = String(this.frame);
+        this.host.dataset.gazeX = this.gaze.x.toFixed(2);
+        this.host.dataset.gazeY = this.gaze.y.toFixed(2);
+        this.host.dataset.poseY = (idleY + pose.y).toFixed(2);
+        this.host.dataset.action = this.action?.name || "idle";
       }
     }
 
-    setExpression(name = "default", duration = 0) {
-      window.clearTimeout(this.expressionTimer);
-      const expression = {
-        happy: { eyeSmile: 0.75, mouthForm: 0.8, mouthOpen: 0.18, cheek: 0.45, browY: 0.15 },
-        smile: { eyeSmile: 1, mouthForm: 0.9, mouthOpen: 0.1, cheek: 0.35 },
-        surprised: { eyeOpen: 1, mouthForm: -0.15, mouthOpen: 0.85, browY: 0.65 },
-        star: { eyeOpen: 1, mouthForm: 0.8, mouthOpen: 0.45, cheek: 0.55 },
-        cry: { eyeSmile: 0.2, mouthForm: -0.8, mouthOpen: 0.18, browAngle: -0.7 },
-        angry: { mouthForm: -0.7, browY: -0.35, browAngle: 0.8 },
-        talk: { mouthForm: 0.35, mouthOpen: 0.55 },
-        eat: { mouthForm: 0.45, mouthOpen: 0.8, cheek: 0.3 },
-        sleep: { eyeOpen: 0, eyeSmile: 1, mouthForm: 0.25, mouthOpen: 0.05 },
-      }[name] || {};
-      Object.assign(this.values, {
-        eyeOpen: 1,
-        eyeSmile: 0,
-        browY: 0,
-        browAngle: 0,
-        mouthForm: 0,
-        mouthOpen: 0,
+    getPose(dt) {
+      const pose = {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        scale: 0,
+        scaleX: 0,
+        scaleY: 0,
+        mouth: 0,
+        smile: 0,
         cheek: 0,
-      }, expression);
-      if (duration > 0) {
-        this.expressionTimer = window.setTimeout(() => this.setExpression("default"), duration);
+        eye: 1,
+        armR: 0,
+        armL: 0,
+        bodyBoost: 0,
+      };
+      if (!this.action) return pose;
+
+      this.action.elapsed += dt;
+      const p = clamp(this.action.elapsed / this.action.duration, 0, 1);
+      const wave = Math.sin(p * Math.PI);
+      const pulse = Math.sin(p * Math.PI * 4);
+
+      switch (this.action.name) {
+        case "pet":
+          pose.y = Math.sin(p * Math.PI * 2) * 8;
+          pose.scaleY = -wave * 0.025;
+          pose.scaleX = wave * 0.018;
+          pose.smile = wave;
+          pose.cheek = wave * 0.8;
+          break;
+        case "feed":
+          pose.y = -wave * 5;
+          pose.mouth = Math.max(0, pulse) * 0.9;
+          pose.smile = wave * 0.55;
+          pose.cheek = wave * 0.45;
+          break;
+        case "play":
+          pose.y = -Math.sin(p * Math.PI) * 66;
+          pose.rotation = Math.sin(p * Math.PI * 2) * 5;
+          pose.scaleY = Math.sin(p * Math.PI) * 0.025;
+          pose.bodyBoost = wave;
+          break;
+        case "dance":
+          pose.x = Math.sin(p * Math.PI * 5) * 25;
+          pose.rotation = Math.sin(p * Math.PI * 5) * 7;
+          pose.armR = Math.sin(p * Math.PI * 5) * 22;
+          pose.armL = -pose.armR * 0.75;
+          pose.smile = 0.8;
+          pose.bodyBoost = 1;
+          break;
+        case "sleep":
+          pose.y = easeOut(p) * 13;
+          pose.rotation = easeOut(p) * 5;
+          pose.eye = Math.max(0.08, 1 - wave * 1.25);
+          pose.mouth = Math.max(0, Math.sin(p * Math.PI * 3)) * 0.18;
+          break;
+        case "wave":
+          pose.armR = Math.sin(p * Math.PI * 7) * 28;
+          pose.rotation = -wave * 2.5;
+          pose.smile = wave;
+          break;
       }
+
+      if (p >= 1) {
+        const done = this.action.done;
+        this.action = null;
+        this.host.dataset.action = "idle";
+        done?.();
+      }
+      return pose;
+    }
+
+    applyParameters() {
+      if (!this.model?.internalModel?.coreModel) return;
+      const core = this.model.internalModel.coreModel;
+      const pose = this.getCurrentParameterPose();
+      const idleAmount = this.enabled ? 1 : 0;
+      const set = (id, value, weight = 1) => {
+        try {
+          core.setParameterValueById(id, value, weight);
+        } catch (_) {
+          // Some exported models omit optional parameters.
+        }
+      };
+
+      const blink = this.getBlink();
+      const eyeOpen = clamp(blink * pose.eye, 0, 1);
+      set("ParamEyeBallX", this.gaze.x);
+      set("ParamEyeBallY", -this.gaze.y);
+      set("ParamAngleX", this.gaze.x * 22);
+      set("ParamAngleY", -this.gaze.y * 16);
+      set("ParamAngleZ", Math.sin(this.time * 0.55) * 2.1 * idleAmount + pose.rotation * 0.65);
+      set("ParamBodyAngleX", this.gaze.x * 5 + Math.sin(this.time * 0.7) * 1.5 * idleAmount);
+      set("ParamBodyAngleY", -this.gaze.y * 3);
+      set("ParamBodyAngleZ", Math.sin(this.time * 0.55) * 2.8 * idleAmount + pose.rotation);
+      set("ParamEyeLOpen", eyeOpen);
+      set("ParamEyeROpen", eyeOpen);
+      set("ParamEyeLSmile", pose.smile);
+      set("ParamEyeRSmile", pose.smile);
+      set("ParamMouthOpenY", pose.mouth);
+      set("ParamMouthForm", 0.15 + pose.smile * 0.85);
+      set("ParamCheek", pose.cheek);
+      set("ParamBreath", 0.5 + Math.sin(this.time * 1.55) * 0.5 * idleAmount);
+      set("ParamHairFront", Math.sin(this.time * 1.1) * 0.35 * idleAmount + pose.rotation * 0.03);
+      set("ParamHairSide", Math.sin(this.time * 0.95 + 1) * 0.45 * idleAmount);
+      set("ParamHairBack", Math.sin(this.time * 0.82 + 2) * 0.55 * idleAmount);
+      set("ParamShoulder", Math.sin(this.time * 1.55) * 0.25 * idleAmount + pose.bodyBoost * 0.4);
+      set("ParamLeg", Math.sin(this.time * 0.72) * 0.2 * idleAmount + pose.bodyBoost * 0.35);
+      set("ParamArmRA", pose.armR);
+      set("ParamArmLB", pose.armL);
+      set("ParamBustY", Math.sin(this.time * 1.55) * 0.35 * idleAmount + pose.bodyBoost * 0.2);
+    }
+
+    getCurrentParameterPose() {
+      if (!this.action) {
+        return { eye: 1, mouth: 0, smile: 0, cheek: 0, armR: 0, armL: 0, bodyBoost: 0, rotation: 0 };
+      }
+      const p = clamp(this.action.elapsed / this.action.duration, 0, 1);
+      const wave = Math.sin(p * Math.PI);
+      const pulse = Math.sin(p * Math.PI * 4);
+      const values = { eye: 1, mouth: 0, smile: 0, cheek: 0, armR: 0, armL: 0, bodyBoost: 0, rotation: 0 };
+      if (this.action.name === "pet") Object.assign(values, { smile: wave, cheek: wave * 0.8 });
+      if (this.action.name === "feed") Object.assign(values, { mouth: Math.max(0, pulse) * 0.9, smile: wave * 0.55, cheek: wave * 0.45 });
+      if (this.action.name === "play") Object.assign(values, { bodyBoost: wave, rotation: Math.sin(p * Math.PI * 2) * 5 });
+      if (this.action.name === "dance") Object.assign(values, { armR: Math.sin(p * Math.PI * 5) * 22, armL: -Math.sin(p * Math.PI * 5) * 17, smile: 0.8, bodyBoost: 1, rotation: Math.sin(p * Math.PI * 5) * 7 });
+      if (this.action.name === "sleep") Object.assign(values, { eye: Math.max(0.08, 1 - wave * 1.25), mouth: Math.max(0, Math.sin(p * Math.PI * 3)) * 0.18 });
+      if (this.action.name === "wave") Object.assign(values, { armR: Math.sin(p * Math.PI * 7) * 28, smile: wave, rotation: -wave * 2.5 });
+      return values;
+    }
+
+    getBlink() {
+      const elapsed = this.time - (this.nextBlink - (2.4 + 3.2));
+      if (this.blinkTime > 0.18) return 1;
+      const p = clamp(this.blinkTime / 0.18, 0, 1);
+      return p < 0.5 ? 1 - p * 2 : (p - 0.5) * 2;
     }
 
     trackPointer(clientX, clientY) {
-      if (!this.motion || this.dragging || this.actionTimeline) return;
-      const rect = this.host.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height * 0.34;
-      const rangeX = Math.max(window.innerWidth * 0.42, rect.width);
-      const rangeY = Math.max(window.innerHeight * 0.42, rect.height);
-      const x = clamp((clientX - centerX) / rangeX);
-      const y = clamp((clientY - centerY) / rangeY);
-      this.model?.focus(clientX - rect.left, clientY - rect.top);
-      if (!window.gsap) {
-        this.gaze.x = x;
-        this.gaze.y = y;
-        return;
-      }
-      gsap.to(this.gaze, {
-        x,
-        y,
-        duration: 0.28,
-        overwrite: "auto",
-        ease: "power3.out",
-      });
+      const rect = this.canvasHost.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      this.gazeTarget.x = clamp(((clientX - rect.left) / rect.width - 0.5) * 2, -1, 1);
+      this.gazeTarget.y = clamp(((clientY - rect.top) / rect.height - 0.44) * 2, -1, 1);
     }
 
     resetGaze() {
-      if (!window.gsap) {
-        this.gaze.x = 0;
-        this.gaze.y = 0;
-        return;
-      }
-      gsap.to(this.gaze, {
-        x: 0,
-        y: 0,
-        duration: 0.5,
-        overwrite: "auto",
-        ease: "power2.out",
-      });
+      this.gazeTarget.x = 0;
+      this.gazeTarget.y = 0;
     }
 
-    scheduleBlink() {
-      window.clearTimeout(this.blinkTimer);
-      if (!this.motion || this.reducedMotion) return;
-      this.blinkTimer = window.setTimeout(() => {
-        if (!this.actionTimeline && !this.dragging) this.blink();
-        this.scheduleBlink();
-      }, 2400 + Math.random() * 3200);
+    setMotion(enabled) {
+      this.enabled = enabled;
+      if (!enabled && this.model) {
+        this.gazeTarget = { x: 0, y: 0 };
+        this.model.position.set(this.baseX, this.baseY);
+        this.model.rotation = 0;
+      }
     }
 
-    blink() {
-      if (!window.gsap) return;
-      this.blinkTimeline?.kill();
-      this.blinkTimeline = gsap.timeline({
-        onComplete: () => {
-          this.blinkTimeline = null;
-        },
-      })
-        .to(this.values, { eyeOpen: 0, duration: 0.07, ease: "power2.in" })
-        .to(this.values, { eyeOpen: 1, duration: 0.12, ease: "power2.out" }, "+=0.04");
+    play(name, done) {
+      if (!this.ready) {
+        done?.();
+        return false;
+      }
+      const durations = { pet: 1.05, feed: 1.25, play: 1.15, dance: 2.1, sleep: 2.4, wave: 1.55 };
+      this.action = { name, elapsed: 0, duration: durations[name] || 1.2, done };
+      this.host.dataset.action = name;
+      return true;
     }
 
-    resetValues(duration = 0) {
-      const target = this.defaults();
-      delete target.breath;
-      if (window.gsap && duration) {
-        gsap.to(this.values, { ...target, duration, overwrite: true, ease: "back.out(1.2)" });
-      } else {
-        Object.assign(this.values, target);
-      }
-      if (window.gsap && duration) {
-        gsap.to(this.display, {
-          x: 0,
-          y: 0,
-          rotation: 0,
-          scale: 1,
-          duration,
-          overwrite: true,
-          ease: "back.out(1.2)",
-        });
-      } else {
-        Object.assign(this.display, { x: 0, y: 0, rotation: 0, scale: 1 });
-      }
-      this.setExpression("default");
-    }
-
-    stop() {
-      window.clearTimeout(this.blinkTimer);
-      window.clearTimeout(this.expressionTimer);
-      this.blinkTimeline?.kill();
-      this.actionTimeline?.kill();
-      this.blinkTimeline = null;
-      this.actionTimeline = null;
-      this.resetValues(0);
-    }
-
-    play(type, onComplete) {
-      if (!window.gsap || !this.motion || !this.ready) {
-        onComplete?.();
-        return null;
-      }
-
-      const value = this.values;
-      const timeline = gsap.timeline({
-        defaults: { ease: "power2.out" },
-        onComplete: () => {
-          this.actionTimeline = null;
-          this.resetValues(0.25);
-          onComplete?.();
-        },
-      });
-      this.actionTimeline = timeline;
-
-      if (type === "pet") {
-        this.setExpression("happy");
-        timeline.to(value, { angleY: -10, bodyY: -5, duration: 0.18 })
-          .to(this.display, { y: 7, scale: 1.025, duration: 0.18 }, 0)
-          .to(value, { angleY: 5, bodyY: 2, duration: 0.24 })
-          .to(this.display, { y: 0, scale: 1, duration: 0.24 }, "<");
-      } else if (type === "feed") {
-        this.setExpression("eat");
-        timeline.to(value, { angleZ: -7, mouthOpen: 0.15, duration: 0.18 })
-          .to(this.display, { rotation: -2.5, duration: 0.18 }, 0)
-          .to(value, { angleZ: 7, mouthOpen: 0.8, duration: 0.18, repeat: 2, yoyo: true })
-          .to(this.display, { rotation: 2.5, duration: 0.18, repeat: 2, yoyo: true }, "<")
-          .add(() => this.setExpression("happy"));
-      } else if (type === "play" || type === "surprise") {
-        this.setExpression("surprised");
-        timeline.to(value, { bodyY: -8, leg: 1, shoulder: 1, duration: 0.18 })
-          .to(this.display, { y: 12, scale: 0.96, duration: 0.16 }, 0)
-          .to(value, { bodyY: 12, angleY: -10, duration: 0.2, ease: "back.out(2)" })
-          .to(this.display, { y: -42, scale: 1.04, duration: 0.24, ease: "power3.out" }, "<")
-          .to(value, { bodyY: 0, angleY: 0, duration: 0.3, ease: "bounce.out" });
-        timeline.to(this.display, { y: 0, scale: 1, duration: 0.32, ease: "bounce.out" }, "<");
-      } else if (type === "dance") {
-        this.setExpression("star");
-        timeline.to(value, { bodyX: -8, bodyZ: -8, angleZ: 8, armR: 1, duration: 0.24 })
-          .to(this.display, { x: -12, rotation: -5, duration: 0.24 }, 0)
-          .to(value, { bodyX: 8, bodyZ: 8, angleZ: -8, armR: -1, armL: 1, duration: 0.28 })
-          .to(this.display, { x: 12, rotation: 5, duration: 0.28 }, "<")
-          .to(value, { bodyX: -6, bodyZ: -6, angleZ: 6, armL: -1, duration: 0.24 });
-        timeline.to(this.display, { x: -8, rotation: -3, duration: 0.24 }, "<");
-      } else if (type === "sleep") {
-        this.setExpression("sleep");
-        timeline.to(value, { angleZ: 12, bodyZ: 6, angleY: 8, duration: 0.42 })
-          .to(this.display, { y: 10, rotation: 5, scale: 0.985, duration: 0.42 }, 0)
-          .to(value, { breath: 1, duration: 0.75, repeat: 1, yoyo: true, ease: "sine.inOut" });
-      } else if (type === "wave") {
-        this.setExpression("happy");
-        timeline.to(value, { armR: 1, angleZ: -6, duration: 0.25 })
-          .to(this.display, { rotation: -3, duration: 0.25 }, 0)
-          .to(value, { armR: -1, duration: 0.16, repeat: 4, yoyo: true });
-      } else if (type === "nod") {
-        this.setExpression("happy");
-        timeline.to(value, { angleY: -18, duration: 0.17 })
-          .to(this.display, { y: 6, duration: 0.17 }, 0)
-          .to(value, { angleY: 8, duration: 0.19 })
-          .to(this.display, { y: -2, duration: 0.19 }, "<")
-          .to(value, { angleY: -12, duration: 0.16 });
-      } else if (type === "talk") {
-        timeline.to(value, { mouthOpen: 0.65, mouthForm: 0.45, angleZ: -4, duration: 0.16 })
-          .to(this.display, { rotation: -2, duration: 0.16 }, 0)
-          .to(value, { mouthOpen: 0.1, angleZ: 4, duration: 0.14, repeat: 3, yoyo: true });
-      }
-
-      timeline.to({}, { duration: 0.14 });
-      return timeline;
+    destroy() {
+      this.resizeObserver?.disconnect();
+      this.app?.ticker.remove(this.tick);
+      this.model?.internalModel?.off("beforeModelUpdate", this.applyParameters);
+      this.app?.destroy(true, { children: true, texture: false, baseTexture: false });
     }
   }
 
