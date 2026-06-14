@@ -10,7 +10,7 @@
       this.host = host;
       this.options = options;
       this.canvasHost = host.querySelector("#petCanvas") || host;
-      this.modelUrl = options.modelUrl || "./assets/models/Hutao/Hutao.model3.json";
+      this.modelUrl = options.modelUrl || "./assets/models/HutaoSeethrough/seethrough_output.model3.json";
       this.app = null;
       this.model = null;
       this.ready = false;
@@ -22,6 +22,9 @@
       this.action = null;
       this.nextBlink = 2.2;
       this.blinkTime = 0;
+      this.blinkCount = 0;
+      this.speechUntil = 0;
+      this.speechStartedAt = 0;
       this.resizeObserver = null;
       this.tick = this.tick.bind(this);
       this.applyParameters = this.applyParameters.bind(this);
@@ -63,6 +66,7 @@
       this.ready = true;
       this.host.classList.add("is-live2d-ready");
       this.host.dataset.live2d = "ready";
+      this.host.dataset.modelUrl = this.modelUrl;
       this.host.dispatchEvent(new CustomEvent("hutao:ready"));
       return this;
     }
@@ -96,6 +100,8 @@
       this.blinkTime += dt;
       if (this.time >= this.nextBlink) {
         this.blinkTime = 0;
+        this.blinkCount += 1;
+        this.host.dataset.blinkCount = String(this.blinkCount);
         this.nextBlink = this.time + 2.4 + Math.random() * 3.2;
       }
 
@@ -207,6 +213,12 @@
 
       const blink = this.getBlink();
       const eyeOpen = clamp(blink * pose.eye, 0, 1);
+      const speechMouth = this.getSpeechMouth();
+      const mouthOpen = Math.max(pose.mouth, speechMouth);
+      if (this.frame % 6 === 0) {
+        this.host.dataset.eyeOpen = eyeOpen.toFixed(2);
+        this.host.dataset.mouthOpen = mouthOpen.toFixed(2);
+      }
       set("ParamEyeBallX", this.gaze.x);
       set("ParamEyeBallY", -this.gaze.y);
       set("ParamAngleX", this.gaze.x * 22);
@@ -219,17 +231,27 @@
       set("ParamEyeROpen", eyeOpen);
       set("ParamEyeLSmile", pose.smile);
       set("ParamEyeRSmile", pose.smile);
-      set("ParamMouthOpenY", pose.mouth);
+      set("ParamMouthOpenY", mouthOpen);
       set("ParamMouthForm", 0.15 + pose.smile * 0.85);
       set("ParamCheek", pose.cheek);
       set("ParamBreath", 0.5 + Math.sin(this.time * 1.55) * 0.5 * idleAmount);
       set("ParamHairFront", Math.sin(this.time * 1.1) * 0.35 * idleAmount + pose.rotation * 0.03);
       set("ParamHairSide", Math.sin(this.time * 0.95 + 1) * 0.45 * idleAmount);
       set("ParamHairBack", Math.sin(this.time * 0.82 + 2) * 0.55 * idleAmount);
+      set("ParamHairFrontFuwa", Math.sin(this.time * 1.18) * 0.42 * idleAmount + pose.bodyBoost * 0.24);
+      set("ParamHairBackFuwa", Math.sin(this.time * 0.92 + 1.4) * 0.5 * idleAmount + pose.bodyBoost * 0.28);
       set("ParamShoulder", Math.sin(this.time * 1.55) * 0.25 * idleAmount + pose.bodyBoost * 0.4);
       set("ParamLeg", Math.sin(this.time * 0.72) * 0.2 * idleAmount + pose.bodyBoost * 0.35);
       set("ParamArmRA", pose.armR);
       set("ParamArmLB", pose.armL);
+      set("ParamShoulderRRotation", pose.armR);
+      set("ParamElbowRRotation", pose.armR * 0.72);
+      set("ParamWristRRotation", pose.armR * 0.9);
+      set("ParamShoulderLRotation", pose.armL);
+      set("ParamElbowLRotation", pose.armL * 0.72);
+      set("ParamWristLRotation", pose.armL * 0.9);
+      set("ParamSkirtSway", Math.sin(this.time * 0.75) * 0.34 * idleAmount + pose.rotation * 0.08);
+      set("ParamSkirtFlap", Math.sin(this.time * 1.35 + 0.6) * 0.22 * idleAmount + pose.bodyBoost * 0.38);
       set("ParamBustY", Math.sin(this.time * 1.55) * 0.35 * idleAmount + pose.bodyBoost * 0.2);
     }
 
@@ -251,10 +273,29 @@
     }
 
     getBlink() {
-      const elapsed = this.time - (this.nextBlink - (2.4 + 3.2));
       if (this.blinkTime > 0.18) return 1;
       const p = clamp(this.blinkTime / 0.18, 0, 1);
       return p < 0.5 ? 1 - p * 2 : (p - 0.5) * 2;
+    }
+
+    getSpeechMouth() {
+      if (this.time >= this.speechUntil) return 0;
+      const elapsed = this.time - this.speechStartedAt;
+      const remaining = this.speechUntil - this.time;
+      const fadeIn = clamp(elapsed / 0.12, 0, 1);
+      const fadeOut = clamp(remaining / 0.16, 0, 1);
+      const syllables =
+        Math.sin(elapsed * 17.5) * 0.32
+        + Math.sin(elapsed * 28.7 + 0.8) * 0.2
+        + Math.sin(elapsed * 9.3 + 1.7) * 0.12;
+      return clamp((0.38 + syllables) * fadeIn * fadeOut, 0.04, 0.82);
+    }
+
+    speak(duration = 2.4) {
+      if (!this.ready) return;
+      const safeDuration = clamp(Number(duration) || 2.4, 0.4, 8);
+      this.speechStartedAt = this.time;
+      this.speechUntil = this.time + safeDuration;
     }
 
     trackPointer(clientX, clientY) {

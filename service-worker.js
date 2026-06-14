@@ -1,4 +1,4 @@
-const CACHE_NAME = "hutao-blog-v30";
+const CACHE_NAME = "hutao-blog-v32";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -23,11 +23,12 @@ const APP_SHELL = [
   "./assets/vendor/live2dcubismcore.min.js",
   "./assets/vendor/pixi.min.js",
   "./assets/vendor/pixi-live2d-display.min.js",
-  "./assets/models/Hutao/Hutao.model3.json",
-  "./assets/models/Hutao/Hutao.moc3",
-  "./assets/models/Hutao/Hutao.physics3.json",
-  "./assets/models/Hutao/Hutao.cdi3.json",
-  "./assets/models/Hutao/Hutao.1024/texture_00.png",
+  "./assets/models/HutaoSeethrough/seethrough_output.model3.json",
+  "./assets/models/HutaoSeethrough/seethrough_output.moc3",
+  "./assets/models/HutaoSeethrough/seethrough_output.physics3.json",
+  "./assets/models/HutaoSeethrough/seethrough_output.cdi3.json",
+  "./assets/models/HutaoSeethrough/seethrough_output.motionsync3.json",
+  "./assets/models/HutaoSeethrough/seethrough_output.2048/texture_00.png",
   "./assets/icon.png",
   "./assets/ink-hero.png",
   "./assets/hutao-house-intro.webp",

@@ -156,6 +156,8 @@
     const speech = $("#petSpeech");
     speech.animate([{ opacity: 0.2, transform: "translateY(3px)" }, { opacity: 1, transform: "none" }], { duration: 260 });
     speech.textContent = line;
+    const speakingDuration = Math.min(5.2, Math.max(1.4, [...String(line)].length * 0.16));
+    rig?.speak(speakingDuration);
   }
 
   function showToast(message) {
@@ -271,7 +273,7 @@
     const status = $("#modelStatus");
     try {
       rig = await new HutaoRig($("#petRig"), {
-        modelUrl: "./assets/models/Hutao/Hutao.model3.json",
+        modelUrl: "./assets/models/HutaoSeethrough/seethrough_output.model3.json",
       }).init();
       rig.setMotion(state.motion);
       status.classList.add("is-ready");
