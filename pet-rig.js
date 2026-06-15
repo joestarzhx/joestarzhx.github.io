@@ -54,7 +54,7 @@
         autoInteract: false,
         autoUpdate: true,
       });
-      this.model.anchor.set(0.5, 0.52);
+      this.model.anchor.set(0.5, 0.5);
       this.app.stage.addChild(this.model);
       this.fit();
 
@@ -78,9 +78,9 @@
         this.canvasHost.clientWidth / this.model.width,
         this.canvasHost.clientHeight / this.model.height,
       );
-      this.baseScale = scale * (this.options.scale || 1.44);
+      this.baseScale = scale * (this.options.scale || 0.9);
       this.baseX = this.canvasHost.clientWidth * 0.5;
-      this.baseY = this.canvasHost.clientHeight * (this.options.y || 0.57);
+      this.baseY = this.canvasHost.clientHeight * (this.options.y || 0.51);
       this.model.scale.set(this.baseScale);
       this.model.position.set(this.baseX, this.baseY);
     }

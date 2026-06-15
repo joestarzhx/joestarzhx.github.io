@@ -90,8 +90,8 @@
       name: "小桃",
       relation: "亲密伙伴",
       modelUrl: "./assets/models/HutaoSeethrough/seethrough_output.model3.json",
-      scale: 1.44,
-      y: 0.57,
+      scale: 0.8,
+      y: 0.52,
       welcome: "这次真的醒过来啦！移动光标看看？",
       actions: {
         pet: ["嘿嘿，再摸一下也不是不行。", "帽子可不能揉乱啦！"],
@@ -106,8 +106,8 @@
       name: "季沧海",
       relation: "登门访客",
       modelUrl: "./assets/models/Fireman/Fireman.model3.json",
-      scale: 1.38,
-      y: 0.56,
+      scale: 0.8,
+      y: 0.52,
       welcome: "听说这里有好酒好茶，我便来串个门。",
       actions: {
         pet: ["哈哈，胆子不小。", "这份热情，我记下了。"],
