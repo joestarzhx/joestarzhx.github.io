@@ -1,4 +1,4 @@
-const CACHE_NAME = "hutao-blog-v33";
+const CACHE_NAME = "hutao-blog-v34";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -29,9 +29,14 @@ const APP_SHELL = [
   "./assets/models/HutaoSeethrough/seethrough_output.cdi3.json",
   "./assets/models/HutaoSeethrough/seethrough_output.motionsync3.json",
   "./assets/models/HutaoSeethrough/seethrough_output.2048/texture_00.png",
+  "./assets/models/Fireman/Fireman.model3.json",
+  "./assets/models/Fireman/Fireman.moc3",
+  "./assets/models/Fireman/Fireman.physics3.json",
+  "./assets/models/Fireman/Fireman.cdi3.json",
+  "./assets/models/Fireman/Fireman.motionsync3.json",
+  "./assets/models/Fireman/Fireman.2048/texture_00.png",
   "./assets/icon.png",
   "./assets/ink-hero.png",
-  "./assets/hutao-house-intro.webp",
   "./assets/ink-scroll.png",
   "./assets/kurumi-portrait-red-moon.png",
   "./assets/kurumi-tiger.png",

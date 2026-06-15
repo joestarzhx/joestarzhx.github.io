@@ -16,15 +16,50 @@
   z-index: 10000;
   overflow: hidden;
   color: #f1ead9;
-  background: #111b19;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(218, 204, 167, 0.18), transparent 24%),
+    linear-gradient(180deg, #18211f 0%, #26322e 52%, #101817 100%);
   isolation: isolate;
-  transition: opacity 1.15s ease, visibility 1.15s;
+  transition: opacity 0.4s ease, visibility 0.4s;
 }
 
 .pet-entry.is-leaving {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+.pet-entry-moon {
+  position: absolute;
+  top: 16%;
+  left: 50%;
+  width: clamp(90px, 12vw, 150px);
+  aspect-ratio: 1;
+  translate: -50%;
+  border-radius: 50%;
+  background: rgba(232, 218, 181, 0.82);
+  box-shadow: 0 0 80px rgba(230, 214, 174, 0.2);
+}
+
+.pet-entry-mountain {
+  position: absolute;
+  right: -10%;
+  bottom: 0;
+  left: -10%;
+  height: 54%;
+  background: #101817;
+  clip-path: polygon(0 72%, 12% 44%, 25% 68%, 39% 25%, 52% 70%, 66% 34%, 80% 63%, 91% 38%, 100% 72%, 100% 100%, 0 100%);
+}
+
+.pet-entry-mountain-back {
+  bottom: 9%;
+  background: rgba(78, 91, 83, 0.68);
+  filter: blur(2px);
+  transform: scaleX(-1);
+}
+
+.pet-entry-mountain-front {
+  opacity: 0.92;
 }
 
 .ink3d-world {
@@ -194,14 +229,14 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 46%, transparent 0 22%, rgba(8, 17, 15, 0.08) 48%, rgba(5, 12, 11, 0.74) 100%),
+    radial-gradient(circle at 50% 42%, transparent 0 20%, rgba(8, 17, 15, 0.08) 48%, rgba(5, 12, 11, 0.74) 100%),
     linear-gradient(180deg, rgba(4, 11, 10, 0.28), transparent 38% 65%, rgba(3, 9, 8, 0.62));
   pointer-events: none;
 }
 
 .pet-entry-title {
   position: absolute;
-  top: 13%;
+  top: 17%;
   left: 50%;
   width: min(90vw, 700px);
   text-align: center;
@@ -218,7 +253,7 @@
 
 .pet-entry-title h1 {
   margin: 0.06em 0 0;
-  font: 400 clamp(70px, 9vw, 142px)/1 "Ma Shan Zheng", cursive;
+  font: 400 clamp(64px, 8vw, 120px)/1 "Ma Shan Zheng", cursive;
   letter-spacing: 0.08em;
 }
 
@@ -403,7 +438,11 @@
 .status-card { top: 30px; left: 30px; }
 .control-card { top: 30px; right: 30px; width: 284px; }
 .profile-row { display: grid; grid-template-columns: 45px 1fr auto; align-items: center; gap: 10px; }
-.profile-row img { width: 45px; height: 45px; object-fit: cover; border: 1px solid #bd8959; border-radius: 50%; background: #8c2733; }
+.profile-avatar { position: relative; display: block; width: 45px; height: 45px; overflow: hidden; border: 1px solid #bd8959; border-radius: 50%; background: #8c2733; }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-avatar b { display: none; place-items: center; width: 100%; height: 100%; color: #ffe0a1; background: linear-gradient(145deg, #73291f, #281717); font: 400 1.35rem/1 "Ma Shan Zheng", cursive; }
+.hutao-house.is-visitor .profile-avatar img { display: none; }
+.hutao-house.is-visitor .profile-avatar b { display: grid; }
 .profile-row small, .control-title small { display: block; color: #c5a594; font-size: 0.72rem; }
 .profile-row strong, .control-title strong { display: block; margin-top: 2px; }
 .coin-count { color: #f1c96f; font-size: 0.88rem; }
@@ -425,6 +464,12 @@
 .control-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
 .text-control { border: 0; color: #d9b978; background: none; cursor: pointer; }
 .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.visit-control { display: grid; grid-template-columns: 48px 1fr; align-items: center; width: 100%; margin-bottom: 12px; padding: 10px 12px; border: 1px solid rgba(239, 186, 103, 0.34); border-radius: 13px; color: #f7dfba; background: linear-gradient(110deg, rgba(161, 67, 48, 0.38), rgba(255,255,255,0.04)); text-align: left; cursor: pointer; }
+.visit-control span { font: 400 1.08rem/1 "Ma Shan Zheng", cursive; }
+.visit-control strong { font-size: 0.72rem; font-weight: 500; }
+.visit-control:hover { border-color: rgba(239, 186, 103, 0.7); background-color: rgba(168, 64, 63, 0.25); }
+.visit-control.is-active { color: #d9c8b8; border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); }
+.visit-control:disabled { opacity: 0.5; cursor: wait; }
 .action-grid button { padding: 10px 5px; border: 1px solid rgba(255, 231, 197, 0.11); border-radius: 13px; color: #f8ead8; background: rgba(255,255,255,0.055); cursor: pointer; transition: transform 0.2s, background 0.2s, border-color 0.2s; }
 .action-grid button:hover { transform: translateY(-2px); border-color: rgba(239, 186, 103, 0.55); background: rgba(168, 64, 63, 0.26); }
 .action-grid button:disabled { opacity: 0.45; cursor: wait; }
@@ -455,6 +500,7 @@
 .live2d-canvas { display: block; width: 100%; height: 100%; }
 .pet-fallback { position: absolute; left: 50%; bottom: 12px; width: 76%; max-height: 92%; translate: -50%; object-fit: contain; filter: drop-shadow(0 15px 20px rgba(15,5,8,0.3)); animation: fallbackBreath 3.4s ease-in-out infinite; }
 .pet-rig.is-live2d-ready .pet-fallback { display: none; }
+.hutao-house.is-visitor .pet-fallback { display: none; }
 .drag-tip { position: absolute; left: 50%; bottom: 18px; z-index: 5; translate: -50%; margin: 0; color: rgba(244, 221, 194, 0.63); font-size: 0.67rem; letter-spacing: 0.08em; white-space: nowrap; }
 
 .pet-notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
@@ -489,7 +535,6 @@
   .ink3d-cliff-left { left: -25%; }
   .ink3d-cliff-right { right: -25%; }
   .ink3d-boat { top: 79%; scale: 0.72; }
-  .ink3d-cabin { top: 60%; scale: 0.76; }
   .pet-entry-title { top: 16%; }
   .pet-entry-loader {
     right: 20px;

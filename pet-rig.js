@@ -78,9 +78,9 @@
         this.canvasHost.clientWidth / this.model.width,
         this.canvasHost.clientHeight / this.model.height,
       );
-      this.baseScale = scale * 1.44;
+      this.baseScale = scale * (this.options.scale || 1.44);
       this.baseX = this.canvasHost.clientWidth * 0.5;
-      this.baseY = this.canvasHost.clientHeight * 0.57;
+      this.baseY = this.canvasHost.clientHeight * (this.options.y || 0.57);
       this.model.scale.set(this.baseScale);
       this.model.position.set(this.baseX, this.baseY);
     }
@@ -334,7 +334,8 @@
       this.resizeObserver?.disconnect();
       this.app?.ticker.remove(this.tick);
       this.model?.internalModel?.off("beforeModelUpdate", this.applyParameters);
-      this.app?.destroy(true, { children: true, texture: false, baseTexture: false });
+      this.app?.destroy(true, { children: true, texture: true, baseTexture: true });
+      this.ready = false;
     }
   }
 

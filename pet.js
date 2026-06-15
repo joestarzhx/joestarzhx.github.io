@@ -11,13 +11,12 @@
     const entry = $("#petEntry");
     if (!entry) return () => {};
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const bar = $("#petEntryBar");
     const number = $("#petEntryNumber");
     const status = $("#petEntryStatus");
     const skip = $("#petEntrySkip");
     const startedAt = performance.now();
-    const minimumDuration = reducedMotion ? 700 : 7600;
+    const minimumDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 650 : 2600;
     let assetsReady = false;
     let finished = false;
     let progress = 0;
@@ -30,25 +29,24 @@
       status.textContent = "已到胡桃小屋";
       entry.classList.add("is-leaving");
       document.body.classList.remove("pet-entry-active");
-      window.setTimeout(() => entry.remove(), 1200);
+      window.setTimeout(() => entry.remove(), 420);
     };
 
     const tick = () => {
       if (finished) return;
       const elapsed = performance.now() - startedAt;
-      const cinematicTarget = Math.min(99.2, 6 + (elapsed / minimumDuration) * 93.2);
-      const target = assetsReady ? cinematicTarget : Math.min(90, cinematicTarget);
-      progress += Math.max(0.22, (target - progress) * 0.06);
-      progress = Math.min(target, progress);
+      const ratio = Math.min(1, elapsed / minimumDuration);
+      const target = 5 + (1 - Math.pow(1 - ratio, 2.2)) * 95;
+      progress += Math.max(0.45, (target - progress) * 0.14);
+      progress = Math.min(100, progress);
       const rounded = Math.floor(progress);
       bar.style.width = `${progress}%`;
       number.textContent = String(rounded);
 
-      if (rounded > 76) status.textContent = "木屋灯火已经可见";
-      else if (rounded > 48) status.textContent = "轻舟驶入云水深处";
-      else if (rounded > 20) status.textContent = "穿过远山与墨雾";
+      if (rounded > 72) status.textContent = assetsReady ? "马上就好" : "正在唤醒角色";
+      else if (rounded > 38) status.textContent = "正在备好茶点";
 
-      if (assetsReady && elapsed >= minimumDuration && progress > 98.4) {
+      if (elapsed >= minimumDuration) {
         leave();
         return;
       }
@@ -56,9 +54,6 @@
     };
 
     skip.addEventListener("click", leave);
-    window.setTimeout(() => {
-      assetsReady = true;
-    }, 12000);
     window.requestAnimationFrame(tick);
     return () => {
       assetsReady = true;
@@ -87,14 +82,51 @@
   let toastTimer = 0;
   let drag = null;
   let stageOffset = { x: 0, y: 0 };
+  let characterKey = "hutao";
+  let modelLoadToken = 0;
+
+  const characters = {
+    hutao: {
+      name: "小桃",
+      relation: "亲密伙伴",
+      modelUrl: "./assets/models/HutaoSeethrough/seethrough_output.model3.json",
+      scale: 1.44,
+      y: 0.57,
+      welcome: "这次真的醒过来啦！移动光标看看？",
+      actions: {
+        pet: ["嘿嘿，再摸一下也不是不行。", "帽子可不能揉乱啦！"],
+        feed: ["唔，这个味道不错！", "吃饱才有力气工作嘛。"],
+        play: ["抓到你啦！再来一次！", "今天的胜负可还没定呢。"],
+        dance: ["一二三，跟上本堂主的节拍！", "这支舞就当今日特别演出。"],
+        sleep: ["只眯一小会儿……呼……", "午后的阳光最适合打盹。"],
+        wave: ["我一直都看见你哦！", "嗨！今天也要开心。"],
+      },
+    },
+    fireman: {
+      name: "季沧海",
+      relation: "登门访客",
+      modelUrl: "./assets/models/Fireman/Fireman.model3.json",
+      scale: 1.38,
+      y: 0.56,
+      welcome: "听说这里有好酒好茶，我便来串个门。",
+      actions: {
+        pet: ["哈哈，胆子不小。", "这份热情，我记下了。"],
+        feed: ["不错，再来一碗。", "有酒有肉，才叫痛快。"],
+        play: ["来，痛痛快快比一场！", "这点热身还不够尽兴。"],
+        dance: ["烈火随心，步子自然也要豪迈。", "今日兴起，便舞上一回。"],
+        sleep: ["养足精神，再战不迟。", "我先歇片刻，酒可别收走。"],
+        wave: ["季沧海，前来拜访。", "有朋在此，岂能不来？"],
+      },
+    },
+  };
 
   const actionData = {
-    pet: { speech: ["嘿嘿，再摸一下也不是不行。", "帽子可不能揉乱啦！"], mood: 8, energy: -1, xp: 5, sound: 540 },
-    feed: { speech: ["唔，这个味道不错！", "吃饱才有力气工作嘛。"], hunger: 14, mood: 3, coins: -2, xp: 6, sound: 650 },
-    play: { speech: ["抓到你啦！再来一次！", "今天的胜负可还没定呢。"], mood: 7, energy: -8, hunger: -3, xp: 8, sound: 760 },
-    dance: { speech: ["一二三，跟上本堂主的节拍！", "这支舞就当今日特别演出。"], mood: 12, energy: -7, xp: 9, sound: 820 },
-    sleep: { speech: ["只眯一小会儿……呼……", "午后的阳光最适合打盹。"], energy: 16, hunger: -3, xp: 4, sound: 330 },
-    wave: { speech: ["我一直都看见你哦！", "嗨！今天也要开心。"], mood: 4, xp: 5, sound: 710 },
+    pet: { mood: 8, energy: -1, xp: 5, sound: 540 },
+    feed: { hunger: 14, mood: 3, coins: -2, xp: 6, sound: 650 },
+    play: { mood: 7, energy: -8, hunger: -3, xp: 8, sound: 760 },
+    dance: { mood: 12, energy: -7, xp: 9, sound: 820 },
+    sleep: { energy: 16, hunger: -3, xp: 4, sound: 330 },
+    wave: { mood: 4, xp: 5, sound: 710 },
   };
 
   function loadState() {
@@ -213,7 +245,7 @@
 
     busy = true;
     $$("[data-action]").forEach((button) => { button.disabled = true; });
-    speak(data.speech);
+    speak(characters[characterKey].actions[name]);
     playSound(data.sound);
     const rect = (source || $("#petCharacter")).getBoundingClientRect();
     makeSparks(rect.left + rect.width / 2, rect.top + rect.height * 0.42, name === "dance" ? 14 : 8);
@@ -269,24 +301,59 @@
     character.addEventListener("pointercancel", () => { drag = null; });
   }
 
-  async function initRig() {
+  function updateCharacterUI() {
+    const character = characters[characterKey];
+    const visiting = characterKey === "fireman";
+    $("#profileName").textContent = character.name;
+    $("#profileRelation").textContent = character.relation;
+    $("#speakerName").textContent = character.name;
+    $("#petCharacter").setAttribute("aria-label", `与${character.name}互动，按住可以拖动`);
+    $("#petRoom").classList.toggle("is-visitor", visiting);
+    const visitToggle = $("#visitToggle");
+    visitToggle.classList.toggle("is-active", visiting);
+    visitToggle.setAttribute("aria-pressed", String(visiting));
+    visitToggle.querySelector("span").textContent = visiting ? "送客" : "串门";
+    visitToggle.querySelector("strong").textContent = visiting ? "请季沧海下次再来" : "邀请季沧海来坐坐";
+  }
+
+  async function loadCharacter(nextKey, initial = false) {
     const status = $("#modelStatus");
+    const token = ++modelLoadToken;
+    const character = characters[nextKey];
+    characterKey = nextKey;
+    updateCharacterUI();
+    status.classList.remove("is-ready", "is-error");
+    status.querySelector("span").textContent = `正在迎接${character.name}…`;
+    $("#petRig").classList.remove("is-live2d-ready");
+    rig?.destroy();
+    rig = null;
     try {
       rig = await new HutaoRig($("#petRig"), {
-        modelUrl: "./assets/models/HutaoSeethrough/seethrough_output.model3.json",
+        modelUrl: character.modelUrl,
+        scale: character.scale,
+        y: character.y,
       }).init();
+      if (token !== modelLoadToken) {
+        rig.destroy();
+        return;
+      }
       rig.setMotion(state.motion);
       status.classList.add("is-ready");
-      status.querySelector("span").textContent = "Live2D 已连接 · 正在运行";
-      speak("这次真的醒过来啦！移动光标看看？");
+      status.querySelector("span").textContent = `${character.name}已到 · Live2D 运行中`;
+      speak(character.welcome);
     } catch (error) {
-      console.error("Live2D init failed:", error);
+      if (token !== modelLoadToken) return;
+      console.error(`${character.name} Live2D init failed:`, error);
       status.classList.add("is-error");
-      status.querySelector("span").textContent = "Live2D 加载失败 · 已启用备用形象";
-      speak("模型暂时没有醒来，请刷新页面再试一次。");
+      status.querySelector("span").textContent = `${character.name}暂时未能到访`;
+      speak(`${character.name}似乎在路上耽搁了，请稍后再试。`);
     } finally {
-      markEntryReady();
+      if (initial) markEntryReady();
     }
+  }
+
+  function initRig() {
+    return loadCharacter("hutao", true);
   }
 
   function bindControls() {
@@ -321,6 +388,16 @@
       state.deepNight = !state.deepNight;
       saveState();
       updateUI();
+    });
+    $("#visitToggle").addEventListener("click", async (event) => {
+      if (busy || event.currentTarget.disabled) return;
+      const button = event.currentTarget;
+      const nextKey = characterKey === "hutao" ? "fireman" : "hutao";
+      button.disabled = true;
+      playSound(nextKey === "fireman" ? 460 : 620);
+      showToast(nextKey === "fireman" ? "季沧海正在登门" : "季沧海告辞离开");
+      await loadCharacter(nextKey);
+      button.disabled = false;
     });
     $("#resetPosition").addEventListener("click", () => {
       stageOffset = { x: 0, y: 0 };

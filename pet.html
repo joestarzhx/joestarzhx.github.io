@@ -11,33 +11,23 @@
     <title>胡桃小屋 | 虎桃不会振刀</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="image" href="./assets/hutao-house-intro.webp" type="image/webp" fetchpriority="high" />
     <link href="https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css?v=13" />
-    <link rel="stylesheet" href="./pet.css?v=20260613-3d-intro" />
+    <link rel="stylesheet" href="./pet.css?v=20260615-visiting" />
   </head>
   <body class="pet-page pet-entry-active">
     <div class="pet-entry" id="petEntry" aria-label="正在进入胡桃小屋" aria-live="polite">
-      <div class="ink3d-world" aria-hidden="true">
-        <div class="ink3d-camera">
-          <div class="ink3d-backdrop"></div>
-          <div class="ink3d-cliff ink3d-cliff-left"></div>
-          <div class="ink3d-cliff ink3d-cliff-right"></div>
-          <div class="ink3d-water"></div>
-          <div class="ink3d-cabin"></div>
-          <div class="ink3d-boat"></div>
-          <span class="ink3d-mist mist-far"></span>
-          <span class="ink3d-mist mist-near"></span>
-        </div>
-      </div>
+      <div class="pet-entry-moon" aria-hidden="true"></div>
+      <div class="pet-entry-mountain pet-entry-mountain-back" aria-hidden="true"></div>
+      <div class="pet-entry-mountain pet-entry-mountain-front" aria-hidden="true"></div>
       <div class="pet-entry-ink" aria-hidden="true"></div>
       <div class="pet-entry-title">
-        <span>循水入山 · 寻灯访客</span>
+        <span>山门轻启 · 故友相逢</span>
         <h1>胡桃小屋</h1>
-        <p>轻舟过千山，前方便是山中木屋</p>
+        <p>一盏茶的工夫，马上就好</p>
       </div>
       <div class="pet-entry-loader">
-        <span id="petEntryStatus">水墨山河正在展开</span>
+        <span id="petEntryStatus">正在整理小屋</span>
         <div><i id="petEntryBar"></i></div>
         <b id="petEntryNumber">0</b>
       </div>
@@ -83,8 +73,11 @@
 
         <aside class="status-card">
           <div class="profile-row">
-            <img src="./assets/hutao.png" alt="" />
-            <div><small>亲密伙伴</small><strong>小桃 · Lv.<span id="petLevel">1</span></strong></div>
+            <span class="profile-avatar">
+              <img id="profileAvatarImage" src="./assets/hutao.png" alt="" />
+              <b id="profileAvatarText" aria-hidden="true">季</b>
+            </span>
+            <div><small id="profileRelation">亲密伙伴</small><strong><span id="profileName">小桃</span> · Lv.<span id="petLevel">1</span></strong></div>
             <span class="coin-count">✦ <b id="petCoins">20</b></span>
           </div>
           <div class="xp-track"><i id="petXpBar"></i><span id="petXpText">0 / 100</span></div>
@@ -103,7 +96,7 @@
         </div>
 
         <div class="speech-bubble" id="petDialogue" aria-live="polite">
-          <small>小桃</small>
+          <small id="speakerName">小桃</small>
           <p id="petSpeech">你来啦！今天也一起玩吧。</p>
         </div>
 
@@ -123,6 +116,10 @@
             <div><small>互动菜单</small><strong>今天想做什么？</strong></div>
             <button id="resetPosition" class="text-control" type="button">归位</button>
           </div>
+          <button class="visit-control" id="visitToggle" type="button" aria-pressed="false">
+            <span>串门</span>
+            <strong>邀请季沧海来坐坐</strong>
+          </button>
           <div class="action-grid">
             <button type="button" data-action="pet"><span>♡</span><b>摸摸</b><small>心情 +8</small></button>
             <button type="button" data-action="feed"><span>◇</span><b>投喂</b><small>饱食 +14</small></button>
@@ -161,7 +158,7 @@
     <script src="./assets/vendor/pixi.min.js"></script>
     <script src="./assets/vendor/pixi-live2d-display.min.js"></script>
     <script src="./theme.js?v=13"></script>
-    <script src="./pet-rig.js?v=16"></script>
-    <script src="./pet.js?v=20260614-seethrough"></script>
+    <script src="./pet-rig.js?v=20260615-visiting"></script>
+    <script src="./pet.js?v=20260615-visiting"></script>
   </body>
 </html>
