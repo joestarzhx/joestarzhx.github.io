@@ -1,0 +1,322 @@
+:root {
+  --phase2-ink-x: 50vw;
+  --phase2-ink-y: 50vh;
+}
+
+body.phase2-transitioning {
+  cursor: progress;
+}
+
+.phase2-video-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.phase2-video-stage video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.72;
+  filter: saturate(0.82) contrast(1.08) brightness(0.6);
+  transform: scale(1.04);
+  will-change: transform;
+}
+
+.phase2-video-stage::before,
+.phase2-video-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.phase2-video-stage::before {
+  z-index: 2;
+  background:
+    radial-gradient(ellipse at 26% 26%, rgba(238, 222, 185, 0.14), transparent 36%),
+    radial-gradient(ellipse at 75% 18%, rgba(220, 232, 221, 0.1), transparent 32%),
+    linear-gradient(90deg, rgba(4, 6, 7, 0.72), rgba(4, 6, 7, 0.18) 46%, rgba(4, 6, 7, 0.58)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.18) 45%, rgba(0, 0, 0, 0.72));
+}
+
+.phase2-video-stage::after {
+  z-index: 3;
+  opacity: 0.28;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.32) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 76% 62%, rgba(255, 255, 255, 0.2) 0 1px, transparent 1.5px);
+  background-size: 14px 14px, 19px 19px;
+  mix-blend-mode: screen;
+}
+
+.phase2-depth {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 900px;
+}
+
+.phase2-depth__layer {
+  position: absolute;
+  inset: -8% -10%;
+  will-change: transform;
+}
+
+.phase2-depth__layer--back {
+  background:
+    url("./assets/phase1/ink_mountain_bg.png") center bottom / cover no-repeat,
+    linear-gradient(180deg, rgba(12, 23, 24, 0.36), transparent);
+  opacity: 0.34;
+  filter: blur(1px) saturate(0.72) brightness(0.7);
+}
+
+.phase2-depth__layer--mid {
+  inset: auto -8% 14%;
+  height: 38%;
+  background:
+    radial-gradient(ellipse at 18% 46%, rgba(222, 232, 218, 0.58), transparent 28%),
+    radial-gradient(ellipse at 58% 40%, rgba(222, 232, 218, 0.46), transparent 32%),
+    radial-gradient(ellipse at 86% 48%, rgba(222, 232, 218, 0.4), transparent 26%);
+  opacity: 0.36;
+  filter: blur(16px);
+}
+
+.phase2-depth__layer--front {
+  inset: auto 0 0;
+  height: 52%;
+  background:
+    linear-gradient(180deg, transparent, rgba(5, 9, 9, 0.18) 34%, rgba(5, 9, 9, 0.56)),
+    url("./assets/phase1/decor_corner_peach.png") left bottom / min(34vw, 360px) auto no-repeat;
+  opacity: 0.42;
+}
+
+.hero.phase2-video-hero::before {
+  opacity: 0.42;
+}
+
+.hero.phase2-video-hero .hero-art {
+  opacity: 0.2;
+}
+
+.hero.phase2-video-hero .hero-copy,
+.kurumi-page-hero.phase2-video-hero .kurumi-page-hero-copy {
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.kurumi-page-hero.phase2-video-hero {
+  isolation: isolate;
+  overflow: hidden;
+  background: #111715;
+}
+
+.kurumi-page-hero.phase2-video-hero::after {
+  z-index: 4;
+}
+
+.kurumi-page-hero.phase2-video-hero .kurumi-page-hero-copy {
+  position: relative;
+  z-index: 5;
+}
+
+.phase2-reveal {
+  opacity: 0;
+  transform: translate3d(0, 34px, 0);
+  filter: blur(12px);
+  transition:
+    opacity 0.82s ease,
+    transform 0.82s cubic-bezier(0.2, 0.75, 0.2, 1),
+    filter 0.82s ease;
+  will-change: transform, opacity, filter;
+}
+
+.phase2-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0);
+}
+
+.site-nav a,
+.inner-nav a,
+.brand,
+.ink-button,
+.text-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.site-nav a,
+.inner-nav a {
+  text-shadow: 0 0 0 rgba(166, 52, 45, 0);
+  transition: color 0.24s, text-shadow 0.24s, -webkit-text-stroke-color 0.24s;
+  -webkit-text-stroke: 0.22px transparent;
+}
+
+.inner-nav {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+.site-nav a::before,
+.inner-nav a::before,
+.brand::before,
+.ink-button::after,
+.text-button::before {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(166, 52, 45, 0.24), rgba(166, 52, 45, 0.12) 36%, transparent 68%);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  transition: opacity 0.34s ease, transform 0.42s ease;
+}
+
+.site-nav a:hover,
+.inner-nav a:hover {
+  text-shadow: 0 0 16px color-mix(in srgb, var(--cinnabar) 36%, transparent);
+  -webkit-text-stroke-color: color-mix(in srgb, var(--cinnabar) 34%, transparent);
+}
+
+.site-nav a:hover::before,
+.inner-nav a:hover::before,
+.brand:hover::before,
+.ink-button:hover::after,
+.text-button:hover::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(11);
+}
+
+.phase2-click-ripple {
+  position: fixed;
+  z-index: 10001;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(219, 221, 205, 0.55);
+  background:
+    radial-gradient(circle, rgba(223, 220, 201, 0.5), rgba(166, 52, 45, 0.18) 38%, transparent 70%);
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.25);
+  animation: phase2Ripple 0.72s ease-out forwards;
+}
+
+.phase2-water-ink {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at var(--phase2-ink-x) var(--phase2-ink-y), rgba(30, 32, 29, 0.98) 0 12%, rgba(14, 17, 16, 0.98) 34%, #050505 66%),
+    url("./assets/phase1/ink_splash_mask.png") center / min(120vmax, 980px) min(120vmax, 980px) no-repeat;
+  clip-path: circle(0 at var(--phase2-ink-x) var(--phase2-ink-y));
+  opacity: 0;
+}
+
+.phase2-water-ink.is-covering {
+  animation: phase2InkCover 0.62s cubic-bezier(0.22, 0.8, 0.25, 1) forwards;
+}
+
+.phase2-water-ink.is-revealing {
+  clip-path: circle(150vmax at var(--phase2-ink-x) var(--phase2-ink-y));
+  opacity: 1;
+  animation: phase2InkReveal 0.72s cubic-bezier(0.18, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes phase2Ripple {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(5.4) rotate(18deg);
+  }
+}
+
+@keyframes phase2InkCover {
+  0% {
+    opacity: 0.2;
+    clip-path: circle(0 at var(--phase2-ink-x) var(--phase2-ink-y));
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    clip-path: circle(150vmax at var(--phase2-ink-x) var(--phase2-ink-y));
+    filter: blur(0);
+  }
+}
+
+@keyframes phase2InkReveal {
+  0% {
+    opacity: 1;
+    clip-path: circle(150vmax at var(--phase2-ink-x) var(--phase2-ink-y));
+  }
+  100% {
+    opacity: 0;
+    clip-path: circle(0 at var(--phase2-ink-x) var(--phase2-ink-y));
+  }
+}
+
+@media (max-width: 760px) {
+  .phase2-video-stage video {
+    opacity: 0.58;
+    filter: saturate(0.78) contrast(1.02) brightness(0.56);
+    transform: scale(1.02);
+  }
+
+  .phase2-video-stage::after {
+    opacity: 0.16;
+    background-size: 22px 22px;
+  }
+
+  .phase2-depth__layer--back {
+    opacity: 0.22;
+    filter: none;
+  }
+
+  .phase2-depth__layer--mid {
+    opacity: 0.22;
+    filter: blur(8px);
+  }
+
+  .phase2-depth__layer--front {
+    opacity: 0.2;
+    background-size: 52vw auto;
+  }
+
+  .phase2-reveal {
+    transform: translate3d(0, 22px, 0);
+    filter: blur(6px);
+  }
+
+  .inner-nav {
+    gap: 14px;
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phase2-video-stage video,
+  .phase2-depth__layer,
+  .phase2-reveal {
+    transform: none !important;
+    transition: opacity 0.2s ease;
+  }
+
+  .phase2-reveal {
+    opacity: 1;
+    filter: none;
+  }
+
+  .phase2-water-ink,
+  .phase2-click-ripple {
+    animation-duration: 0.01ms !important;
+  }
+}
