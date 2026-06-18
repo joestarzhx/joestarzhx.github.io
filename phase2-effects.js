@@ -156,13 +156,10 @@
     depth.className = "phase2-depth";
     depth.setAttribute("aria-hidden", "true");
     const layers = [
-      '<div class="phase2-depth__layer phase2-depth__layer--gif" data-depth-speed="0.25"></div>',
-      '<div class="phase2-depth__layer phase2-depth__layer--mountain" data-depth-speed="0.45"></div>',
-      '<div class="phase2-depth__layer phase2-depth__layer--mist" data-depth-speed="0.75"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--gif" data-depth-speed="0.2"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--mountain" data-depth-speed="0.35"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--mist" data-depth-speed="0.45"></div>',
     ];
-    if (window.innerWidth >= 760 && !coarsePointer) {
-      layers.push('<div class="phase2-depth__layer phase2-depth__layer--branch" data-depth-speed="1.1"></div>');
-    }
     depth.innerHTML = layers.join("");
     return depth;
   }
@@ -196,7 +193,7 @@
       if (rect.bottom < -120 || rect.top > viewportHeight + 120) return;
       const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
       const clamped = Math.max(0, Math.min(1, progress));
-      const travel = coarsePointer ? 14 : 72;
+      const travel = coarsePointer ? 8 : 48;
       const y = (clamped - 0.5) * travel * item.speed;
       const scale = item.element.classList.contains("phase2-depth__layer--gif") ? 1.035 + clamped * 0.018 : 1;
       item.element.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;

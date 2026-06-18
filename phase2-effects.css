@@ -37,7 +37,7 @@ body.phase2-transitioning main {
   inset: -6%;
   background:
     linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.48)),
-    url("/personal-blog/assets/next/hero_bg_from_mp4_optimized.gif") center / cover no-repeat;
+    url("./assets/next/hero_bg_from_mp4_optimized.gif") center / cover no-repeat;
   filter: saturate(0.86) contrast(1.08) brightness(0.82);
 }
 
@@ -55,31 +55,22 @@ body.phase2-transitioning main {
 
 .phase2-depth__layer--mountain {
   inset: auto -8% -4%;
-  height: 74%;
-  background-image: url("/personal-blog/assets/next/parallax_mountain_mid.png");
+  height: 62%;
+  background-image: url("./assets/minimal-ink/scroll_mountain_line_minimal.png");
   background-position: center bottom;
   background-size: cover;
-  opacity: 0.55;
-  filter: saturate(0.76) brightness(0.82);
+  opacity: 0.26;
+  filter: saturate(0.7) brightness(1.08);
 }
 
 .phase2-depth__layer--mist {
   inset: auto -12% -10%;
   height: 66%;
-  background-image: url("/personal-blog/assets/next/parallax_mist_foreground.png");
+  background-image: url("./assets/minimal-ink/scroll_mist_minimal.png");
   background-position: center bottom;
   background-size: cover;
-  opacity: 0.46;
+  opacity: 0.18;
   mix-blend-mode: screen;
-}
-
-.phase2-depth__layer--branch {
-  inset: -3% -8% auto auto;
-  height: 62%;
-  background-image: url("/personal-blog/assets/next/parallax_peach_branch_foreground.png");
-  background-position: right top;
-  background-size: contain;
-  opacity: 0.82;
 }
 
 .hero.phase2-gif-hero::before,
@@ -121,7 +112,7 @@ body.phase2-transitioning main {
 
 .phase2-reveal {
   opacity: 0;
-  transform: translate3d(0, 50px, 0) scale(0.96) rotateX(4deg);
+  transform: translate3d(0, 42px, 0) scale(0.975);
   filter: blur(10px);
   transition:
     opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
@@ -212,20 +203,20 @@ body.phase2-transitioning main {
   z-index: 10000;
   pointer-events: none;
   background:
-    radial-gradient(circle at var(--phase2-ink-x) var(--phase2-ink-y), rgba(30, 32, 29, 0.98) 0 12%, rgba(14, 17, 16, 0.98) 34%, #050505 66%),
-    url("./assets/phase1/ink_splash_mask.png") center / min(120vmax, 980px) min(120vmax, 980px) no-repeat;
+    radial-gradient(circle at var(--phase2-ink-x) var(--phase2-ink-y), rgba(13, 15, 14, 0.94) 0 18%, rgba(8, 10, 9, 0.96) 48%, rgba(5, 5, 5, 0.98) 76%),
+    url("./assets/minimal-ink/transition_ink_veil.png") center / cover no-repeat;
   clip-path: circle(0 at var(--phase2-ink-x) var(--phase2-ink-y));
   opacity: 0;
 }
 
 .phase2-water-ink.is-covering {
-  animation: phase2InkCover 0.62s cubic-bezier(0.22, 0.8, 0.25, 1) forwards;
+  animation: phase2InkCover 0.46s cubic-bezier(0.22, 0.8, 0.25, 1) forwards;
 }
 
 .phase2-water-ink.is-revealing {
   clip-path: circle(150vmax at var(--phase2-ink-x) var(--phase2-ink-y));
   opacity: 1;
-  animation: phase2InkReveal 0.72s cubic-bezier(0.18, 0.7, 0.2, 1) forwards;
+  animation: phase2InkReveal 0.65s cubic-bezier(0.18, 0.7, 0.2, 1) forwards;
 }
 
 @keyframes phase2Ripple {
