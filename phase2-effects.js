@@ -2,7 +2,6 @@
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
   const transitionKey = "phase2WaterInkTransition";
-  const videoSrc = "./assets/phase2/jianghu-bg.mp4";
   let transitionActive = false;
   let depthItems = [];
   let ticking = false;
@@ -120,6 +119,9 @@
         if (target) {
           target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
           history.pushState(null, "", targetHash);
+          target.classList.remove("phase2-anchor-arrive");
+          window.requestAnimationFrame(() => target.classList.add("phase2-anchor-arrive"));
+          window.setTimeout(() => target.classList.remove("phase2-anchor-arrive"), 900);
         }
         layer.classList.remove("is-covering");
         layer.classList.add("is-revealing");
@@ -149,24 +151,17 @@
     });
   }
 
-  function createVideoStage() {
-    const stage = document.createElement("div");
-    stage.className = "phase2-video-stage";
-    stage.setAttribute("aria-hidden", "true");
-    stage.innerHTML = `<video src="${videoSrc}" muted loop playsinline autoplay preload="metadata"></video>`;
-    return stage;
-  }
-
   function createDepthStage() {
     const depth = document.createElement("div");
     depth.className = "phase2-depth";
     depth.setAttribute("aria-hidden", "true");
     const layers = [
-      '<div class="phase2-depth__layer phase2-depth__layer--back" data-depth-speed="0.3"></div>',
-      '<div class="phase2-depth__layer phase2-depth__layer--mid" data-depth-speed="0.6"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--gif" data-depth-speed="0.25"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--mountain" data-depth-speed="0.45"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--mist" data-depth-speed="0.75"></div>',
     ];
     if (window.innerWidth >= 760 && !coarsePointer) {
-      layers.push('<div class="phase2-depth__layer phase2-depth__layer--front" data-depth-speed="1"></div>');
+      layers.push('<div class="phase2-depth__layer phase2-depth__layer--branch" data-depth-speed="1.1"></div>');
     }
     depth.innerHTML = layers.join("");
     return depth;
@@ -175,17 +170,16 @@
   function enhanceHero(hero) {
     if (!hero || hero.dataset.phase2Enhanced === "true") return;
     hero.dataset.phase2Enhanced = "true";
-    hero.classList.add("phase2-video-hero");
+    hero.classList.add("phase2-gif-hero");
     hero.prepend(createDepthStage());
-    hero.prepend(createVideoStage());
   }
 
   function setupVideoDepth() {
     enhanceHero(document.querySelector(".hero#home"));
     enhanceHero(document.querySelector(".kurumi-page-hero"));
-    depthItems = Array.from(document.querySelectorAll(".phase2-depth__layer, .phase2-video-stage video")).map((element) => ({
+    depthItems = Array.from(document.querySelectorAll(".phase2-depth__layer")).map((element) => ({
       element,
-      speed: Number(element.dataset.depthSpeed || (element.tagName === "VIDEO" ? 0.3 : 1)),
+      speed: Number(element.dataset.depthSpeed || 1),
       host: element.closest(".hero, .kurumi-page-hero"),
     }));
     updateDepth();
@@ -202,9 +196,9 @@
       if (rect.bottom < -120 || rect.top > viewportHeight + 120) return;
       const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
       const clamped = Math.max(0, Math.min(1, progress));
-      const travel = coarsePointer ? 22 : 58;
+      const travel = coarsePointer ? 14 : 72;
       const y = (clamped - 0.5) * travel * item.speed;
-      const scale = item.element.tagName === "VIDEO" ? 1.04 + clamped * 0.018 : 1;
+      const scale = item.element.classList.contains("phase2-depth__layer--gif") ? 1.035 + clamped * 0.018 : 1;
       item.element.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
     });
   }

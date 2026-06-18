@@ -7,57 +7,20 @@ body.phase2-transitioning {
   cursor: progress;
 }
 
-.phase2-video-stage {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
+body.phase2-transitioning main {
+  transform: scale(0.96);
+  filter: blur(2px);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.phase2-video-stage video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.72;
-  filter: saturate(0.82) contrast(1.08) brightness(0.6);
-  transform: scale(1.04);
-  will-change: transform;
-}
-
-.phase2-video-stage::before,
-.phase2-video-stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.phase2-video-stage::before {
-  z-index: 2;
-  background:
-    radial-gradient(ellipse at 26% 26%, rgba(238, 222, 185, 0.14), transparent 36%),
-    radial-gradient(ellipse at 75% 18%, rgba(220, 232, 221, 0.1), transparent 32%),
-    linear-gradient(90deg, rgba(4, 6, 7, 0.72), rgba(4, 6, 7, 0.18) 46%, rgba(4, 6, 7, 0.58)),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.18) 45%, rgba(0, 0, 0, 0.72));
-}
-
-.phase2-video-stage::after {
-  z-index: 3;
-  opacity: 0.28;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.32) 0 1px, transparent 1.5px),
-    radial-gradient(circle at 76% 62%, rgba(255, 255, 255, 0.2) 0 1px, transparent 1.5px);
-  background-size: 14px 14px, 19px 19px;
-  mix-blend-mode: screen;
+.phase2-anchor-arrive {
+  animation: phase2AnchorArrive 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .phase2-depth {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
   perspective: 900px;
@@ -66,79 +29,111 @@ body.phase2-transitioning {
 .phase2-depth__layer {
   position: absolute;
   inset: -8% -10%;
+  background-repeat: no-repeat;
   will-change: transform;
 }
 
-.phase2-depth__layer--back {
+.phase2-depth__layer--gif {
+  inset: -6%;
   background:
-    url("./assets/phase1/ink_mountain_bg.png") center bottom / cover no-repeat,
-    linear-gradient(180deg, rgba(12, 23, 24, 0.36), transparent);
-  opacity: 0.34;
-  filter: blur(1px) saturate(0.72) brightness(0.7);
+    linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.48)),
+    url("/personal-blog/assets/next/hero_bg_from_mp4_optimized.gif") center / cover no-repeat;
+  filter: saturate(0.86) contrast(1.08) brightness(0.82);
 }
 
-.phase2-depth__layer--mid {
-  inset: auto -8% 14%;
-  height: 38%;
+.phase2-depth__layer--gif::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(ellipse at 18% 46%, rgba(222, 232, 218, 0.58), transparent 28%),
-    radial-gradient(ellipse at 58% 40%, rgba(222, 232, 218, 0.46), transparent 32%),
-    radial-gradient(ellipse at 86% 48%, rgba(222, 232, 218, 0.4), transparent 26%);
-  opacity: 0.36;
-  filter: blur(16px);
-}
-
-.phase2-depth__layer--front {
-  inset: auto 0 0;
-  height: 52%;
-  background:
-    linear-gradient(180deg, transparent, rgba(5, 9, 9, 0.18) 34%, rgba(5, 9, 9, 0.56)),
-    url("./assets/phase1/decor_corner_peach.png") left bottom / min(34vw, 360px) auto no-repeat;
+    radial-gradient(ellipse at 24% 28%, rgba(245, 232, 196, 0.12), transparent 34%),
+    radial-gradient(ellipse at 72% 22%, rgba(210, 222, 210, 0.1), transparent 32%),
+    repeating-radial-gradient(circle at 45% 45%, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 7px);
   opacity: 0.42;
+  mix-blend-mode: screen;
 }
 
-.hero.phase2-video-hero::before {
-  opacity: 0.42;
+.phase2-depth__layer--mountain {
+  inset: auto -8% -4%;
+  height: 74%;
+  background-image: url("/personal-blog/assets/next/parallax_mountain_mid.png");
+  background-position: center bottom;
+  background-size: cover;
+  opacity: 0.55;
+  filter: saturate(0.76) brightness(0.82);
 }
 
-.hero.phase2-video-hero .hero-art {
-  opacity: 0.2;
+.phase2-depth__layer--mist {
+  inset: auto -12% -10%;
+  height: 66%;
+  background-image: url("/personal-blog/assets/next/parallax_mist_foreground.png");
+  background-position: center bottom;
+  background-size: cover;
+  opacity: 0.46;
+  mix-blend-mode: screen;
 }
 
-.hero.phase2-video-hero .hero-copy,
-.kurumi-page-hero.phase2-video-hero .kurumi-page-hero-copy {
+.phase2-depth__layer--branch {
+  inset: -3% -8% auto auto;
+  height: 62%;
+  background-image: url("/personal-blog/assets/next/parallax_peach_branch_foreground.png");
+  background-position: right top;
+  background-size: contain;
+  opacity: 0.82;
+}
+
+.hero.phase2-gif-hero::before,
+.hero.phase2-gif-hero::after {
+  opacity: 0;
+}
+
+.hero.phase2-gif-hero .hero-art,
+.kurumi-page-hero.phase2-gif-hero::after {
+  opacity: 0.16;
+}
+
+.hero.phase2-gif-hero .hero-wash {
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(243, 239, 228, 0.84) 0%, rgba(243, 239, 228, 0.56) 34%, rgba(7, 10, 10, 0.2) 70%, transparent 88%),
+    linear-gradient(0deg, var(--paper) 0%, transparent 18%);
+}
+
+.hero.phase2-gif-hero .hero-copy,
+.kurumi-page-hero.phase2-gif-hero .kurumi-page-hero-copy {
   box-shadow: 0 32px 90px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
-.kurumi-page-hero.phase2-video-hero {
+.kurumi-page-hero.phase2-gif-hero {
   isolation: isolate;
   overflow: hidden;
   background: #111715;
 }
 
-.kurumi-page-hero.phase2-video-hero::after {
+.kurumi-page-hero.phase2-gif-hero::after {
   z-index: 4;
 }
 
-.kurumi-page-hero.phase2-video-hero .kurumi-page-hero-copy {
+.kurumi-page-hero.phase2-gif-hero .kurumi-page-hero-copy {
   position: relative;
   z-index: 5;
 }
 
 .phase2-reveal {
   opacity: 0;
-  transform: translate3d(0, 34px, 0);
-  filter: blur(12px);
+  transform: translate3d(0, 50px, 0) scale(0.96) rotateX(4deg);
+  filter: blur(10px);
   transition:
-    opacity 0.82s ease,
-    transform 0.82s cubic-bezier(0.2, 0.75, 0.2, 1),
-    filter 0.82s ease;
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center top;
   will-change: transform, opacity, filter;
 }
 
 .phase2-reveal.is-visible {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  transform: none;
   filter: blur(0);
 }
 
@@ -264,36 +259,35 @@ body.phase2-transitioning {
   }
 }
 
+@keyframes phase2AnchorArrive {
+  from {
+    opacity: 0.28;
+    filter: blur(10px);
+    transform: translate3d(0, 34px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
 @media (max-width: 760px) {
-  .phase2-video-stage video {
-    opacity: 0.58;
-    filter: saturate(0.78) contrast(1.02) brightness(0.56);
-    transform: scale(1.02);
+  .phase2-depth__layer--gif {
+    filter: saturate(0.78) contrast(1.02) brightness(0.72);
   }
 
-  .phase2-video-stage::after {
-    opacity: 0.16;
-    background-size: 22px 22px;
+  .phase2-depth__layer--mountain {
+    opacity: 0.34;
   }
 
-  .phase2-depth__layer--back {
-    opacity: 0.22;
-    filter: none;
-  }
-
-  .phase2-depth__layer--mid {
-    opacity: 0.22;
-    filter: blur(8px);
-  }
-
-  .phase2-depth__layer--front {
-    opacity: 0.2;
-    background-size: 52vw auto;
+  .phase2-depth__layer--mist {
+    opacity: 0.28;
   }
 
   .phase2-reveal {
-    transform: translate3d(0, 22px, 0);
-    filter: blur(6px);
+    transform: translate3d(0, 24px, 0) scale(0.985);
+    filter: blur(4px);
   }
 
   .inner-nav {
@@ -303,7 +297,6 @@ body.phase2-transitioning {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .phase2-video-stage video,
   .phase2-depth__layer,
   .phase2-reveal {
     transform: none !important;
