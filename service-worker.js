@@ -1,4 +1,4 @@
-const CACHE_NAME = "hutao-blog-v37";
+const CACHE_NAME = "hutao-blog-v38";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -8,9 +8,11 @@ const APP_SHELL = [
   "./kurumi.html",
   "./pet.html",
   "./styles.css",
+  "./phase1-effects.css",
   "./pet.css",
   "./article-pages.css",
   "./script.js",
+  "./phase1-effects.js",
   "./articles.js",
   "./article-detail.js",
   "./videos.js",
@@ -44,6 +46,13 @@ const APP_SHELL = [
   "./assets/hutao-entry-shanshui.png",
   "./assets/ink-hero.png",
   "./assets/ink-scroll.png",
+  "./assets/phase1/scroll_paper_full.png",
+  "./assets/phase1/scroll_rod_left.png",
+  "./assets/phase1/scroll_rod_right.png",
+  "./assets/phase1/ink_splash_mask.png",
+  "./assets/phase1/peach_petals_sprites.png",
+  "./assets/phase1/ink_mountain_bg.png",
+  "./assets/phase1/decor_corner_peach.png",
   "./assets/kurumi-portrait-red-moon.png",
   "./assets/kurumi-tiger.png",
   "./assets/kurumi-spring-smile.png",
