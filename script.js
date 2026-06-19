@@ -324,62 +324,7 @@ async function setupAchievements() {
   });
 }
 
-function createClickEffect(x, y) {
-  if (!hasGsap || reducedMotion) return;
-
-  const ripple = document.createElement("span");
-  const core = document.createElement("span");
-  ripple.className = "ink-click-ripple";
-  core.className = "ink-click-core";
-  document.body.append(ripple, core);
-
-  gsap.set([ripple, core], { x, y, xPercent: -50, yPercent: -50 });
-  gsap.fromTo(
-    ripple,
-    { scale: 0.25, rotation: random(-18, 18), opacity: 0.75 },
-    {
-      scale: 2.8,
-      rotation: random(20, 55),
-      opacity: 0,
-      duration: 0.75,
-      ease: "power2.out",
-      onComplete: () => ripple.remove(),
-    },
-  );
-  gsap.to(core, {
-    scale: 0,
-    opacity: 0,
-    duration: 0.5,
-    ease: "power2.out",
-    onComplete: () => core.remove(),
-  });
-
-  for (let i = 0; i < 8; i += 1) {
-    const petal = document.createElement("i");
-    const angle = (Math.PI * 2 * i) / 8 + random(-0.22, 0.22);
-    const distance = random(28, 62);
-    petal.className = "click-petal";
-    document.body.appendChild(petal);
-    gsap.set(petal, {
-      x,
-      y,
-      xPercent: -50,
-      yPercent: -50,
-      rotation: (angle * 180) / Math.PI,
-      scale: random(0.65, 1.15),
-    });
-    gsap.to(petal, {
-      x: x + Math.cos(angle) * distance,
-      y: y + Math.sin(angle) * distance + random(5, 18),
-      rotation: `+=${random(80, 220)}`,
-      scale: 0.15,
-      opacity: 0,
-      duration: random(0.55, 0.9),
-      ease: "power2.out",
-      onComplete: () => petal.remove(),
-    });
-  }
-}
+function createClickEffect() {}
 
 function createCursorTrail(x, y) {
   const now = performance.now();

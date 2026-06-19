@@ -1,70 +1,10 @@
 (function () {
-  const storageKey = "introPlayed";
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isHome = Boolean(document.querySelector(".hero#home"));
   const hero = document.querySelector(".hero#home");
 
   if (hero) {
-    hero.classList.add("phase1-ink-home");
-  }
-
-  function safeStorageGet(key) {
-    try {
-      return window.localStorage.getItem(key);
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function safeStorageSet(key, value) {
-    try {
-      window.localStorage.setItem(key, value);
-    } catch (error) {
-      /* localStorage can be unavailable in strict privacy contexts. */
-    }
-  }
-
-  function closeIntro(overlay, immediate) {
-    safeStorageSet(storageKey, "true");
-    document.body.classList.remove("phase1-intro-lock");
-
-    if (immediate || reducedMotion) {
-      overlay.remove();
-      return;
-    }
-
-    overlay.classList.add("is-leaving");
-    window.setTimeout(() => overlay.remove(), 680);
-  }
-
-  function mountIntro() {
-    if (!isHome || safeStorageGet(storageKey) === "true") return;
-
-    const overlay = document.createElement("div");
-    overlay.className = "phase1-intro";
-    overlay.setAttribute("role", "dialog");
-    overlay.setAttribute("aria-label", "虎桃不会振刀开场卷轴");
-    overlay.innerHTML = [
-      '<div class="phase1-intro__ink" aria-hidden="true"></div>',
-      '<div class="phase1-scroll" aria-hidden="true">',
-      '<div class="phase1-scroll__paper"></div>',
-      '<div class="phase1-scroll__rod phase1-scroll__rod--left"></div>',
-      '<div class="phase1-scroll__rod phase1-scroll__rod--right"></div>',
-      '<div class="phase1-scroll__text">',
-      '<div class="phase1-scroll__title">虎桃不会振刀</div>',
-      '<div class="phase1-scroll__subtitle">一卷桃花江湖</div>',
-      "</div>",
-      "</div>",
-      '<button class="phase1-intro__skip" type="button">跳过入卷</button>',
-    ].join("");
-
-    document.body.appendChild(overlay);
-    document.body.classList.add("phase1-intro-lock");
-
-    const skipButton = overlay.querySelector(".phase1-intro__skip");
-    skipButton.addEventListener("click", () => closeIntro(overlay, true));
-
-    window.setTimeout(() => closeIntro(overlay, false), reducedMotion ? 900 : 3400);
+    hero.classList.remove("phase1-ink-home");
   }
 
   function mountPetals() {
@@ -107,9 +47,9 @@
     }
 
     function petalCount() {
-      if (window.innerWidth < 600) return 8;
-      if (window.innerWidth < 900) return 14;
-      return 20;
+      if (window.innerWidth < 600) return 4;
+      if (window.innerWidth < 900) return 6;
+      return 8;
     }
 
     function createPetal(resetAbove) {
@@ -229,11 +169,9 @@
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
-      mountIntro();
       mountPetals();
     }, { once: true });
   } else {
-    mountIntro();
     mountPetals();
   }
 }());
