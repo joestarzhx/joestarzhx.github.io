@@ -13,8 +13,7 @@
   border: 1px solid var(--next-gold-soft);
   border-radius: 24px;
   background:
-    linear-gradient(rgba(7, 12, 12, 0.68), rgba(7, 12, 12, 0.76)),
-    url("/personal-blog/assets/next/ui_card_dark_ink_glass.png") center / 100% 100% no-repeat;
+    linear-gradient(145deg, rgba(248, 243, 231, 0.88), rgba(235, 226, 210, 0.8));
   color: #f4ead7;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(12px);

@@ -156,9 +156,10 @@
     depth.className = "phase2-depth";
     depth.setAttribute("aria-hidden", "true");
     const layers = [
-      '<div class="phase2-depth__layer phase2-depth__layer--gif" data-depth-speed="0.2"></div>',
-      '<div class="phase2-depth__layer phase2-depth__layer--mountain" data-depth-speed="0.35"></div>',
-      '<div class="phase2-depth__layer phase2-depth__layer--mist" data-depth-speed="0.45"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--far" data-depth-speed="0.2"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--mid" data-depth-speed="0.42"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--near" data-depth-speed="0.68"></div>',
+      '<div class="phase2-depth__layer phase2-depth__layer--mist" data-depth-speed="0.86"></div>',
     ];
     depth.innerHTML = layers.join("");
     return depth;
@@ -195,7 +196,7 @@
       const clamped = Math.max(0, Math.min(1, progress));
       const travel = coarsePointer ? 8 : 48;
       const y = (clamped - 0.5) * travel * item.speed;
-      const scale = item.element.classList.contains("phase2-depth__layer--gif") ? 1.035 + clamped * 0.018 : 1;
+      const scale = 1;
       item.element.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
     });
   }

@@ -33,7 +33,7 @@ body.phase2-transitioning main {
   will-change: transform;
 }
 
-.phase2-depth__layer--gif {
+.phase2-depth__layer--far {
   inset: -6%;
   background:
     linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.48)),
@@ -41,35 +41,47 @@ body.phase2-transitioning main {
   filter: saturate(0.86) contrast(1.08) brightness(0.82);
 }
 
-.phase2-depth__layer--gif::after {
+.phase2-depth__layer--far::after {
   content: "";
   position: absolute;
   inset: 0;
   background:
     radial-gradient(ellipse at 24% 28%, rgba(245, 232, 196, 0.12), transparent 34%),
-    radial-gradient(ellipse at 72% 22%, rgba(210, 222, 210, 0.1), transparent 32%),
-    repeating-radial-gradient(circle at 45% 45%, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 7px);
-  opacity: 0.42;
+    radial-gradient(ellipse at 72% 22%, rgba(210, 222, 210, 0.1), transparent 32%);
+  opacity: 0.32;
   mix-blend-mode: screen;
 }
 
-.phase2-depth__layer--mountain {
-  inset: auto -8% -4%;
-  height: 62%;
-  background-image: url("./assets/minimal-ink/scroll_mountain_line_minimal.png");
+.phase2-depth__layer--mid,
+.phase2-depth__layer--near {
+  inset: auto -8% -6%;
+  height: 72%;
   background-position: center bottom;
   background-size: cover;
-  opacity: 0.26;
-  filter: saturate(0.7) brightness(1.08);
+}
+
+.phase2-depth__layer--mid {
+  background-image: url("./assets/art-scroll/parallax_mountain_layer_1.png");
+  opacity: 0.32;
+  filter: saturate(0.74) brightness(0.95);
+}
+
+.phase2-depth__layer--near {
+  background-image:
+    url("./assets/art-scroll/parallax_mountain_layer_3.png"),
+    url("./assets/art-scroll/parallax_mountain_layer_2.png");
+  background-size: cover, cover;
+  opacity: 0.38;
+  filter: saturate(0.72) brightness(0.9);
 }
 
 .phase2-depth__layer--mist {
   inset: auto -12% -10%;
   height: 66%;
-  background-image: url("./assets/minimal-ink/scroll_mist_minimal.png");
+  background-image: url("./assets/art-scroll/floating_mist_layer.png");
   background-position: center bottom;
   background-size: cover;
-  opacity: 0.18;
+  opacity: 0.2;
   mix-blend-mode: screen;
 }
 
@@ -203,8 +215,8 @@ body.phase2-transitioning main {
   z-index: 10000;
   pointer-events: none;
   background:
-    radial-gradient(circle at var(--phase2-ink-x) var(--phase2-ink-y), rgba(13, 15, 14, 0.94) 0 18%, rgba(8, 10, 9, 0.96) 48%, rgba(5, 5, 5, 0.98) 76%),
-    url("./assets/minimal-ink/transition_ink_veil.png") center / cover no-repeat;
+    linear-gradient(90deg, rgba(5, 6, 6, 0.98), rgba(7, 8, 8, 0.9), rgba(5, 6, 6, 0.98)),
+    url("./assets/art-scroll/transition_brush_wave.png") center / cover no-repeat;
   clip-path: circle(0 at var(--phase2-ink-x) var(--phase2-ink-y));
   opacity: 0;
 }
