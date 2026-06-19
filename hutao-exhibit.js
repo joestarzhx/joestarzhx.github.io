@@ -103,15 +103,16 @@
   }
 
   function setupPageMotion() {
-    ensurePageVeil();
+    const veil = ensurePageVeil();
     document.body.classList.add("hutao-page-entering");
     window.requestAnimationFrame(() => {
-      window.setTimeout(() => document.body.classList.remove("hutao-page-entering"), reducedMotion ? 80 : 520);
+      window.setTimeout(() => document.body.classList.remove("hutao-page-entering"), reducedMotion ? 40 : 820);
     });
 
     document.addEventListener("click", (event) => {
       const anchor = event.target.closest("a[href]");
       if (!anchor || event.defaultPrevented) return;
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       if (anchor.target || anchor.hasAttribute("download")) return;
 
       let url;
@@ -136,10 +137,12 @@
 
       if (samePath) return;
       event.preventDefault();
+      veil.style.setProperty("--hutao-transition-x", `${event.clientX}px`);
+      veil.style.setProperty("--hutao-transition-y", `${event.clientY}px`);
       document.body.classList.add("hutao-page-leaving");
       window.setTimeout(() => {
         window.location.href = url.href;
-      }, reducedMotion ? 20 : 280);
+      }, reducedMotion ? 20 : 510);
     });
   }
 
