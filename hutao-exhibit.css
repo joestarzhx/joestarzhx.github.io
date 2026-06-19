@@ -68,22 +68,69 @@ body.art-scroll-transitioning main {
 }
 
 .hutao-page-veil {
+  --hutao-transition-x: 50%;
+  --hutao-transition-y: 50%;
   position: fixed;
   inset: 0;
   z-index: 9998;
   pointer-events: none;
   opacity: 0;
+  overflow: hidden;
   background:
-    radial-gradient(circle at 50% 40%, rgba(255, 250, 238, 0.72), rgba(245, 235, 216, 0.38) 34%, rgba(31, 28, 23, 0.08) 72%),
+    radial-gradient(circle at var(--hutao-transition-x) var(--hutao-transition-y), rgba(255, 250, 238, 0.8), rgba(245, 235, 216, 0.5) 34%, rgba(31, 28, 23, 0.12) 72%),
     url("./assets/hutao-ink/InkFog_03.png") center / cover no-repeat,
     url("./assets/hutao-ink/PaperTexture.png") center / 720px auto repeat;
   mix-blend-mode: normal;
-  transition: opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+  clip-path: circle(0 at var(--hutao-transition-x) var(--hutao-transition-y));
+  will-change: clip-path, opacity;
 }
 
-body.hutao-page-entering .hutao-page-veil,
+.hutao-page-veil::before,
+.hutao-page-veil::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.hutao-page-veil::before {
+  inset: -18%;
+  opacity: 0.28;
+  background:
+    url("./assets/hutao-ink/InkFog_02.png") center / cover no-repeat,
+    linear-gradient(112deg, transparent 17%, rgba(25, 23, 20, 0.72) 46%, transparent 72%);
+  mix-blend-mode: multiply;
+  transform: translate3d(-22%, 8%, 0) rotate(-5deg) scale(1.15);
+}
+
+.hutao-page-veil::after {
+  right: clamp(24px, 7vw, 88px);
+  bottom: clamp(24px, 7vw, 72px);
+  width: 28px;
+  aspect-ratio: 1;
+  border: 2px solid rgba(142, 44, 40, 0.72);
+  box-shadow: inset 0 0 0 3px rgba(142, 44, 40, 0.08);
+  opacity: 0;
+  transform: rotate(-8deg) scale(0.72);
+}
+
 body.hutao-page-leaving .hutao-page-veil {
-  opacity: 1;
+  animation: hutaoInkCover 0.52s cubic-bezier(0.7, 0, 0.22, 1) both;
+}
+
+body.hutao-page-leaving .hutao-page-veil::before {
+  animation: hutaoBrushCross 0.58s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+body.hutao-page-leaving .hutao-page-veil::after {
+  animation: hutaoSealLand 0.3s 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+body.hutao-page-entering .hutao-page-veil {
+  animation: hutaoInkReveal 0.68s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+body.hutao-page-entering .hutao-page-veil::before {
+  animation: hutaoBrushSettle 0.68s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 body.hutao-page-entering main {
@@ -91,9 +138,13 @@ body.hutao-page-entering main {
 }
 
 body.hutao-page-leaving main {
-  transform: translateY(10px) scale(0.99);
-  opacity: 0.88;
-  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.42s ease;
+  transform: translateY(14px) scale(0.992);
+  opacity: 0.72;
+  filter: saturate(0.72) contrast(0.94);
+  transition:
+    transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.42s ease,
+    filter 0.42s ease;
 }
 
 .site-header {
@@ -648,6 +699,139 @@ main > section:not(.hero):not(.kurumi-page-hero) > * {
   }
 }
 
+@keyframes hutaoInkCover {
+  0% { clip-path: circle(0 at var(--hutao-transition-x) var(--hutao-transition-y)); opacity: 0; }
+  18% { opacity: 0.9; }
+  100% { clip-path: circle(150vmax at var(--hutao-transition-x) var(--hutao-transition-y)); opacity: 1; }
+}
+
+@keyframes hutaoInkReveal {
+  0%, 28% { clip-path: circle(150vmax at 50% 50%); opacity: 1; }
+  100% { clip-path: circle(0 at 88% 12%); opacity: 0; }
+}
+
+@keyframes hutaoBrushCross {
+  from { opacity: 0; transform: translate3d(-32%, 10%, 0) rotate(-6deg) scale(1.18); }
+  to { opacity: 0.32; transform: translate3d(16%, -6%, 0) rotate(3deg) scale(1.08); }
+}
+
+@keyframes hutaoBrushSettle {
+  from { opacity: 0.3; transform: translate3d(10%, -5%, 0) rotate(2deg) scale(1.12); }
+  to { opacity: 0; transform: translate3d(28%, -12%, 0) rotate(5deg) scale(1.04); }
+}
+
+@keyframes hutaoSealLand {
+  from { opacity: 0; transform: rotate(-18deg) scale(1.45); }
+  to { opacity: 0.82; transform: rotate(-8deg) scale(1); }
+}
+
+/* Restore the compact Hu Tao House proportions from the preceding version. */
+.pet-page .pet-shell {
+  width: min(1280px, calc(100% - 40px)) !important;
+}
+
+.pet-page .text-control,
+.pet-page .visit-control,
+.pet-page .mini-toggle,
+.pet-page .action-grid button,
+.pet-page .daily-gift {
+  min-height: 0;
+}
+
+.pet-page .text-control {
+  padding-inline: 0;
+}
+
+.pet-page .action-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+@media (max-width: 840px) {
+  html.mobile-nav-open,
+  body.mobile-nav-open {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  .site-header {
+    z-index: 100;
+  }
+
+  .site-header .brand,
+  .site-header .menu-toggle {
+    position: relative;
+    z-index: 10002;
+  }
+
+  .site-header .site-nav {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 10001;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0 !important;
+    padding: max(88px, calc(env(safe-area-inset-top) + 76px)) 24px max(28px, env(safe-area-inset-bottom)) !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background:
+      linear-gradient(180deg, rgba(250, 246, 236, 0.99), rgba(241, 232, 214, 0.98)),
+      url("./assets/hutao-ink/PaperTexture.png") center / 560px auto repeat !important;
+    clip-path: inset(0 0 100% 0);
+    opacity: 1 !important;
+    visibility: hidden;
+    pointer-events: none;
+    transform: none !important;
+    transition:
+      clip-path 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s linear 0.38s;
+  }
+
+  .site-header .site-nav.open {
+    clip-path: inset(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  .site-header .site-nav a {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: min(100%, 360px);
+    min-height: 52px;
+    padding: 11px 8px;
+    border-bottom: 1px solid rgba(49, 42, 30, 0.1);
+    font-size: clamp(17px, 4.8vw, 20px);
+    letter-spacing: 0.18em;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition:
+      color 0.25s,
+      opacity 0.24s ease,
+      transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .site-header .site-nav.open a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .site-header .site-nav.open a:nth-child(2) { transition-delay: 0.035s; }
+  .site-header .site-nav.open a:nth-child(3) { transition-delay: 0.07s; }
+  .site-header .site-nav.open a:nth-child(4) { transition-delay: 0.105s; }
+  .site-header .site-nav.open a:nth-child(5) { transition-delay: 0.14s; }
+  .site-header .site-nav.open a:nth-child(6) { transition-delay: 0.175s; }
+  .site-header .site-nav.open a:nth-child(7) { transition-delay: 0.21s; }
+}
+
 @media (max-width: 760px) {
   :root {
     --glass-blur: 4px;
@@ -655,21 +839,6 @@ main > section:not(.hero):not(.kurumi-page-hero) > * {
 
   .site-header {
     z-index: 100;
-  }
-
-  .site-nav {
-    inset: 0 !important;
-    padding: 88px 22px 32px !important;
-    justify-content: flex-start !important;
-    gap: 12px !important;
-    overflow-y: auto;
-    background:
-      linear-gradient(180deg, rgba(250, 246, 236, 0.97), rgba(241, 232, 214, 0.94)),
-      url("./assets/hutao-ink/PaperTexture.png") center / 560px auto repeat !important;
-    clip-path: inset(0 0 100% 0);
-    opacity: 1 !important;
-    transform: none !important;
-    transition: clip-path 0.34s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .site-nav::before {
@@ -680,17 +849,6 @@ main > section:not(.hero):not(.kurumi-page-hero) > * {
     opacity: 0.2;
     background: url("./assets/hutao-ink/InkFog_03.png") center / cover no-repeat;
     pointer-events: none;
-  }
-
-  .site-nav.open {
-    clip-path: inset(0 0 0 0);
-  }
-
-  .site-nav a {
-    width: min(100%, 360px);
-    min-height: 48px;
-    justify-content: center;
-    border-bottom: 1px solid rgba(49, 42, 30, 0.1);
   }
 
   .hero-copy {
@@ -790,9 +948,19 @@ main > section:not(.hero):not(.kurumi-page-hero) > * {
   .speech-bubble {
     max-width: calc(100vw - 36px);
   }
+
+  .pet-page .pet-shell {
+    width: min(100% - 20px, 620px) !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hutao-page-veil,
+  .hutao-page-veil::before,
+  .hutao-page-veil::after {
+    animation-duration: 0.01ms !important;
+  }
+
   .hutao-fog-layer,
   .hutao-bamboo-leaves {
     animation: none !important;
