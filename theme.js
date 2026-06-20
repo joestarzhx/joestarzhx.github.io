@@ -27,13 +27,50 @@
   document.body.appendChild(button);
 
   const header = document.querySelector(".site-header");
+  const navigation = header?.querySelector("nav");
+  let menuToggle = header?.querySelector(".menu-toggle");
+
+  if (header && navigation) {
+    navigation.classList.add("site-nav");
+    if (!navigation.id) navigation.id = "siteNav";
+
+    if (!menuToggle) {
+      menuToggle = document.createElement("button");
+      menuToggle.type = "button";
+      menuToggle.className = "menu-toggle";
+      menuToggle.innerHTML = '<span></span><span></span><span class="sr-only">打开导航</span>';
+      header.insertBefore(menuToggle, navigation);
+    }
+
+    menuToggle.setAttribute("aria-controls", navigation.id);
+    menuToggle.setAttribute("aria-expanded", "false");
+
+    const setMenuOpen = (open) => {
+      navigation.classList.toggle("open", open);
+      menuToggle.classList.toggle("open", open);
+      menuToggle.setAttribute("aria-expanded", String(open));
+      document.documentElement.classList.toggle("mobile-nav-open", open);
+      document.body.classList.toggle("mobile-nav-open", open);
+    };
+
+    menuToggle.addEventListener("click", () => setMenuOpen(!navigation.classList.contains("open")));
+    navigation.addEventListener("click", (event) => {
+      if (event.target.closest("a")) setMenuOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && navigation.classList.contains("open")) setMenuOpen(false);
+    });
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 840 && navigation.classList.contains("open")) setMenuOpen(false);
+    }, { passive: true });
+  }
+
   const searchButton = document.createElement("button");
   searchButton.type = "button";
   searchButton.className = "site-search-trigger";
   searchButton.setAttribute("aria-label", "搜索全站内容");
   searchButton.innerHTML = '<span aria-hidden="true">⌕</span><span>搜索</span><kbd>/</kbd>';
   if (header) {
-    const navigation = header.querySelector("nav");
     header.insertBefore(searchButton, navigation || null);
   }
 
