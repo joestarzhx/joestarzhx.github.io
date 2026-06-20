@@ -1,4 +1,4 @@
-const CACHE_NAME = "hutao-blog-v45";
+const CACHE_NAME = "hutao-blog-v46";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -15,6 +15,7 @@ const APP_SHELL = [
   "./minimal-ink.css",
   "./art-scroll.css",
   "./hutao-exhibit.css",
+  "./page-motion.css",
   "./pet.css",
   "./article-pages.css",
   "./script.js",
@@ -24,6 +25,7 @@ const APP_SHELL = [
   "./minimal-ink.js",
   "./art-scroll.js",
   "./hutao-exhibit.js",
+  "./page-motion.js",
   "./articles.js",
   "./article-detail.js",
   "./videos.js",
