@@ -46,6 +46,12 @@ function writeCachedWorks(key, items) {
   } catch {}
 }
 
+function revealInsertedCards(container) {
+  container.querySelectorAll(".reveal").forEach((element) => {
+    element.classList.add("is-visible");
+  });
+}
+
 function createHomepageArticleCard(article, index) {
   const card = document.createElement("article");
   const cover = articleService.firstImage(article);
@@ -127,7 +133,7 @@ async function loadHomepageArticles() {
   }
 
   try {
-    const articles = await withTimeout(articleService.listPublished(2));
+    const articles = await withTimeout(articleService.listPublished(2, { contentType: "article" }));
     container.replaceChildren();
     if (!articles.length) {
       container.innerHTML = '<p class="article-state">还没有发布文章，第一卷正在酝酿中。</p>';
@@ -135,12 +141,14 @@ async function loadHomepageArticles() {
     }
     writeCachedWorks("hutao-homepage-articles", articles);
     articles.forEach((article, index) => container.appendChild(createHomepageArticleCard(article, index)));
+    revealInsertedCards(container);
     setupInkHoverEffects();
   } catch (error) {
     const cached = readCachedWorks("hutao-homepage-articles");
     if (cached.length) {
       container.replaceChildren();
       cached.slice(0, 2).forEach((article, index) => container.appendChild(createHomepageArticleCard(article, index)));
+      revealInsertedCards(container);
       setupInkHoverEffects();
       return;
     }
@@ -193,12 +201,14 @@ async function loadHomepageVideos() {
     }
     writeCachedWorks("hutao-homepage-videos", videos);
     videos.forEach((video) => container.appendChild(createHomepageVideoCard(video)));
+    revealInsertedCards(container);
     setupInkHoverEffects();
   } catch (error) {
     const cached = readCachedWorks("hutao-homepage-videos");
     if (cached.length) {
       container.replaceChildren();
       cached.slice(0, 2).forEach((video) => container.appendChild(createHomepageVideoCard(video)));
+      revealInsertedCards(container);
       setupInkHoverEffects();
       return;
     }
