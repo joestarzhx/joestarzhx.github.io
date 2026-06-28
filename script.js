@@ -10,6 +10,12 @@ const cursorRing = document.querySelector(".ink-cursor-ring");
 const cursorDot = document.querySelector(".ink-cursor-dot");
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 const compactMotion = window.matchMedia("(max-width: 840px), (pointer: coarse)").matches;
+const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+const saveData = connection?.saveData === true;
+const lowPowerDevice =
+  saveData ||
+  (Number.isFinite(navigator.deviceMemory) && navigator.deviceMemory <= 4) ||
+  (Number.isFinite(navigator.hardwareConcurrency) && navigator.hardwareConcurrency <= 4);
 
 let windActive = false;
 let windStrength = 0;
@@ -442,7 +448,7 @@ function createCursorTrail(x, y) {
 }
 
 function setupFlowingLandscape() {
-  if (!hasGsap || reducedMotion || compactMotion) return;
+  if (!hasGsap || reducedMotion || compactMotion || lowPowerDevice) return;
   const hero = document.querySelector(".hero");
   const far = document.querySelector(".landscape-far");
   const near = document.querySelector(".landscape-near");
@@ -467,7 +473,7 @@ function setupFlowingLandscape() {
 }
 
 function setupAmbientInk() {
-  if (!hasGsap || reducedMotion || compactMotion) return;
+  if (!hasGsap || reducedMotion || compactMotion || lowPowerDevice) return;
   const drifts = gsap.utils.toArray(".ink-drift");
   if (!drifts.length) return;
 
@@ -487,7 +493,7 @@ function setupAmbientInk() {
 }
 
 function createPiece(options = {}) {
-  if (reducedMotion || compactMotion || !hasGsap || pieces.size > 42) return;
+  if (reducedMotion || compactMotion || lowPowerDevice || !hasGsap || pieces.size > 28) return;
 
   const piece = document.createElement("span");
   const isPetal = options.type ? options.type === "petal" : Math.random() > 0.28;
@@ -787,7 +793,7 @@ function setupLinksToggle() {
 }
 
 if (hasGsap && !reducedMotion) {
-  if (finePointer) {
+  if (finePointer && !lowPowerDevice) {
     document.documentElement.classList.add("cursor-ready");
     const cursorX = gsap.quickTo(cursor, "x", { duration: 0.12, ease: "power3.out" });
     const cursorY = gsap.quickTo(cursor, "y", { duration: 0.12, ease: "power3.out" });
@@ -846,10 +852,36 @@ if (hasGsap && !reducedMotion) {
   }
 }
 
-loadHomepageArticles();
-loadHomepageVideos();
-loadSiteVisitCount();
-initializeGuestbook();
+function runWhenIdle(task, timeout = 1600) {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(() => task(), { timeout });
+    return;
+  }
+  window.setTimeout(task, Math.min(timeout, 600));
+}
+
+function runWhenNear(selector, task, rootMargin = "320px 0px") {
+  const target = document.querySelector(selector);
+  if (!target || !("IntersectionObserver" in window)) {
+    task();
+    return;
+  }
+
+  let completed = false;
+  const observer = new IntersectionObserver((entries) => {
+    if (completed || !entries.some((entry) => entry.isIntersecting)) return;
+    completed = true;
+    observer.disconnect();
+    task();
+  }, { rootMargin, threshold: 0 });
+
+  observer.observe(target);
+}
+
+runWhenIdle(loadHomepageArticles, 1200);
+runWhenNear(".home-videos-section", loadHomepageVideos);
+runWhenIdle(loadSiteVisitCount, 2400);
+runWhenNear(".message-section", initializeGuestbook, "420px 0px");
 setupAchievements();
 setupInkHoverEffects();
 setupFlowingLandscape();

@@ -1,7 +1,7 @@
 :root {
-  --hutao-brush: "Ma Shan Zheng", "ZCOOL QingKe HuangYou", "Long Cang", cursive;
-  --hutao-serif: "ZCOOL XiaoWei", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
-  --hutao-body: "Noto Serif SC", "Source Han Serif SC", serif;
+  --hutao-brush: "Ma Shan Zheng", "Kaiti SC", "STKaiti", "KaiTi", "Noto Serif CJK SC", ui-serif, serif;
+  --hutao-serif: "Noto Serif CJK SC", "Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", ui-serif, serif;
+  --hutao-body: "Noto Serif CJK SC", "Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", ui-serif, serif;
   --hutao-ink: #1b1b1b;
   --hutao-muted: #5f5a50;
   --hutao-paper: rgba(250, 246, 235, 0.9);
@@ -1233,5 +1233,70 @@ main > section:not(.hero):not(.kurumi-page-hero):not(.hutao-house) > * {
   .friend-card,
   .portal-card {
     transition: none !important;
+  }
+}
+
+/* ===== V4_LAYOUT_FONT_PERFORMANCE: mobile rendering ===== */
+body {
+  font-synthesis: weight style;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 840px) {
+  .paper-noise,
+  .ink-atmosphere {
+    display: none !important;
+  }
+
+  html body,
+  html.cursor-ready body {
+    background-image: linear-gradient(180deg, #faf6ec, #f0e6d4) !important;
+  }
+
+  .article-card,
+  .home-video-card,
+  .article-list-card,
+  .video-card,
+  .achievement-cards article,
+  .friend-card,
+  .guestbook-list article,
+  .portal-card,
+  .kurumi-art-card,
+  .kurumi-profile-card,
+  .about-copy,
+  .message-inner,
+  .portrait-panel {
+    background-image: linear-gradient(
+      145deg,
+      rgba(252, 248, 238, 0.97),
+      rgba(239, 228, 207, 0.92)
+    ) !important;
+  }
+
+  .article-card::before,
+  .home-video-card::before,
+  .article-list-card::before,
+  .video-card::before,
+  .achievement-cards article::before,
+  .friend-card::before {
+    display: none !important;
+  }
+
+  .card-visual,
+  .article-cover,
+  .portrait-frame,
+  .home-video-visual img {
+    filter: none !important;
+  }
+
+  .section-heading h2,
+  .page-title h1,
+  .article-detail-title,
+  .about-copy h2,
+  .message-inner h2 {
+    font-family: var(--hutao-serif) !important;
+    font-synthesis: weight style;
   }
 }

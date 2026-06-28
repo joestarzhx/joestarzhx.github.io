@@ -10,9 +10,9 @@
   --line: rgba(24, 32, 29, 0.18);
   --ink-wash: rgba(32, 48, 42, 0.08);
   --surface: rgba(250, 250, 246, 0.68);
-  --serif: "Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
-  --brush: "Ma Shan Zheng", "STKaiti", "KaiTi", cursive;
-  --hand: "Long Cang", "STKaiti", "KaiTi", cursive;
+  --serif: "Noto Serif CJK SC", "Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", ui-serif, serif;
+  --brush: "Ma Shan Zheng", "Kaiti SC", "STKaiti", "KaiTi", "Noto Serif CJK SC", ui-serif, serif;
+  --hand: "Long Cang", "Kaiti SC", "STKaiti", "KaiTi", "Noto Serif CJK SC", ui-serif, serif;
   --z-content: 1;
   --z-floating: 40;
   --z-header: 1000;
