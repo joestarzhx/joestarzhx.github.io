@@ -1,4 +1,4 @@
-const CACHE_NAME = "hutao-blog-v50";
+const CACHE_NAME = "hutao-blog-v51";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -23,6 +23,7 @@ const APP_SHELL = [
   "./motion-video.js",
   "./motion-gallery.js",
   "./motion-pet.js",
+  "./works-data.js",
   "./works.js",
   "./articles.js",
   "./article-detail.js",
