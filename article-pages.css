@@ -1364,3 +1364,223 @@ button:disabled {
     padding: 1rem;
   }
 }
+/* ===== Mobile article/video readability repair v2 ===== */
+@media (max-width: 840px) {
+  .article-page-shell,
+  .article-detail-shell,
+  .admin-shell {
+    width: min(100% - 24px, 1080px) !important;
+    min-height: auto !important;
+    padding-top: calc(132px + env(safe-area-inset-top)) !important;
+    padding-bottom: 52px !important;
+  }
+
+  .page-title {
+    margin-bottom: 34px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .page-title .eyebrow {
+    max-width: 100%;
+    letter-spacing: 0.22em !important;
+    line-height: 1.55;
+    white-space: normal;
+  }
+
+  .page-title h1,
+  .article-detail-header h1 {
+    margin: 6px 0 14px !important;
+    font-size: clamp(48px, 15vw, 68px) !important;
+    line-height: 1.08 !important;
+  }
+
+  .page-title > p:last-child {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .article-filters,
+  .article-filters:has(#sortArticles) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    margin: 0 0 16px !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+  }
+
+  .article-filters > label {
+    grid-column: 1 / -1;
+  }
+
+  .article-filters #categoryFilter,
+  .article-filters #videoCategory {
+    grid-column: 1;
+  }
+
+  .article-filters #sortArticles,
+  .article-filters #clearVideoFilters {
+    grid-column: 2;
+  }
+
+  .article-filters #clearFilters {
+    grid-column: 1 / -1;
+  }
+
+  .article-filters input,
+  .article-filters select,
+  .article-filters button {
+    min-width: 0;
+    min-height: 44px !important;
+    padding: 10px 12px !important;
+    font-size: 15px;
+  }
+
+  .article-filters .text-button {
+    border: 1px solid var(--line) !important;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--paper) 76%, transparent);
+    text-align: center;
+  }
+
+  .filter-summary {
+    margin-bottom: 22px !important;
+    gap: 9px !important;
+  }
+
+  .tag-filter-list {
+    flex-wrap: nowrap !important;
+    max-width: 100%;
+    overflow-x: auto;
+    padding-bottom: 3px;
+    scrollbar-width: none;
+  }
+
+  .tag-filter-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tag-filter-list button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .all-articles-grid,
+  .video-grid {
+    gap: 18px !important;
+  }
+
+  .article-list-card,
+  .video-card {
+    min-height: 0 !important;
+    border-radius: 12px;
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+
+  .article-list-cover {
+    min-height: 170px !important;
+    aspect-ratio: 16 / 8.5;
+  }
+
+  .placeholder-cover {
+    font-size: 60px !important;
+  }
+
+  .article-list-copy {
+    min-width: 0;
+    padding: 20px !important;
+  }
+
+  .article-card-meta {
+    flex-wrap: wrap;
+    gap: 5px 10px !important;
+    line-height: 1.5;
+  }
+
+  .article-list-copy h2,
+  .video-card-copy h2 {
+    overflow-wrap: anywhere;
+  }
+
+  .article-list-copy h2 {
+    margin: 14px 0 9px !important;
+    font-size: clamp(24px, 7vw, 32px) !important;
+    line-height: 1.35 !important;
+  }
+
+  .article-list-copy p {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    overflow-wrap: anywhere;
+  }
+
+  .article-list-copy .article-tags {
+    margin-top: 14px !important;
+  }
+
+  .article-card-stats,
+  .read-more {
+    margin-top: 14px !important;
+    padding-top: 0 !important;
+  }
+
+  .video-card-copy {
+    min-width: 0;
+    padding: 18px !important;
+  }
+
+  .video-card-copy > p:first-child {
+    margin: 0 0 10px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+
+  .video-card-copy h2 {
+    margin: 8px 0 10px !important;
+    font-size: clamp(24px, 7vw, 31px);
+    line-height: 1.35;
+  }
+
+  .video-card-copy p,
+  .video-card-copy span {
+    font-size: 14px;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  .video-card-copy > span {
+    display: block;
+    margin-top: 12px;
+  }
+
+  .article-state,
+  .hutao-state {
+    padding: 24px 18px !important;
+  }
+
+  .reading-tools {
+    align-items: stretch !important;
+    flex-direction: column;
+    margin-top: -16px !important;
+  }
+
+  .reading-tools > div,
+  .article-actions,
+  .comment-item-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 420px) {
+  .article-page-shell,
+  .article-detail-shell,
+  .admin-shell {
+    width: min(100% - 18px, 1080px) !important;
+  }
+
+  .article-filters {
+    padding: 9px !important;
+  }
+}

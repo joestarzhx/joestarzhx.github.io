@@ -167,3 +167,142 @@
 .home-page .home-video-visual > .media-play-button .media-play-button__icon::before {
   content: none !important;
 }
+/* ===== Homepage readability and spacing repair v2 ===== */
+@media (min-width: 901px) {
+  .home-page .about-section {
+    min-height: auto !important;
+    padding-top: clamp(76px, 7vw, 108px) !important;
+    padding-bottom: clamp(82px, 7.5vw, 116px) !important;
+  }
+}
+
+@media (max-width: 840px) {
+  .home-page .section {
+    width: min(100% - 28px, 1180px) !important;
+    padding: 56px 0 !important;
+  }
+
+  .home-page .section-heading {
+    gap: 10px !important;
+    margin-bottom: 28px !important;
+  }
+
+  .home-page .section-heading h2 {
+    font-size: clamp(42px, 13vw, 62px) !important;
+    line-height: 1.08;
+  }
+
+  .home-page .section-heading > p {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .home-page .article-card h3,
+  .home-page .home-video-card h3,
+  .home-page .card-content p,
+  .home-page .home-video-card p {
+    display: block !important;
+    overflow: visible !important;
+    -webkit-box-orient: initial !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+  }
+
+  .home-page .article-card,
+  .home-page .home-video-card {
+    min-height: 0 !important;
+  }
+
+  .home-page .card-visual,
+  .home-page .home-video-visual {
+    min-height: 170px !important;
+  }
+
+  .home-page .card-content,
+  .home-page .home-video-card > div:last-child {
+    min-width: 0;
+    padding: 20px !important;
+  }
+
+  .home-page .hero {
+    min-height: max(640px, 92svh) !important;
+  }
+
+  .home-page .hero-copy {
+    width: calc(100% - 28px) !important;
+    left: 14px !important;
+    bottom: 24px !important;
+    padding: 18px !important;
+  }
+
+  .home-page .hero h1 {
+    font-size: clamp(52px, 17vw, 78px) !important;
+  }
+
+  .home-page .hero-verse {
+    margin-top: 16px !important;
+    font-size: 18px !important;
+    line-height: 1.65;
+  }
+
+  .home-page .hero-actions {
+    margin-top: 16px !important;
+    gap: 10px !important;
+  }
+
+  .home-page .about-section {
+    width: 100% !important;
+    gap: 24px !important;
+    min-height: 0 !important;
+    padding: 64px 16px !important;
+  }
+
+  .home-page .about-copy {
+    padding: 24px 20px !important;
+  }
+
+  .home-page .about-copy::before {
+    display: none !important;
+  }
+
+  .home-page .about-copy blockquote {
+    font-size: clamp(21px, 7vw, 28px) !important;
+  }
+
+  .home-page .kurumi-portal {
+    min-height: 440px !important;
+    padding-block: 64px !important;
+  }
+
+  .home-page .message-section {
+    min-height: 0 !important;
+    padding: 64px 14px !important;
+  }
+
+  .home-page .message-inner {
+    width: 100% !important;
+    padding: 26px 18px !important;
+  }
+
+  .home-page .message-inner h2 {
+    white-space: normal !important;
+    font-size: clamp(38px, 11vw, 54px) !important;
+    line-height: 1.2;
+  }
+
+  .home-page .links-collapsible {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .home-page .links-collapsible::after,
+  .home-page .links-toggle {
+    display: none !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .home-page .section {
+    width: min(100% - 20px, 1180px) !important;
+  }
+}
