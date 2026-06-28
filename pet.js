@@ -15,8 +15,15 @@
     const number = $("#petEntryNumber");
     const status = $("#petEntryStatus");
     const skip = $("#petEntrySkip");
+    const replay = $("#petEntryReplay");
+    const seenKey = "hutao-pet-entry-seen";
+    const hasSeenEntry = sessionStorage.getItem(seenKey) === "true";
     const startedAt = performance.now();
-    const minimumDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 650 : 2600;
+    const minimumDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? 240
+      : hasSeenEntry
+        ? 420
+        : 2600;
     let assetsReady = false;
     let finished = false;
     let progress = 0;
@@ -24,6 +31,7 @@
     const leave = () => {
       if (finished) return;
       finished = true;
+      sessionStorage.setItem(seenKey, "true");
       bar.style.width = "100%";
       number.textContent = "100";
       status.textContent = "已到胡桃小屋";
@@ -54,6 +62,10 @@
     };
 
     skip.addEventListener("click", leave);
+    replay?.addEventListener("click", () => {
+      sessionStorage.removeItem(seenKey);
+      window.location.reload();
+    });
     window.requestAnimationFrame(tick);
     return () => {
       assetsReady = true;

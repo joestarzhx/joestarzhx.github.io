@@ -10,9 +10,9 @@
   --line: rgba(24, 32, 29, 0.18);
   --ink-wash: rgba(32, 48, 42, 0.08);
   --surface: rgba(250, 250, 246, 0.68);
-  --serif: "Noto Serif SC", "Songti SC", serif;
-  --brush: "Ma Shan Zheng", "STKaiti", cursive;
-  --hand: "Long Cang", "STKaiti", cursive;
+  --serif: "Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+  --brush: "Ma Shan Zheng", "STKaiti", "KaiTi", cursive;
+  --hand: "Long Cang", "STKaiti", "KaiTi", cursive;
 }
 
 * {

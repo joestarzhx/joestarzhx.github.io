@@ -1,0 +1,134 @@
+.home-page main {
+  position: relative;
+}
+
+.home-page .hero {
+  isolation: isolate;
+}
+
+.home-page .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(90deg, transparent 0 8%, color-mix(in srgb, var(--ink) 20%, transparent) 18%, transparent 46%),
+    url("./assets/hutao-ink/PaperTexture.png") center / 680px auto repeat;
+  mix-blend-mode: multiply;
+  transform: translate3d(-18%, 0, 0) scaleX(0.7);
+}
+
+.home-page.motion-home-opening .hero::before {
+  animation: homeInkOpening var(--home-open-duration, 2200ms) var(--ease-ink) both;
+}
+
+.home-page.motion-home-opening .hero-copy > *,
+.home-page.motion-home-opening .hero-actions {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+}
+
+.home-page.motion-home-ready .hero-copy > *,
+.home-page.motion-home-ready .hero-actions {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--motion-slow) var(--ease-ink), transform var(--motion-slow) var(--ease-ink);
+}
+
+.jianghu-route {
+  position: absolute;
+  z-index: 1;
+  top: calc(100vh + 40px);
+  bottom: 280px;
+  left: clamp(18px, 4vw, 72px);
+  width: 44px;
+  pointer-events: none;
+}
+
+.jianghu-route svg {
+  position: sticky;
+  top: 18vh;
+  display: block;
+  width: 44px;
+  height: 64vh;
+  overflow: visible;
+}
+
+.jianghu-route path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--cinnabar) 66%, var(--ink));
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--route-progress, 0));
+  opacity: 0.76;
+}
+
+.jianghu-route span {
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--cinnabar) 72%, var(--ink));
+  background: var(--paper);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--cinnabar) 10%, transparent);
+  transform: translate(-50%, -50%) scale(0.76);
+  opacity: 0.42;
+  transition: opacity var(--motion-normal) var(--ease-ink), transform var(--motion-normal) var(--ease-ink);
+}
+
+.jianghu-route span.is-lit {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.jianghu-route span:nth-of-type(1) { top: 8%; }
+.jianghu-route span:nth-of-type(2) { top: 22%; }
+.jianghu-route span:nth-of-type(3) { top: 36%; }
+.jianghu-route span:nth-of-type(4) { top: 50%; }
+.jianghu-route span:nth-of-type(5) { top: 64%; }
+.jianghu-route span:nth-of-type(6) { top: 78%; }
+.jianghu-route span:nth-of-type(7) { top: 92%; }
+
+@keyframes homeInkOpening {
+  0% { opacity: 0; transform: translate3d(-28%, 0, 0) scaleX(0.25); }
+  16% { opacity: 0.55; }
+  54% { opacity: 0.35; transform: translate3d(15%, 0, 0) scaleX(1.18); }
+  100% { opacity: 0; transform: translate3d(56%, 0, 0) scaleX(1.55); }
+}
+
+@media (max-width: 900px) {
+  .jianghu-route {
+    left: 10px;
+    width: 22px;
+    opacity: 0.42;
+  }
+
+  .jianghu-route svg {
+    width: 22px;
+    height: 54vh;
+  }
+
+  .jianghu-route span {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page.motion-home-opening .hero::before {
+    animation: none;
+  }
+
+  .home-page.motion-home-opening .hero-copy > *,
+  .home-page.motion-home-opening .hero-actions,
+  .home-page.motion-home-ready .hero-copy > *,
+  .home-page.motion-home-ready .hero-actions {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

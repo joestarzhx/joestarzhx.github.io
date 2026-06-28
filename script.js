@@ -380,7 +380,20 @@ async function setupAchievements() {
   });
 }
 
-function createClickEffect() {}
+function createClickEffect(x, y, source) {
+  if (window.MotionCore?.createClickEffect) {
+    window.MotionCore.createClickEffect(x, y, source);
+    return;
+  }
+  const ripple = document.createElement("i");
+  ripple.className = "ink-click-ripple";
+  ripple.style.setProperty("--click-x", `${x}px`);
+  ripple.style.setProperty("--click-y", `${y}px`);
+  ripple.style.setProperty("--click-size", compactMotion ? "64px" : "88px");
+  ripple.style.setProperty("--click-duration", reducedMotion ? "160ms" : "380ms");
+  document.body.appendChild(ripple);
+  window.setTimeout(() => ripple.remove(), reducedMotion ? 220 : 460);
+}
 
 function createCursorTrail(x, y) {
   const now = performance.now();
@@ -605,7 +618,7 @@ window.addEventListener("pointermove", (event) => {
 
 window.addEventListener("pointerdown", (event) => {
   if (event.button !== 0) return;
-  createClickEffect(event.clientX, event.clientY);
+  createClickEffect(event.clientX, event.clientY, event.target);
 });
 
 window.addEventListener(

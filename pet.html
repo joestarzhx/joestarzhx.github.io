@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="./styles.css?v=14" />
     <link rel="preload" as="image" href="./assets/hutao-entry-shanshui.png" fetchpriority="high" />
     <link rel="stylesheet" href="./pet.css?v=20260615-shanshui" />
-    <link rel="stylesheet" href="./page-motion.css?v=1" />
+    <link rel="stylesheet" href="./motion-core.css?v=1" />
   </head>
   <body class="pet-page pet-entry-active" data-page="pet">
     <div class="pet-entry" id="petEntry" aria-label="正在进入胡桃小屋" aria-live="polite">
@@ -47,6 +47,7 @@
         <a href="./index.html" data-nav-page="home">卷首</a>
         <a href="./articles.html" data-nav-page="articles">文章</a>
         <a href="./videos.html" data-nav-page="videos">视频</a>
+        <a href="./works.html" data-nav-page="works">作品</a>
         <a href="./kurumi.html" data-nav-page="kurumi">胡桃绘卷</a>
         <a class="active" href="./pet.html" data-nav-page="pet">桌宠小屋</a>
         <a href="./index.html#links" data-nav-page="links">江湖去处</a>
@@ -67,6 +68,7 @@
           <strong id="petClock">--:--</strong>
           <small id="petDayText">正在整理往生堂的今日事务</small>
         </div>
+        <button class="pet-entry-replay" id="petEntryReplay" type="button">重看入境</button>
       </section>
 
       <section class="hutao-house" id="petRoom" aria-label="胡桃互动小屋">
@@ -168,6 +170,7 @@
     <script src="./theme.js?v=14"></script>
     <script src="./pet-rig.js?v=20260615-fullbody"></script>
     <script src="./pet.js?v=20260616-zhang"></script>
-    <script src="./page-motion.js?v=1"></script>
+    <script src="./motion-core.js?v=1"></script>
+    <script src="./motion-pet.js?v=1"></script>
   </body>
 </html>
