@@ -145,3 +145,25 @@
     transition: none;
   }
 }
+/* 修复首页视频播放键出现双圆环的问题 */
+.home-page .home-video-visual > .media-play-button .media-play-button__icon {
+  position: static !important;
+  display: block !important;
+  flex: 0 0 auto;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 0 0 4px !important;
+  border: 0 !important;
+  border-top: 9px solid transparent !important;
+  border-bottom: 9px solid transparent !important;
+  border-left: 14px solid #f6ecdc !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.home-page .home-video-visual > .media-play-button::before,
+.home-page .home-video-visual > .media-play-button .media-play-button__icon::before {
+  content: none !important;
+}
