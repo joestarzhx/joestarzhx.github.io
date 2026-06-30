@@ -39,6 +39,7 @@
   const header = document.querySelector(".site-header");
   const navigation = header?.querySelector("nav");
   let menuToggle = header?.querySelector(".menu-toggle");
+  let mobileChromeController = null;
 
   if (header && navigation) {
     navigation.classList.add("site-nav");
@@ -66,11 +67,13 @@
     }
 
     const setMenuOpen = (open) => {
+      if (open) mobileChromeController?.forceVisible();
       navigation.classList.toggle("open", open);
       menuToggle.classList.toggle("open", open);
       menuToggle.setAttribute("aria-expanded", String(open));
       document.documentElement.classList.toggle("mobile-nav-open", open);
       document.body.classList.toggle("mobile-nav-open", open);
+      mobileChromeController?.reset();
     };
 
     menuToggle.addEventListener("click", () => setMenuOpen(!navigation.classList.contains("open")));
@@ -203,6 +206,7 @@
 
   async function openSearch() {
     if (searchClosing) return;
+    mobileChromeController?.forceVisible();
     if (!searchDialog.open) searchDialog.showModal();
     searchDialog.classList.remove("is-closing");
     searchDialog.classList.add("is-opening");
@@ -242,6 +246,8 @@
   searchDialog.addEventListener("close", () => {
     document.documentElement.classList.remove("search-dialog-open");
     document.body.classList.remove("search-dialog-open");
+    mobileChromeController?.forceVisible();
+    mobileChromeController?.reset();
   });
   searchDialog.addEventListener("cancel", (event) => {
     event.preventDefault();
@@ -269,12 +275,119 @@
   backToTop.textContent = "↑";
   document.body.appendChild(backToTop);
   backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" }));
-  window.addEventListener("scroll", () => {
-    backToTop.classList.toggle("visible", window.scrollY > 650);
-  }, { passive: true });
+  let backToTopFrame = 0;
+  const updateBackToTop = () => {
+    backToTopFrame = 0;
+    backToTop.classList.toggle("visible", Math.max(0, window.scrollY) > 650);
+  };
+  const requestBackToTopUpdate = () => {
+    if (backToTopFrame) return;
+    backToTopFrame = window.requestAnimationFrame(updateBackToTop);
+  };
+  window.addEventListener("scroll", requestBackToTopUpdate, { passive: true });
+  updateBackToTop();
 
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function setupMobileScrollChrome() {
+    const mobileQuery = window.matchMedia("(max-width: 840px)");
+    let lastScrollY = clampScrollY();
+    let accumulatedDelta = 0;
+    let scrollFrame = 0;
+    let chromeVisible = true;
+
+    const setVisible = (visible) => {
+      chromeVisible = visible;
+      document.body.classList.toggle("mobile-chrome-visible", visible);
+      document.body.classList.toggle("mobile-chrome-hidden", !visible);
+    };
+
+    const hasOpenMobileOverlay = () => (
+      document.documentElement.classList.contains("mobile-nav-open") ||
+      document.body.classList.contains("mobile-nav-open") ||
+      document.documentElement.classList.contains("search-dialog-open") ||
+      document.body.classList.contains("search-dialog-open") ||
+      Boolean(document.querySelector("dialog[open]")) ||
+      /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || "")
+    );
+
+    function clampScrollY() {
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      return Math.max(0, Math.min(window.scrollY || 0, maxScroll));
+    }
+
+    const reset = (show = false) => {
+      lastScrollY = clampScrollY();
+      accumulatedDelta = 0;
+      if (!mobileQuery.matches) {
+        setVisible(true);
+        return;
+      }
+      if (show || lastScrollY <= 24 || hasOpenMobileOverlay()) setVisible(true);
+    };
+
+    const update = () => {
+      scrollFrame = 0;
+
+      if (!mobileQuery.matches) {
+        reset();
+        return;
+      }
+
+      const currentY = clampScrollY();
+      const delta = currentY - lastScrollY;
+
+      if (currentY <= 24 || hasOpenMobileOverlay()) {
+        setVisible(true);
+        accumulatedDelta = 0;
+        lastScrollY = currentY;
+        return;
+      }
+
+      if (Math.abs(delta) < 2) {
+        lastScrollY = currentY;
+        return;
+      }
+
+      const sameDirection = accumulatedDelta === 0 || Math.sign(accumulatedDelta) === Math.sign(delta);
+      accumulatedDelta = sameDirection ? accumulatedDelta + delta : delta;
+
+      if (accumulatedDelta > 14 && currentY > 90 && chromeVisible) {
+        setVisible(false);
+        accumulatedDelta = 0;
+      } else if (accumulatedDelta < -10 && !chromeVisible) {
+        setVisible(true);
+        accumulatedDelta = 0;
+      }
+
+      lastScrollY = currentY;
+    };
+
+    const requestUpdate = () => {
+      if (scrollFrame) return;
+      scrollFrame = window.requestAnimationFrame(update);
+    };
+
+    const forceVisible = () => {
+      setVisible(true);
+      reset();
+    };
+
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", () => reset(true), { passive: true });
+    window.addEventListener("orientationchange", () => reset(true), { passive: true });
+    window.addEventListener("pageshow", () => reset(true), { passive: true });
+    document.addEventListener("focusin", (event) => {
+      if (event.target.closest?.("input, textarea, select")) forceVisible();
+    });
+    document.addEventListener("focusout", () => reset(true));
+
+    mobileQuery.addEventListener?.("change", () => reset(true));
+    reset(true);
+
+    return { forceVisible, reset: () => reset(true), requestUpdate };
+  }
 
   function setupFloatingControls() {
     const windToggle = document.querySelector(".wind-toggle");
@@ -285,17 +398,10 @@
     document.body.classList.add("floating-controls-ready");
 
     if (!finePointer) {
-      let idleTimer = 0;
-      const wake = () => {
-        document.body.classList.add("floating-controls-awake");
-        window.clearTimeout(idleTimer);
-        idleTimer = window.setTimeout(() => document.body.classList.remove("floating-controls-awake"), 2200);
-      };
-      [...leftControls, ...rightControls].forEach((control) => {
-        control.addEventListener("pointerdown", wake, { passive: true });
-        control.addEventListener("focus", wake);
-      });
-      wake();
+      document.body.classList.remove("floating-left-open", "floating-right-open", "floating-controls-awake");
+      if (!window.matchMedia("(max-width: 840px)").matches) {
+        document.body.classList.add("floating-left-open", "floating-right-open");
+      }
       return;
     }
 
@@ -353,6 +459,7 @@
     });
   }
 
+  mobileChromeController = setupMobileScrollChrome();
   setupFloatingControls();
 
   if (finePointer && !reducedMotion && !document.querySelector(".ink-cursor")) {
