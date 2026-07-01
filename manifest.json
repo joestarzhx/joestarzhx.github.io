@@ -1,10 +1,22 @@
 {
-  "name": "Haoxuan Zhang Portfolio",
-  "short_name": "Haoxuan Zhang",
-  "description": "Haoxuan Zhang（张颢轩）的个人博客与作品集。",
+  "name": "张颢轩｜Blog & Portfolio",
+  "short_name": "张颢轩",
+  "description": "张颢轩的个人博客与数字作品集",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f5f7",
   "theme_color": "#8f1d2c",
-  "lang": "zh-CN"
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/images/branding/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/branding/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
 }

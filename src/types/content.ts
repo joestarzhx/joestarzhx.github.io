@@ -1,10 +1,9 @@
 export type ProjectCategory =
   | "Web 与 H5"
+  | "比赛作品"
   | "Manim 与科普动画"
-  | "AI 影像与视觉设计"
   | "Live2D 与虚拟角色"
-  | "开源工具与代码"
-  | "比赛作品";
+  | "AI 影像与视觉设计";
 
 export type Project = {
   slug: string;
@@ -23,17 +22,10 @@ export type Project = {
   challenges: string[];
   results: string[];
   gallery: string[];
-  github?: string;
   demo?: string;
 };
 
-export type PostCategory =
-  | "技术开发"
-  | "视觉设计"
-  | "物理与数学"
-  | "AI 创作"
-  | "项目复盘"
-  | "随笔思考";
+export type PostCategory = "项目复盘" | "视觉设计" | "物理与数学";
 
 export type Post = {
   slug: string;
@@ -41,11 +33,14 @@ export type Post = {
   description: string;
   category: PostCategory;
   tags: string[];
-  date: string;
-  readingTime: string;
-  cover?: string;
+  date?: string;
+  cover: string;
   featured: boolean;
   headings: string[];
+  body: Array<{
+    heading: string;
+    paragraphs: string[];
+  }>;
 };
 
 export type Experience = {

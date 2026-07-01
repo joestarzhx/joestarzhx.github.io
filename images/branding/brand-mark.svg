@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="112" fill="#F5F5F7"/>
+<path d="M370 119A164 164 0 1 1 391 339" fill="none" stroke="#8F1D2C" stroke-width="18" stroke-linecap="round"/>
+<path d="M188 157l44-62 37 72M279 167l37-72 44 62" fill="none" stroke="#8F1D2C" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="256" y="310" text-anchor="middle" font-size="118" font-family="Inter,Arial,sans-serif" font-weight="600" fill="#1D1D1F">HZ</text>
+</svg>

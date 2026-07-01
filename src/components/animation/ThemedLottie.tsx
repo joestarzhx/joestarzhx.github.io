@@ -11,7 +11,8 @@ type ThemedLottieProps = Omit<LottieAnimationProps, "src"> & {
 
 export function ThemedLottie({ light, dark, shared, ...props }: ThemedLottieProps) {
   const { resolvedTheme } = useTheme();
-  const src = resolvedTheme === "dark" ? dark : light;
+  const preferred = resolvedTheme === "dark" ? dark : light;
+  const sources = [preferred, shared].filter((item): item is string => Boolean(item));
 
-  return <LottieAnimation key={src} src={src ?? shared ?? light} {...props} />;
+  return <LottieAnimation key={sources.join("|")} src={sources} {...props} />;
 }

@@ -11,9 +11,10 @@ type ButtonProps = {
   href?: string;
   variant?: "primary" | "secondary" | "ghost";
   className?: string;
+  ariaLabel?: string;
 } & HTMLMotionProps<"button">;
 
-export function Button({ children, href, variant = "primary", className, ...props }: ButtonProps) {
+export function Button({ children, href, variant = "primary", className, ariaLabel, ...props }: ButtonProps) {
   const classes = cn(
     "focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-medium transition-colors",
     variant === "primary" && "bg-[var(--text-primary)] text-[var(--background)] hover:opacity-90",
@@ -24,11 +25,18 @@ export function Button({ children, href, variant = "primary", className, ...prop
   );
 
   if (href) {
+    const external = /^https?:\/\//.test(href);
     return (
       <motion.span whileTap={{ scale: 0.975 }} transition={motionTokens.spring}>
-        <Link className={classes} href={href}>
-          {children}
-        </Link>
+        {external ? (
+          <a className={classes} href={href} target="_blank" rel="noopener noreferrer" aria-label={ariaLabel}>
+            {children}
+          </a>
+        ) : (
+          <Link className={classes} href={href} aria-label={ariaLabel}>
+            {children}
+          </Link>
+        )}
       </motion.span>
     );
   }

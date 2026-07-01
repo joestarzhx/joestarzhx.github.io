@@ -1,26 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { motion, useReducedMotion, useScroll } from "motion/react";
 
 export function ReadingProgress() {
-  const [progress, setProgress] = useState(0);
+  const { scrollYProgress } = useScroll();
+  const reducedMotion = useReducedMotion();
 
-  useEffect(() => {
-    const update = () => {
-      const height = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(height <= 0 ? 0 : window.scrollY / height);
-    };
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
-  }, []);
+  if (reducedMotion) return null;
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-[60] h-0.5 bg-transparent">
-      <div
-        className="h-full bg-[var(--accent)]"
-        style={{ transform: `scaleX(${progress})`, transformOrigin: "left" }}
-      />
+    <div className="pointer-events-none fixed left-0 right-0 top-0 z-40 h-0.5 bg-transparent">
+      <motion.div className="h-full origin-left bg-[var(--accent)]" style={{ scaleX: scrollYProgress }} />
     </div>
   );
 }

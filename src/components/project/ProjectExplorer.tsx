@@ -40,12 +40,12 @@ export function ProjectExplorer() {
       <AnimatePresence mode="popLayout">
         {filtered.length > 0 ? (
           <motion.div layout className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((project) => (
-              <ProjectCard project={project} key={project.slug} />
+            {filtered.map((project, index) => (
+              <ProjectCard project={project} key={project.slug} priority={index === 0} />
             ))}
           </motion.div>
         ) : (
-          <EmptyState title="没有匹配项目" text="换一个分类试试，后续接入真实数据后会显示更多内容。" />
+          <EmptyState title="没有匹配项目" text="可以切换分类查看其他作品。" />
         )}
       </AnimatePresence>
     </div>

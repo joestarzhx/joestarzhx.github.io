@@ -11,6 +11,8 @@ export default function NotFound() {
         <ThemedLottie
           light={lostDot.light}
           dark={lostDot.dark}
+          shared={lostDot.shared}
+          fallbackSrc={lostDot.fallback}
           loop
           speed={lostDot.speed}
           className="pointer-events-none mx-auto aspect-square w-56"

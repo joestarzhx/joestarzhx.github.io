@@ -19,7 +19,7 @@ export default function LottiePreviewPage() {
         <SectionHeading
           eyebrow="Internal Preview"
           title="Lottie 动画验收台"
-          text="这里展示已接入的全部动画、主题版本、加载状态、尺寸、文件大小和基本播放控制。该页面不加入正式导航。"
+          text="这里展示已接入的全部动画、主题版本、静态回退和基本播放控制。该页面不加入正式导航。"
         />
         <LottiePreviewGrid />
       </section>
