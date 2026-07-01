@@ -5,6 +5,7 @@ import { BrandIntro } from "@/components/animation/BrandIntro";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,6 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Haoxuan Zhang（张颢轩） | Blog & Portfolio",
     template: "%s | Haoxuan Zhang",
