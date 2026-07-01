@@ -7,7 +7,7 @@ import { getLottieItem } from "@/data/lottie";
 
 export const metadata: Metadata = {
   title: "项目",
-  description: "Haoxuan Zhang（张颢轩）的项目与作品集。",
+  description: "张颢轩的网页、动画、视觉设计与数字创作项目。",
 };
 
 export default function ProjectsPage() {
@@ -16,7 +16,7 @@ export default function ProjectsPage() {
   return (
     <PageContainer>
       <section className="container-shell section-space">
-        <div className="grid gap-8 lg:grid-cols-[1fr_260px] lg:items-end">
+        <div className="grid gap-6 lg:grid-cols-[1fr_260px] lg:items-end">
           <SectionHeading
             eyebrow="Projects"
             title="作品不是截图集合，而是问题、过程和结果。"
@@ -25,9 +25,11 @@ export default function ProjectsPage() {
           <ThemedLottie
             light={projectsStack.light}
             dark={projectsStack.dark}
+            shared={projectsStack.shared}
+            fallbackSrc={projectsStack.fallback}
             loop={false}
             speed={projectsStack.speed}
-            className="pointer-events-none aspect-square w-48 lg:ml-auto lg:w-64"
+            className="pointer-events-none mx-auto aspect-square w-[120px] lg:ml-auto lg:w-64"
             decorative
           />
         </div>

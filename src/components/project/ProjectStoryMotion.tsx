@@ -24,16 +24,21 @@ export function ProjectStoryMotion({ children }: { children: React.ReactNode }) 
           start: "top 78%",
         },
       });
-      gsap.to("[data-story-hero]", {
-        yPercent: 8,
-        ease: "none",
-        scrollTrigger: {
-          trigger: "[data-story-hero]",
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
+      gsap.fromTo(
+        "[data-story-hero-media]",
+        { scale: 1.08, yPercent: -4 },
+        {
+          scale: 1.02,
+          yPercent: 4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: "[data-story-hero]",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
         },
-      });
+      );
     }, scope);
 
     return () => ctx.revert();

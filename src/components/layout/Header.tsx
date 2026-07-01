@@ -32,6 +32,11 @@ export function Header() {
   }, []);
 
   useEffect(() => {
+    const timeout = window.setTimeout(() => setOpen(false), 0);
+    return () => window.clearTimeout(timeout);
+  }, [pathname]);
+
+  useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -47,12 +52,7 @@ export function Header() {
   }, [open]);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled ? "py-3" : "py-5",
-      )}
-    >
+    <header className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-300", scrolled ? "py-3" : "py-5")}>
       <div
         className={cn(
           "container-shell flex items-center justify-between rounded-full px-4 transition-all duration-300",
@@ -111,11 +111,12 @@ export function Header() {
               }}
             />
             <motion.nav
-              className="glass absolute inset-x-4 top-20 rounded-[32px] p-5"
+              className="glass absolute inset-x-4 top-20 rounded-[24px] p-5"
               initial={{ y: -18, scale: 0.98, opacity: 0 }}
               animate={{ y: 0, scale: 1, opacity: 1 }}
               exit={{ y: -18, scale: 0.98, opacity: 0 }}
               transition={{ type: "spring", stiffness: 260, damping: 28 }}
+              aria-label="移动端导航"
             >
               <div className="grid gap-2">
                 {nav.map((item) => (

@@ -56,8 +56,14 @@ body {
     radial-gradient(circle at top left, var(--accent-soft), transparent 34rem),
     var(--background);
   color: var(--text-primary);
-  font-family: var(--font-geist-sans), "MiSans", "HarmonyOS Sans SC", "Noto Sans SC",
-    system-ui, sans-serif;
+  font-family:
+    var(--font-geist-sans),
+    "PingFang SC",
+    "Microsoft YaHei",
+    "HarmonyOS Sans SC",
+    "Noto Sans SC",
+    system-ui,
+    sans-serif;
 }
 
 ::selection {
@@ -117,8 +123,9 @@ input {
 
 .prose-custom {
   color: var(--text-secondary);
-  font-size: 1.05rem;
-  line-height: 1.9;
+  max-width: 760px;
+  font-size: 1.06rem;
+  line-height: 1.85;
 }
 
 .prose-custom h2 {

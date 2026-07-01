@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, ExternalLink, GitBranch } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { ProjectStoryMotion } from "@/components/project/ProjectStoryMotion";
+import { ProjectImage } from "@/components/project/ProjectImage";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { projects } from "@/data/projects";
@@ -34,16 +34,34 @@ export default async function ProjectDetailPage({ params }: Props) {
     <ProjectStoryMotion>
       <main className="pt-[var(--nav-height)]">
         <section className="container-shell section-space pb-12">
-          <Link className="focus-ring mb-10 inline-flex items-center gap-2 rounded-full text-sm text-[var(--text-secondary)]" href="/projects">
+          <Link
+            className="focus-ring mb-10 inline-flex items-center gap-2 rounded-full text-sm text-[var(--text-secondary)]"
+            href="/projects"
+          >
             <ArrowLeft size={16} /> 返回项目
           </Link>
           <div className="max-w-4xl">
-            <p className="mb-4 text-sm font-medium text-[var(--accent)]">{project.category} · {project.year}</p>
+            <p className="mb-4 text-sm font-medium text-[var(--accent)]">
+              {project.category} · {project.year}
+            </p>
             <h1 className="text-5xl font-semibold tracking-normal sm:text-7xl">{project.title}</h1>
             <p className="mt-6 text-2xl leading-10 text-[var(--text-secondary)]">{project.subtitle}</p>
           </div>
-          <div data-story-hero className="relative mt-12 aspect-[16/9] overflow-hidden rounded-[36px] bg-[var(--surface-muted)]">
-            <Image src={project.cover} alt={`${project.title} 项目封面`} fill priority sizes="100vw" className="object-cover" />
+          <div
+            data-story-hero
+            className="relative mt-12 aspect-[16/9] overflow-hidden rounded-[26px] bg-[var(--surface-muted)]"
+          >
+            <div data-story-hero-media className="absolute inset-0">
+              <ProjectImage
+                src={project.cover}
+                alt={`${project.title} 项目主视觉`}
+                title={project.title}
+                priority
+                sizes="100vw"
+                className="relative size-full"
+                imageClassName="object-cover"
+              />
+            </div>
           </div>
         </section>
 
@@ -51,51 +69,99 @@ export default async function ProjectDetailPage({ params }: Props) {
           <div>
             <h2 className="text-3xl font-semibold">我负责的内容</h2>
             <div className="mt-6 flex flex-wrap gap-2">
-              {project.responsibilities.map((item) => <Badge key={item}>{item}</Badge>)}
+              {project.responsibilities.map((item) => (
+                <Badge key={item}>{item}</Badge>
+              ))}
             </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              {project.github ? <Button href={project.github} variant="secondary"><GitBranch size={16} /> GitHub</Button> : null}
-              {project.demo ? <Button href={project.demo}><ExternalLink size={16} /> 在线预览</Button> : null}
-            </div>
+            {project.demo ? (
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button href={project.demo} ariaLabel={`在新标签页打开${project.title}`}>
+                  <ExternalLink size={16} /> 在线预览
+                </Button>
+              </div>
+            ) : null}
           </div>
           <div className="prose-custom">
-            <h2 id="背景">项目背景</h2>
+            <h2 id="项目背景">项目背景</h2>
             <p>{project.background}</p>
             <h2 id="设计目标">设计目标</h2>
-            <ul>{project.goals.map((item) => <li key={item}>{item}</li>)}</ul>
-            <h2 id="技术方案">技术方案与过程</h2>
-            <ul>{project.process.map((item) => <li key={item}>{item}</li>)}</ul>
-            <h2 id="问题">遇到的问题</h2>
-            <ul>{project.challenges.map((item) => <li key={item}>{item}</li>)}</ul>
-            <h2 id="成果">最终成果</h2>
-            <ul>{project.results.map((item) => <li key={item}>{item}</li>)}</ul>
+            <ul>
+              {project.goals.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <h2 id="实现过程">实现过程</h2>
+            <ul>
+              {project.process.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <h2 id="遇到的问题">遇到的问题</h2>
+            <ul>
+              {project.challenges.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <h2 id="最终成果">最终成果</h2>
+            <ul>
+              {project.results.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
           </div>
         </section>
 
         <section className="container-shell section-space" data-story-gallery>
           <div className="mb-8 flex flex-wrap gap-2">
-            {project.tags.map((tag) => <Badge key={tag}>{tag}</Badge>)}
+            {project.tags.map((tag) => (
+              <Badge key={tag}>{tag}</Badge>
+            ))}
           </div>
           <div className="grid gap-5 md:grid-cols-2">
-            {project.gallery.map((image) => (
-              <div data-story-image className="relative aspect-[16/10] overflow-hidden rounded-[28px] bg-[var(--surface-muted)]" key={image}>
-                <Image src={image} alt={`${project.title} 展示图`} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
+            {project.gallery.map((image, index) => (
+              <div
+                data-story-image
+                className="relative aspect-[16/10] overflow-hidden rounded-[22px] bg-[var(--surface-muted)]"
+                key={image}
+              >
+                <ProjectImage
+                  src={image}
+                  alt={`${project.title} 展示画面 ${index + 1}`}
+                  title={project.title}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="relative size-full"
+                  imageClassName="object-cover"
+                />
               </div>
             ))}
           </div>
         </section>
 
-        <nav className="container-shell mb-20 grid gap-4 border-t border-[var(--border)] pt-8 md:grid-cols-2" aria-label="项目导航">
+        <nav
+          className="container-shell mb-20 grid gap-4 border-t border-[var(--border)] pt-8 md:grid-cols-2"
+          aria-label="项目导航"
+        >
           {adjacent.previous ? (
-            <Link className="focus-ring rounded-[24px] border border-[var(--border)] p-5" href={`/projects/${adjacent.previous.slug}`}>
+            <Link
+              className="focus-ring rounded-[20px] border border-[var(--border)] p-5"
+              href={`/projects/${adjacent.previous.slug}`}
+            >
               <span className="text-sm text-[var(--text-secondary)]">上一个项目</span>
               <p className="mt-2 text-xl font-semibold">{adjacent.previous.title}</p>
             </Link>
-          ) : <div />}
+          ) : (
+            <div />
+          )}
           {adjacent.next ? (
-            <Link className="focus-ring rounded-[24px] border border-[var(--border)] p-5 text-right" href={`/projects/${adjacent.next.slug}`}>
+            <Link
+              className="focus-ring rounded-[20px] border border-[var(--border)] p-5 text-right"
+              href={`/projects/${adjacent.next.slug}`}
+            >
               <span className="text-sm text-[var(--text-secondary)]">下一个项目</span>
-              <p className="mt-2 inline-flex items-center gap-2 text-xl font-semibold">{adjacent.next.title}<ArrowRight size={18} /></p>
+              <p className="mt-2 inline-flex items-center gap-2 text-xl font-semibold">
+                {adjacent.next.title}
+                <ArrowRight size={18} />
+              </p>
             </Link>
           ) : null}
         </nav>

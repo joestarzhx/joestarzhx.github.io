@@ -5,16 +5,18 @@ export function LottieDemo() {
   const labModules = getLottieItem("lab-modules")!;
 
   return (
-    <div className="rounded-[30px] border border-[var(--border)] bg-[var(--surface-solid)] p-5">
+    <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-5">
       <ThemedLottie
         light={labModules.light}
         dark={labModules.dark}
+        shared={labModules.shared}
+        fallbackSrc={labModules.fallback}
         loop
         speed={labModules.speed}
         ariaLabel="实验室模块动画"
         decorative={false}
         replayOnHover
-        className="overflow-hidden rounded-[24px]"
+        className="overflow-hidden rounded-[18px]"
       />
       <div className="mt-5 flex items-center justify-between gap-4">
         <div>

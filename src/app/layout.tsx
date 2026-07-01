@@ -22,23 +22,26 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Haoxuan Zhang（张颢轩） | Blog & Portfolio",
+    default: "张颢轩（Haoxuan Zhang）｜个人博客与作品集",
     template: "%s | Haoxuan Zhang",
   },
-  description: "一个克制、流畅、以作品和文章为核心的个人博客与作品集。",
-  keywords: ["个人博客", "作品集", "前端开发", "交互设计", "动效设计", "Next.js"],
+  description:
+    "张颢轩的个人博客与数字作品集，记录前端开发、交互动效、视觉设计、Manim 科普动画、AI 视觉创作与 Live2D 项目。",
+  keywords: ["个人博客", "作品集", "前端开发", "交互设计", "动效设计", "Manim", "Live2D", "Next.js"],
   authors: [{ name: "Haoxuan Zhang" }],
   creator: "Haoxuan Zhang",
   manifest: "/manifest.json",
   openGraph: {
-    title: "Haoxuan Zhang（张颢轩） | Blog & Portfolio",
-    description: "代码、动画与视觉设计的个人创作档案。",
+    title: "张颢轩（Haoxuan Zhang）｜个人博客与作品集",
+    description: "张颢轩的个人博客与数字作品集。",
     type: "website",
+    images: ["/images/branding/site-og-cover.webp"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Haoxuan Zhang（张颢轩） | Blog & Portfolio",
-    description: "代码、动画与视觉设计的个人创作档案。",
+    title: "张颢轩（Haoxuan Zhang）｜个人博客与作品集",
+    description: "张颢轩的个人博客与数字作品集。",
+    images: ["/images/branding/site-og-cover.webp"],
   },
   robots: {
     index: true,

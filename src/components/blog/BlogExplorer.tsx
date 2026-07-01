@@ -13,7 +13,7 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.tags)));
 export function BlogExplorer() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<(typeof postCategories)[number]>("全部");
-  const [tag, setTag] = useState("全部");
+  const [tag, setTag] = useState("全部标签");
   const [focused, setFocused] = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export function BlogExplorer() {
     const term = query.trim().toLowerCase();
     return posts.filter((post) => {
       const categoryMatch = category === "全部" || post.category === category;
-      const tagMatch = tag === "全部" || post.tags.includes(tag);
+      const tagMatch = tag === "全部标签" || post.tags.includes(tag);
       const queryMatch =
         !term ||
         [post.title, post.description, post.category, ...post.tags]
@@ -73,7 +73,12 @@ export function BlogExplorer() {
             </button>
           ) : null}
         </motion.div>
-        <LinkArchive />
+        <a
+          className="focus-ring inline-flex min-h-12 items-center justify-center rounded-full border border-[var(--border)] px-5 text-sm text-[var(--text-secondary)]"
+          href="#archive"
+        >
+          文章归档
+        </a>
       </div>
 
       <div className="mb-5 flex gap-2 overflow-x-auto pb-2">
@@ -94,7 +99,7 @@ export function BlogExplorer() {
         ))}
       </div>
       <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
-        {["全部", ...allTags].map((item) => (
+        {["全部标签", ...allTags].map((item) => (
           <button
             className={cn(
               "focus-ring shrink-0 rounded-full px-3 py-1 text-sm",
@@ -113,26 +118,25 @@ export function BlogExplorer() {
         {filtered.length ? (
           <motion.div layout className="grid gap-4">
             {filtered.map((post) => (
-              <motion.div layout key={post.slug}>
+              <motion.div
+                layout
+                key={post.slug}
+                initial={{ opacity: 0, y: 12, scale: 0.99 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.985 }}
+                transition={{ duration: 0.22 }}
+              >
                 <PostCard post={post} />
               </motion.div>
             ))}
           </motion.div>
         ) : (
-          <EmptyState title="没有找到文章" text="试着减少关键词或切换分类。搜索仅使用本地模拟数据。" />
+          <EmptyState
+            title="没有找到文章"
+            text="文章正在整理中。这里将记录项目复盘、技术实践与创作思考。"
+          />
         )}
       </AnimatePresence>
     </div>
-  );
-}
-
-function LinkArchive() {
-  return (
-    <a
-      className="focus-ring inline-flex min-h-12 items-center justify-center rounded-full border border-[var(--border)] px-5 text-sm text-[var(--text-secondary)]"
-      href="#archive"
-    >
-      文章归档
-    </a>
   );
 }
