@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://joestarzhx.github.io/sitemap.xml
