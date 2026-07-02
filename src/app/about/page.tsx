@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { ProfileCard } from "@/components/profile/ProfileCard";
 import { Button } from "@/components/ui/Button";
-import { getLottieItem } from "@/data/lottie";
 import { profile } from "@/data/profile";
 import { socials } from "@/data/socials";
 
@@ -13,8 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  const brandIntro = getLottieItem("brand-intro")!;
-
   return (
     <PageContainer>
       <section className="container-shell section-space">
@@ -37,7 +34,7 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          <ProfileCard photo={profile.photo} brandIntro={brandIntro} />
+          <ProfileCard photo={profile.photo} />
         </div>
       </section>
 

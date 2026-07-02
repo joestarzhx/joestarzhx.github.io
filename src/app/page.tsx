@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ThemedLottie } from "@/components/animation/ThemedLottie";
 import { Reveal } from "@/components/animation/Reveal";
+import { CapabilityPath } from "@/components/home/CapabilityPath";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { ProjectImage } from "@/components/project/ProjectImage";
 import { Badge } from "@/components/ui/Badge";
@@ -23,7 +24,6 @@ export default function Home() {
   const latestPosts = getPublishedPosts().slice(0, 4);
   const heroOrbit = getLottieItem("hero-orbit")!;
   const projectsStack = getLottieItem("projects-stack")!;
-  const articleWriting = getLottieItem("article-writing")!;
 
   return (
     <PageContainer>
@@ -148,36 +148,14 @@ export default function Home() {
             eyebrow="能力方向"
             title="工程、审美和叙事放在同一张桌上。"
           />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {capabilities.map((item) => (
-              <Reveal
-                className="rounded-[20px] border border-[var(--border)] p-6"
-                key={item.title}
-              >
-                <item.icon className="mb-8 text-[var(--accent)]" size={24} />
-                <h3 className="text-xl font-semibold">{item.title}</h3>
-                <p className="mt-3 leading-7 text-[var(--text-secondary)]">
-                  {item.text}
-                </p>
-              </Reveal>
-            ))}
-          </div>
+          <CapabilityPath items={capabilities} />
         </div>
       </section>
 
       <section className="section-space container-shell">
         <div className="flex items-start justify-between gap-6">
           <SectionHeading eyebrow="最新文章" title="记录每次取舍背后的判断。" />
-          <ThemedLottie
-            light={articleWriting.light}
-            dark={articleWriting.dark}
-            shared={articleWriting.shared}
-            fallbackSrc={articleWriting.fallback}
-            loop={false}
-            speed={articleWriting.speed}
-            className="pointer-events-none hidden aspect-square w-28 shrink-0 md:block"
-            decorative
-          />
+          <div className="hidden h-12 w-28 shrink-0 border-b border-[var(--accent)] opacity-55 md:block" aria-hidden="true" />
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
           {latestPosts.map((post) => (
@@ -188,7 +166,7 @@ export default function Home() {
             >
               <ProjectImage
                 src={post.cover}
-                alt={`${post.title} ????`}
+                alt={`${post.title} 文章封面`}
                 title={post.title}
                 sizes="(max-width: 1024px) 100vw, 360px"
                 className="relative aspect-[2/1] overflow-hidden bg-[var(--surface-muted)]"
@@ -196,7 +174,7 @@ export default function Home() {
               />
               <div className="p-5">
                 <p className="text-sm text-[var(--text-secondary)]">
-                  {post.category} ? {estimateReadingTime(post)}
+                  {post.category} · {estimateReadingTime(post)}
                 </p>
                 <h3 className="mt-4 text-xl font-semibold leading-7">
                   {post.title}

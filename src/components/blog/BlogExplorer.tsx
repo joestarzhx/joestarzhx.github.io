@@ -99,6 +99,7 @@ export function BlogExplorer({ posts, categories, tags }: BlogExplorerProps) {
             )}
             key={item}
             type="button"
+            aria-pressed={category === item}
             onClick={() => setCategory(item)}
           >
             {item}
@@ -109,16 +110,17 @@ export function BlogExplorer({ posts, categories, tags }: BlogExplorerProps) {
         {["全部标签", ...tags].map((item) => (
           <button
             className={cn(
-              "focus-ring shrink-0 rounded-full px-3 py-1 text-sm",
+              "focus-ring min-h-9 shrink-0 rounded-full px-3 py-1 text-sm",
               tag === item
                 ? "bg-[var(--accent-soft)] text-[var(--accent)]"
                 : "text-[var(--text-secondary)]",
             )}
             key={item}
             type="button"
+            aria-pressed={tag === item}
             onClick={() => setTag(item)}
           >
-            #{item}
+            {item === "全部标签" ? item : `#${item}`}
           </button>
         ))}
       </div>

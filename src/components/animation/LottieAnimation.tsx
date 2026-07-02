@@ -103,15 +103,18 @@ export function LottieAnimation({
   const reducedMotion = useReducedMotion();
   const [data, setData] = useState<LottieData | null>(null);
   const [failed, setFailed] = useState(false);
-  const shouldLoad = !playOnView || inView;
   const resolvedSources = useMemo(
     () => (Array.isArray(src) ? src : [src]).filter(Boolean).map((item) => assetPath(item)),
     [src],
   );
   const resolvedFallback = useMemo(() => (fallbackSrc ? assetPath(fallbackSrc) : undefined), [fallbackSrc]);
+  const shouldLoad = (!playOnView || inView) && resolvedSources.length > 0;
 
   useEffect(() => {
-    if (!shouldLoad || reducedMotion) return;
+    if (!shouldLoad || reducedMotion) {
+      if (!resolvedSources.length) onLoadStateChange?.("error");
+      return;
+    }
     let cancelled = false;
     const resetFailedTimeout = window.setTimeout(() => {
       if (!cancelled) setFailed(false);

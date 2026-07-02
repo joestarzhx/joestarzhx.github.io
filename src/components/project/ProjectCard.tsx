@@ -8,14 +8,23 @@ import { Badge } from "@/components/ui/Badge";
 import { ProjectImage } from "@/components/project/ProjectImage";
 import { motionTokens } from "@/lib/motion";
 
-export function ProjectCard({ project, priority = false }: { project: Project; priority?: boolean }) {
+export function ProjectCard({
+  project,
+  priority = false,
+  featured = false,
+}: {
+  project: Project;
+  priority?: boolean;
+  featured?: boolean;
+}) {
   return (
     <motion.article
       layout
-      initial={{ opacity: 0, y: 12, scale: 0.99 }}
+      initial={{ opacity: 0, y: 16, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -6, scale: 0.985 }}
-      transition={{ ...motionTokens.gentleSpring, duration: 0.22 }}
+      exit={{ opacity: 0, y: -8, scale: 0.98 }}
+      transition={{ ...motionTokens.gentleSpring, duration: 0.28 }}
+      className={featured ? "xl:col-span-2" : undefined}
     >
       <Link
         className="focus-ring group block overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface-solid)]"

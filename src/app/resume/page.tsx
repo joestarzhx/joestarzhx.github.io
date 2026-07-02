@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ThemedLottie } from "@/components/animation/ThemedLottie";
 import { ExperienceTimeline } from "@/components/resume/ExperienceTimeline";
 import { ResumeDownload } from "@/components/resume/ResumeDownload";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Badge } from "@/components/ui/Badge";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { profile } from "@/data/profile";
-import { getLottieItem } from "@/data/lottie";
 import { projects } from "@/data/projects";
 import { skillGroups } from "@/data/skills";
 import { socials } from "@/data/socials";
@@ -19,8 +17,6 @@ export const metadata: Metadata = {
 };
 
 export default function ResumePage() {
-  const resumeTimeline = getLottieItem("resume-timeline")!;
-
   return (
     <PageContainer>
       <section className="container-shell section-space">
@@ -30,27 +26,27 @@ export default function ResumePage() {
             title="在线简历，像作品一样说明能力。"
             text={profile.bio}
           />
-          <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-6">
+          <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-5 sm:p-6">
             <div className="mb-5 flex items-center gap-4">
-              <div className="relative h-28 w-24 overflow-hidden rounded-[20px] bg-[var(--surface-muted)]">
+              <div className="relative h-[116px] w-[88px] overflow-hidden rounded-[20px] bg-[var(--surface-muted)] sm:h-[132px] sm:w-[104px]">
                 <Image
                   src={profile.photo}
-                  alt="???????"
+                  alt="张颢轩个人照片"
                   fill
-                  sizes="96px"
+                  sizes="(max-width: 640px) 88px, 104px"
                   className="object-contain object-center"
                 />
               </div>
-              <ThemedLottie
-                light={resumeTimeline.light}
-                dark={resumeTimeline.dark}
-                shared={resumeTimeline.shared}
-                fallbackSrc={resumeTimeline.fallback}
-                loop={false}
-                speed={resumeTimeline.speed}
-                className="pointer-events-none aspect-square w-20 opacity-70"
-                decorative
-              />
+              <div className="grid size-12 shrink-0 place-items-center rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
+                <Image
+                  src="/images/lottie-fallbacks/brand-intro-static.svg"
+                  alt=""
+                  width={44}
+                  height={44}
+                  aria-hidden="true"
+                  className="object-contain"
+                />
+              </div>
             </div>
             <p className="text-sm text-[var(--text-secondary)]">当前身份</p>
             <h2 className="mt-2 text-2xl font-semibold">{profile.current}</h2>

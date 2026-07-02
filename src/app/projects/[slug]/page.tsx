@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { ProjectStoryMotion } from "@/components/project/ProjectStoryMotion";
+import { ProjectStoryNavigation, type ProjectStorySection } from "@/components/project/ProjectStoryNavigation";
 import { ProjectImage } from "@/components/project/ProjectImage";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -29,6 +30,13 @@ export default async function ProjectDetailPage({ params }: Props) {
   const project = getProject(slug);
   if (!project) notFound();
   const adjacent = getAdjacentBySlug(projects, project.slug);
+  const storySections: ProjectStorySection[] = [
+    { id: "project-background", label: "项目背景" },
+    { id: "design-goals", label: "设计目标" },
+    { id: "process", label: "实现过程" },
+    { id: "challenges", label: "遇到的问题" },
+    { id: "results", label: "最终成果" },
+  ];
 
   return (
     <ProjectStoryMotion>
@@ -65,7 +73,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           </div>
         </section>
 
-        <section className="container-shell grid gap-10 py-16 lg:grid-cols-[0.8fr_1.2fr]">
+        <section className="container-shell grid gap-10 py-16 lg:grid-cols-[0.55fr_1.25fr]">
           <div>
             <h2 className="text-3xl font-semibold">我负责的内容</h2>
             <div className="mt-6 flex flex-wrap gap-2">
@@ -80,29 +88,32 @@ export default async function ProjectDetailPage({ params }: Props) {
                 </Button>
               </div>
             ) : null}
+            <div className="mt-10">
+              <ProjectStoryNavigation sections={storySections} />
+            </div>
           </div>
-          <div className="prose-custom">
-            <h2 id="项目背景">项目背景</h2>
+          <div className="prose-custom" data-project-story>
+            <h2 id="project-background" data-story-section>项目背景</h2>
             <p>{project.background}</p>
-            <h2 id="设计目标">设计目标</h2>
+            <h2 id="design-goals" data-story-section>设计目标</h2>
             <ul>
               {project.goals.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
-            <h2 id="实现过程">实现过程</h2>
+            <h2 id="process" data-story-section>实现过程</h2>
             <ul>
               {project.process.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
-            <h2 id="遇到的问题">遇到的问题</h2>
+            <h2 id="challenges" data-story-section>遇到的问题</h2>
             <ul>
               {project.challenges.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
-            <h2 id="最终成果">最终成果</h2>
+            <h2 id="results" data-story-section>最终成果</h2>
             <ul>
               {project.results.map((item) => (
                 <li key={item}>{item}</li>

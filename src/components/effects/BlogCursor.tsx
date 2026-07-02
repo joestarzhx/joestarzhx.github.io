@@ -47,18 +47,6 @@ function isDisabled(target: Element | null) {
   );
 }
 
-function createClickRipple(x: number, y: number) {
-  const ripple = document.createElement("span");
-  ripple.className = "blog-click-ripple";
-  ripple.style.left = `${x}px`;
-  ripple.style.top = `${y}px`;
-  ripple.setAttribute("aria-hidden", "true");
-  document.body.appendChild(ripple);
-  ripple.addEventListener("animationend", () => ripple.remove(), {
-    once: true,
-  });
-}
-
 export function BlogCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
 
@@ -118,7 +106,6 @@ export function BlogCursor() {
       const target = event.target as Element | null;
       if (target?.closest(TEXT_SELECTOR) || isDisabled(target)) return;
       cursor.dataset.pressed = "true";
-      createClickRipple(event.clientX, event.clientY);
     };
 
     const onPointerUp = () => {
@@ -153,9 +140,6 @@ export function BlogCursor() {
       );
       document.removeEventListener("visibilitychange", onVisibilityChange);
       delete html.dataset.customCursor;
-      document
-        .querySelectorAll(".blog-click-ripple")
-        .forEach((node) => node.remove());
     };
   }, []);
 

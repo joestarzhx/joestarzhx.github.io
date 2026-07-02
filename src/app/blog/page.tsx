@@ -24,11 +24,12 @@ export default function BlogPage() {
   return (
     <PageContainer>
       <section className="container-shell section-space">
-        <div className="grid gap-6 lg:grid-cols-[1fr_260px] lg:items-end">
+        <div className="grid gap-6 lg:grid-cols-[1fr_300px] lg:items-center">
           <SectionHeading
             eyebrow="Blog"
             title="写下方法，也写下判断。"
             text="记录前端开发、交互动效、视觉设计、科普动画与数字创作中的方法、过程和判断。"
+            spacing="none"
           />
           <ThemedLottie
             light={articleWriting.light}
@@ -37,14 +38,16 @@ export default function BlogPage() {
             fallbackSrc={articleWriting.fallback}
             loop={false}
             speed={articleWriting.speed}
-            className="pointer-events-none mx-auto aspect-square w-[120px] lg:ml-auto lg:w-64"
+            className="pointer-events-none mx-auto aspect-square w-[130px] lg:ml-auto lg:w-72"
             decorative
           />
         </div>
-        <div className="mb-12 grid gap-4 lg:grid-cols-3">
-          {featured.map((post) => (
+        <div className="my-12 grid gap-4 lg:grid-cols-2">
+          {featured.map((post, index) => (
             <Link
-              className="focus-ring group overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)]"
+              className={`focus-ring group overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)] ${
+                index === 0 ? "lg:row-span-2" : ""
+              }`}
               href={`/blog/${post.slug}`}
               key={post.slug}
             >
@@ -52,8 +55,8 @@ export default function BlogPage() {
                 src={post.cover}
                 alt={`${post.title} 文章封面`}
                 title={post.title}
-                sizes="(max-width: 1024px) 100vw, 360px"
-                className="relative aspect-[2/1] overflow-hidden bg-[var(--surface-muted)]"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className={`relative overflow-hidden bg-[var(--surface-muted)] ${index === 0 ? "aspect-[16/10] lg:aspect-[16/13]" : "aspect-[2/1]"}`}
                 imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.035]"
               />
               <div className="p-6">

@@ -21,26 +21,23 @@ export function BrandIntro() {
     if (played) return;
 
     window.sessionStorage.setItem("haoxuan-brand-intro-played", "true");
-    const showTimeout = window.setTimeout(() => setVisible(true), 0);
+    const showTimeout = window.setTimeout(() => {
+      setReady(false);
+      setVisible(true);
+    }, 0);
 
-    const hideTimeout = window.setTimeout(() => setVisible(false), 3000);
+    const fallbackTimeout = window.setTimeout(() => setVisible(false), 3000);
     return () => {
       window.clearTimeout(showTimeout);
-      window.clearTimeout(hideTimeout);
+      window.clearTimeout(fallbackTimeout);
     };
   }, [pathname, reducedMotion]);
-
-  useEffect(() => {
-    if (!visible || !ready) return;
-    const timeout = window.setTimeout(() => setVisible(false), 3000);
-    return () => window.clearTimeout(timeout);
-  }, [ready, visible]);
 
   return (
     <AnimatePresence>
       {visible ? (
         <motion.div
-          className="fixed inset-0 z-[70] grid place-items-center bg-[var(--background)]/88 backdrop-blur-sm"
+          className="fixed inset-0 z-[70] grid place-items-center bg-[var(--background)]/92"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 0.985 }}
@@ -55,7 +52,7 @@ export function BrandIntro() {
               loop={false}
               autoplay={ready}
               playOnView={false}
-              className="aspect-square w-44"
+              className="aspect-square w-[150px] sm:w-48"
               decorative
               onDataReady={() => setReady(true)}
               onComplete={() => setVisible(false)}

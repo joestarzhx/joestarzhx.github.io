@@ -13,15 +13,22 @@ export function ProjectStoryMotion({ children }: { children: React.ReactNode }) 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce || !scope.current) return;
     const ctx = gsap.context(() => {
-      gsap.from("[data-story-image]", {
-        y: 46,
+      const images = gsap.utils.toArray<HTMLElement>("[data-story-image]");
+      gsap.fromTo(images, {
+        clipPath: (index) => (index % 2 === 0 ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)"),
         opacity: 0,
+        y: 14,
+      }, {
+        clipPath: "inset(0 0% 0 0)",
+        y: 0,
+        opacity: 1,
         duration: 0.9,
         ease: "power3.out",
-        stagger: 0.12,
+        stagger: 0.1,
         scrollTrigger: {
           trigger: "[data-story-gallery]",
           start: "top 78%",
+          once: true,
         },
       });
       gsap.fromTo(

@@ -16,7 +16,7 @@ export function LottieDemo() {
         ariaLabel="实验室模块动画"
         decorative={false}
         replayOnHover
-        className="overflow-hidden rounded-[18px]"
+        className="h-[260px] overflow-hidden rounded-[18px] sm:h-[340px] lg:h-[430px]"
       />
       <div className="mt-5 flex items-center justify-between gap-4">
         <div>

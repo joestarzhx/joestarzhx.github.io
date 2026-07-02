@@ -20,11 +20,12 @@ export function ProjectExplorer() {
         {projectCategories.map((category) => (
           <button
             className={cn(
-              "focus-ring relative shrink-0 rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)]",
+              "focus-ring relative min-h-10 shrink-0 rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)]",
               active === category && "text-[var(--text-primary)]",
             )}
             key={category}
             type="button"
+            aria-pressed={active === category}
             onClick={() => setActive(category)}
           >
             {active === category ? (
@@ -41,7 +42,7 @@ export function ProjectExplorer() {
         {filtered.length > 0 ? (
           <motion.div layout className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((project, index) => (
-              <ProjectCard project={project} key={project.slug} priority={index === 0} />
+              <ProjectCard project={project} key={project.slug} priority={index === 0} featured={index === 0} />
             ))}
           </motion.div>
         ) : (

@@ -2,9 +2,9 @@ export type LottieItem = {
   key: string;
   name: string;
   description: string;
-  shared: string;
-  light: string;
-  dark: string;
+  shared?: string;
+  light?: string;
+  dark?: string;
   fallback: string;
   loop: boolean;
   speed: number;
@@ -16,7 +16,6 @@ export const lottieItems: LottieItem[] = [
     key: "brand-intro",
     name: "Brand Intro",
     description: "首页品牌开场与个人标识。",
-    shared: "/lottie/shared/brand-intro.json",
     light: "/lottie/light/brand-intro.json",
     dark: "/lottie/dark/brand-intro.json",
     fallback: "/images/lottie-fallbacks/brand-intro-static.svg",
@@ -28,7 +27,6 @@ export const lottieItems: LottieItem[] = [
     key: "hero-orbit",
     name: "Hero Orbit",
     description: "首页 Hero 区域的低干扰循环图形。",
-    shared: "/lottie/shared/hero-orbit.json",
     light: "/lottie/light/hero-orbit.json",
     dark: "/lottie/dark/hero-orbit.json",
     fallback: "/images/lottie-fallbacks/hero-orbit-static.svg",
@@ -40,7 +38,6 @@ export const lottieItems: LottieItem[] = [
     key: "projects-stack",
     name: "Projects Stack",
     description: "项目区域标题旁的轻量图形。",
-    shared: "/lottie/shared/projects-stack.json",
     light: "/lottie/light/projects-stack.json",
     dark: "/lottie/dark/projects-stack.json",
     fallback: "/images/lottie-fallbacks/projects-stack-static.svg",
@@ -52,7 +49,6 @@ export const lottieItems: LottieItem[] = [
     key: "resume-timeline",
     name: "Resume Timeline",
     description: "简历首屏与时间轴的辅助图形。",
-    shared: "/lottie/shared/resume-timeline.json",
     light: "/lottie/light/resume-timeline.json",
     dark: "/lottie/dark/resume-timeline.json",
     fallback: "/images/lottie-fallbacks/resume-timeline-static.svg",
@@ -64,7 +60,6 @@ export const lottieItems: LottieItem[] = [
     key: "article-writing",
     name: "Article Writing",
     description: "文章区域的写作状态图形。",
-    shared: "/lottie/shared/article-writing.json",
     light: "/lottie/light/article-writing.json",
     dark: "/lottie/dark/article-writing.json",
     fallback: "/images/lottie-fallbacks/article-writing-static.svg",
@@ -76,7 +71,6 @@ export const lottieItems: LottieItem[] = [
     key: "lab-modules",
     name: "Lab Modules",
     description: "实验室模块的低速循环图形。",
-    shared: "/lottie/shared/lab-modules.json",
     light: "/lottie/light/lab-modules.json",
     dark: "/lottie/dark/lab-modules.json",
     fallback: "/images/lottie-fallbacks/lab-modules-static.svg",
@@ -88,7 +82,6 @@ export const lottieItems: LottieItem[] = [
     key: "message-success",
     name: "Message Success",
     description: "联系成功状态动画。",
-    shared: "/lottie/shared/message-success.json",
     light: "/lottie/light/message-success.json",
     dark: "/lottie/dark/message-success.json",
     fallback: "/images/lottie-fallbacks/message-success-static.svg",
@@ -100,7 +93,6 @@ export const lottieItems: LottieItem[] = [
     key: "lost-dot-404",
     name: "Lost Dot 404",
     description: "404 页面未找到状态动画。",
-    shared: "/lottie/shared/lost-dot-404.json",
     light: "/lottie/light/lost-dot-404.json",
     dark: "/lottie/dark/lost-dot-404.json",
     fallback: "/images/lottie-fallbacks/lost-dot-404-static.svg",
