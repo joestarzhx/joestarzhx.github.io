@@ -1,5 +1,7 @@
-1:"$Sreact.fragment"
-2:I[39756,["/_next/static/chunks/3d8yzrzj632vg.js","/_next/static/chunks/1pg7161tui5ru.js","/_next/static/chunks/2os6ibh430wzf.js","/_next/static/chunks/2x2rtnlqq34y4.js","/_next/static/chunks/14mrh2-p_w84d.js"],"default"]
-3:I[37457,["/_next/static/chunks/3d8yzrzj632vg.js","/_next/static/chunks/1pg7161tui5ru.js","/_next/static/chunks/2os6ibh430wzf.js","/_next/static/chunks/2x2rtnlqq34y4.js","/_next/static/chunks/14mrh2-p_w84d.js"],"default"]
-4:[]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"crtc52R1EfuNYZvTAVj6d"}
+1:I[39756,["/_next/static/chunks/0vncmcpurrum_.js","/_next/static/chunks/1ftzxib5b_r96.js","/_next/static/chunks/1aze7l89nwd3z.js","/_next/static/chunks/2qr92e5484k2z.js","/_next/static/chunks/14mrh2-p_w84d.js"],"LoadingBoundaryProvider"]
+2:I[30237,["/_next/static/chunks/0vncmcpurrum_.js","/_next/static/chunks/1ftzxib5b_r96.js","/_next/static/chunks/1aze7l89nwd3z.js","/_next/static/chunks/2qr92e5484k2z.js","/_next/static/chunks/14mrh2-p_w84d.js","/_next/static/chunks/2j-ve8nhet3lk.js"],"PageContentLoader"]
+3:"$Sreact.fragment"
+4:I[39756,["/_next/static/chunks/0vncmcpurrum_.js","/_next/static/chunks/1ftzxib5b_r96.js","/_next/static/chunks/1aze7l89nwd3z.js","/_next/static/chunks/2qr92e5484k2z.js","/_next/static/chunks/14mrh2-p_w84d.js"],"default"]
+5:I[37457,["/_next/static/chunks/0vncmcpurrum_.js","/_next/static/chunks/1ftzxib5b_r96.js","/_next/static/chunks/1aze7l89nwd3z.js","/_next/static/chunks/2qr92e5484k2z.js","/_next/static/chunks/14mrh2-p_w84d.js"],"default"]
+6:[]
+0:{"rsc":["$","$L1",null,{"loading":[["$","main","l",{"className":"pt-[var(--nav-height)]","children":["$","section",null,{"className":"container-shell","children":["$","$L2",null,{"className":"min-h-[360px]"}]}]}],[],[["$","script","script-0",{"src":"/_next/static/chunks/2j-ve8nhet3lk.js","async":true}]]],"children":["$","$3","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","template":["$","$L5",null,{}]}]]}]}],"isPartial":false,"staleTime":300,"varyParams":"$W6","buildId":"0UTmcyDB8G71fskzGMwkC"}
