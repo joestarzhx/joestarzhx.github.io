@@ -8,9 +8,11 @@ export function Footer() {
         <div>
           <p className="text-lg font-semibold">{profile.displayName}</p>
           <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--text-secondary)]">
-            用代码、动画和视觉设计，记录持续生长的数字作品。
+            ?????????????????????????????
           </p>
-          <p className="mt-4 text-xs text-[var(--text-tertiary)]">© 2026 Haoxuan Zhang. 版权所有。</p>
+          <p className="mt-4 text-xs text-[var(--text-tertiary)]">
+            ? 2026 Haoxuan Zhang. ?????
+          </p>
         </div>
         <div className="flex flex-wrap gap-3">
           {socials.map((social) => (

@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
-import { posts } from "@/data/posts";
 import { projects } from "@/data/projects";
+import { getPublishedPosts } from "@/lib/posts";
 import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const posts = getPublishedPosts();
   return [
     "",
     "/projects",

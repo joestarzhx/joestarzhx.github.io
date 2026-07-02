@@ -1,4 +1,5 @@
 import { ArrowRight, Download } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { ThemedLottie } from "@/components/animation/ThemedLottie";
 import { Reveal } from "@/components/animation/Reveal";
@@ -7,17 +8,19 @@ import { ProjectImage } from "@/components/project/ProjectImage";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { posts } from "@/data/posts";
 import { getLottieItem } from "@/data/lottie";
 import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
 import { capabilities } from "@/data/skills";
 import { socials } from "@/data/socials";
+import { getPublishedPosts } from "@/lib/posts";
 import { estimateReadingTime } from "@/lib/utils";
 
 export default function Home() {
-  const featuredProjects = projects.filter((project) => project.featured).slice(0, 4);
-  const latestPosts = posts.slice(0, 4);
+  const featuredProjects = projects
+    .filter((project) => project.featured)
+    .slice(0, 4);
+  const latestPosts = getPublishedPosts().slice(0, 4);
   const heroOrbit = getLottieItem("hero-orbit")!;
   const projectsStack = getLottieItem("projects-stack")!;
   const articleWriting = getLottieItem("article-writing")!;
@@ -26,7 +29,9 @@ export default function Home() {
     <PageContainer>
       <section className="container-shell grid min-h-[calc(100svh-var(--nav-height))] items-center gap-8 py-6 sm:py-10 lg:grid-cols-[1.05fr_0.95fr]">
         <Reveal>
-          <p className="mb-4 text-sm font-medium text-[var(--accent)]">{profile.role}</p>
+          <p className="mb-4 text-sm font-medium text-[var(--accent)]">
+            {profile.role}
+          </p>
           <h1 className="text-[clamp(2.6rem,13vw,4.5rem)] font-semibold leading-none tracking-normal lg:text-8xl">
             {profile.name}
           </h1>
@@ -40,15 +45,15 @@ export default function Home() {
             <Button href="/projects">
               查看作品 <ArrowRight size={16} />
             </Button>
-            <Button href="/about" variant="secondary">
-              了解我
+            <Button href="/resume" variant="secondary">
+              查看简历
             </Button>
           </div>
         </Reveal>
         <Reveal className="relative">
-          <div className="relative mx-auto aspect-square max-w-[320px] rounded-[28px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 shadow-[var(--shadow-soft)] sm:max-w-[540px] sm:rounded-[32px] sm:p-5">
+          <div className="relative mx-auto max-w-[320px] rounded-[28px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 shadow-[var(--shadow-soft)] sm:max-w-[420px] sm:rounded-[32px] sm:p-5">
             <ThemedLottie
-              className="pointer-events-none h-full opacity-80"
+              className="pointer-events-none absolute -right-8 -top-8 aspect-square w-44 opacity-30 sm:-right-16 sm:-top-16 sm:w-72"
               light={heroOrbit.light}
               dark={heroOrbit.dark}
               shared={heroOrbit.shared}
@@ -58,8 +63,20 @@ export default function Home() {
               decorative
               hideWhenReducedMotion
             />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] bg-[var(--surface-muted)]">
+              <Image
+                src={profile.photo}
+                alt="张颢轩个人照片"
+                fill
+                priority
+                sizes="(max-width: 640px) 320px, 420px"
+                className="object-contain object-center"
+              />
+            </div>
             <div className="absolute bottom-4 left-4 right-4 rounded-[20px] border border-[var(--border)] bg-[var(--surface)] p-4 backdrop-blur sm:bottom-5 sm:left-5 sm:right-5">
-              <p className="text-sm text-[var(--text-secondary)]">{profile.status}</p>
+              <p className="text-sm text-[var(--text-secondary)]">
+                {profile.status}
+              </p>
             </div>
           </div>
         </Reveal>
@@ -106,9 +123,14 @@ export default function Home() {
                 </div>
                 <h3 className="mt-3 flex items-center gap-2 text-2xl font-semibold">
                   {project.title}
-                  <ArrowRight className="transition-transform group-hover:translate-x-1" size={18} />
+                  <ArrowRight
+                    className="transition-transform group-hover:translate-x-1"
+                    size={18}
+                  />
                 </h3>
-                <p className="mt-3 leading-7 text-[var(--text-secondary)]">{project.description}</p>
+                <p className="mt-3 leading-7 text-[var(--text-secondary)]">
+                  {project.description}
+                </p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {project.tags.slice(0, 3).map((tag) => (
                     <Badge key={tag}>{tag}</Badge>
@@ -122,13 +144,21 @@ export default function Home() {
 
       <section className="section-space bg-[var(--surface-solid)]">
         <div className="container-shell">
-          <SectionHeading eyebrow="能力方向" title="工程、审美和叙事放在同一张桌上。" />
+          <SectionHeading
+            eyebrow="能力方向"
+            title="工程、审美和叙事放在同一张桌上。"
+          />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {capabilities.map((item) => (
-              <Reveal className="rounded-[20px] border border-[var(--border)] p-6" key={item.title}>
+              <Reveal
+                className="rounded-[20px] border border-[var(--border)] p-6"
+                key={item.title}
+              >
                 <item.icon className="mb-8 text-[var(--accent)]" size={24} />
                 <h3 className="text-xl font-semibold">{item.title}</h3>
-                <p className="mt-3 leading-7 text-[var(--text-secondary)]">{item.text}</p>
+                <p className="mt-3 leading-7 text-[var(--text-secondary)]">
+                  {item.text}
+                </p>
               </Reveal>
             ))}
           </div>
@@ -152,17 +182,29 @@ export default function Home() {
         <div className="grid gap-4 lg:grid-cols-3">
           {latestPosts.map((post) => (
             <Link
-              className="focus-ring group rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)] p-5 transition-transform hover:-translate-y-1"
+              className="focus-ring group overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)] transition-transform hover:-translate-y-1"
               href={`/blog/${post.slug}`}
               key={post.slug}
             >
-              <p className="text-sm text-[var(--text-secondary)]">
-                {post.category} · {estimateReadingTime(post)}
-              </p>
-              <h3 className="mt-4 text-xl font-semibold leading-7">{post.title}</h3>
-              <p className="mt-3 line-clamp-3 text-sm leading-6 text-[var(--text-secondary)]">
-                {post.description}
-              </p>
+              <ProjectImage
+                src={post.cover}
+                alt={`${post.title} ????`}
+                title={post.title}
+                sizes="(max-width: 1024px) 100vw, 360px"
+                className="relative aspect-[2/1] overflow-hidden bg-[var(--surface-muted)]"
+                imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.035]"
+              />
+              <div className="p-5">
+                <p className="text-sm text-[var(--text-secondary)]">
+                  {post.category} ? {estimateReadingTime(post)}
+                </p>
+                <h3 className="mt-4 text-xl font-semibold leading-7">
+                  {post.title}
+                </h3>
+                <p className="mt-3 line-clamp-3 text-sm leading-6 text-[var(--text-secondary)]">
+                  {post.description}
+                </p>
+              </div>
             </Link>
           ))}
         </div>
@@ -173,7 +215,8 @@ export default function Home() {
           <Download className="mb-10" size={28} />
           <h2 className="text-3xl font-semibold">简历摘要</h2>
           <p className="mt-4 leading-8 opacity-80">
-            {profile.current}。教育方向：{profile.education}。主要关注前端工程、交互动效、AI 视觉创作与科普动画。
+            {profile.current}。教育方向：{profile.education}
+            。主要关注前端工程、交互动效、AI 视觉创作与科普动画。
           </p>
           <div className="mt-8">
             <Button href="/resume" variant="secondary">
@@ -188,7 +231,12 @@ export default function Home() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             {socials.map((social) => (
-              <Button href={social.href} variant="secondary" key={social.label} ariaLabel={social.ariaLabel}>
+              <Button
+                href={social.href}
+                variant="secondary"
+                key={social.label}
+                ariaLabel={social.ariaLabel}
+              >
                 <social.icon size={16} />
                 {social.label}
               </Button>

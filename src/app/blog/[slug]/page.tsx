@@ -2,36 +2,59 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, ChevronUp } from "lucide-react";
+import { MarkdownContent } from "@/components/blog/MarkdownContent";
 import { ReadingProgress } from "@/components/blog/ReadingProgress";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 import { ProjectImage } from "@/components/project/ProjectImage";
 import { Badge } from "@/components/ui/Badge";
-import { posts } from "@/data/posts";
 import { profile } from "@/data/profile";
-import { estimateReadingTime, formatArchiveDate, getAdjacentBySlug, getPost } from "@/lib/utils";
+import {
+  getAdjacentPosts,
+  getPostBySlug,
+  getPublishedPosts,
+  getRelatedPosts,
+} from "@/lib/posts";
+import { SITE_URL } from "@/lib/site";
+import { estimateReadingTime, formatArchiveDate } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return posts.map((post) => ({ slug: post.slug }));
+  return getPublishedPosts().map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = getPostBySlug(slug);
   if (!post) return {};
-  return { title: post.title, description: post.description };
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article",
+      images: [
+        { url: `${SITE_URL}${post.cover}`, alt: `${post.title} 文章封面` },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [`${SITE_URL}${post.cover}`],
+    },
+  };
 }
 
 export default async function PostDetailPage({ params }: Props) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = getPostBySlug(slug);
   if (!post) notFound();
-  const adjacent = getAdjacentBySlug(posts, post.slug);
-  const related = posts.filter((item) => item.slug !== post.slug && item.category === post.category).slice(0, 2);
-  const headings = post.body.map((section) => section.heading);
+  const adjacent = getAdjacentPosts(post.slug);
+  const related = getRelatedPosts(post, 2);
 
   return (
     <main className="pt-[var(--nav-height)]">
@@ -48,8 +71,12 @@ export default async function PostDetailPage({ params }: Props) {
             <Badge>{post.category}</Badge>
             <Badge>{estimateReadingTime(post)}</Badge>
           </div>
-          <h1 className="text-4xl font-semibold tracking-normal sm:text-6xl">{post.title}</h1>
-          <p className="mt-6 text-xl leading-9 text-[var(--text-secondary)]">{post.description}</p>
+          <h1 className="text-4xl font-semibold tracking-normal sm:text-6xl">
+            {post.title}
+          </h1>
+          <p className="mt-6 text-xl leading-9 text-[var(--text-secondary)]">
+            {post.description}
+          </p>
           <p className="mt-6 text-sm text-[var(--text-tertiary)]">
             {post.date ? `${formatArchiveDate(post.date)} · ` : null}
             {profile.name}
@@ -61,7 +88,7 @@ export default async function PostDetailPage({ params }: Props) {
           title={post.title}
           priority
           sizes="100vw"
-          className="relative mt-12 aspect-[16/8] overflow-hidden rounded-[28px] bg-[var(--surface-muted)]"
+          className="relative mt-12 aspect-[2/1] overflow-hidden rounded-[28px] bg-[var(--surface-muted)]"
           imageClassName="object-cover"
         />
       </article>
@@ -69,16 +96,9 @@ export default async function PostDetailPage({ params }: Props) {
       <div className="container-shell grid gap-10 pb-24 xl:grid-cols-[1fr_minmax(0,720px)_1fr]">
         <div />
         <div className="prose-custom">
-          {post.body.map((section) => (
-            <section key={section.heading}>
-              <h2 id={section.heading}>{section.heading}</h2>
-              {section.paragraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </section>
-          ))}
+          <MarkdownContent content={post.content} />
         </div>
-        <TableOfContents headings={headings} />
+        <TableOfContents headings={post.headings} />
       </div>
 
       <section className="container-shell mb-20">
@@ -88,8 +108,12 @@ export default async function PostDetailPage({ params }: Props) {
               className="focus-ring rounded-[20px] border border-[var(--border)] p-5"
               href={`/blog/${adjacent.previous.slug}`}
             >
-              <span className="text-sm text-[var(--text-secondary)]">上一篇</span>
-              <p className="mt-2 text-xl font-semibold">{adjacent.previous.title}</p>
+              <span className="text-sm text-[var(--text-secondary)]">
+                上一篇
+              </span>
+              <p className="mt-2 text-xl font-semibold">
+                {adjacent.previous.title}
+              </p>
             </Link>
           ) : (
             <div />
@@ -99,7 +123,9 @@ export default async function PostDetailPage({ params }: Props) {
               className="focus-ring rounded-[20px] border border-[var(--border)] p-5 text-right"
               href={`/blog/${adjacent.next.slug}`}
             >
-              <span className="text-sm text-[var(--text-secondary)]">下一篇</span>
+              <span className="text-sm text-[var(--text-secondary)]">
+                下一篇
+              </span>
               <p className="mt-2 inline-flex items-center gap-2 text-xl font-semibold">
                 {adjacent.next.title}
                 <ArrowRight size={18} />

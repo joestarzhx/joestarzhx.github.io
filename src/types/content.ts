@@ -25,7 +25,14 @@ export type Project = {
   demo?: string;
 };
 
-export type PostCategory = "项目复盘" | "视觉设计" | "物理与数学";
+export type PostCategory =
+  "技术开发" | "视觉设计" | "物理与数学" | "AI 创作" | "项目复盘" | "随笔思考";
+
+export type PostHeading = {
+  id: string;
+  text: string;
+  depth: 2 | 3;
+};
 
 export type Post = {
   slug: string;
@@ -33,14 +40,13 @@ export type Post = {
   description: string;
   category: PostCategory;
   tags: string[];
-  date?: string;
+  date: string;
+  updated?: string;
   cover: string;
   featured: boolean;
-  headings: string[];
-  body: Array<{
-    heading: string;
-    paragraphs: string[];
-  }>;
+  draft: boolean;
+  content: string;
+  headings: PostHeading[];
 };
 
 export type Experience = {
