@@ -45,3 +45,19 @@ export const scalePress = {
   whileTap: { scale: 0.965, y: 0 },
   transition: motionTokens.spring,
 };
+
+export const interactionMotion = {
+  hover: {
+    y: -3,
+    scale: 1.005,
+  },
+  tap: {
+    scale: 0.985,
+  },
+  transition: {
+    type: "spring",
+    stiffness: 380,
+    damping: 30,
+    mass: 0.8,
+  } satisfies Transition,
+};

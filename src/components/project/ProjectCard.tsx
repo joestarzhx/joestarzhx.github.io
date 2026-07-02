@@ -27,10 +27,10 @@ export function ProjectCard({
       className={featured ? "xl:col-span-2" : undefined}
     >
       <Link
-        className="focus-ring group block overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface-solid)]"
+        className="focus-ring group block overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface-solid)] transition-[border-color,box-shadow,transform] hover:-translate-y-[3px] hover:border-[var(--accent)] hover:shadow-[var(--shadow-soft)] active:scale-[0.985] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
         href={`/projects/${project.slug}`}
       >
-        <motion.div whileTap={{ scale: 0.985 }}>
+        <div>
           <ProjectImage
             src={project.cover}
             alt={`${project.title} 项目封面`}
@@ -49,14 +49,14 @@ export function ProjectCard({
               {project.title}
               <ArrowRight className="shrink-0 transition-transform group-hover:translate-x-1" size={18} />
             </h2>
-            <p className="mt-3 min-h-14 leading-7 text-[var(--text-secondary)]">{project.description}</p>
+            <p className="mt-3 line-clamp-3 leading-7 text-[var(--text-body)]">{project.description}</p>
             <div className="mt-5 flex flex-wrap gap-2">
-              {project.tags.slice(0, 4).map((tag) => (
+              {project.tags.slice(0, 3).map((tag) => (
                 <Badge key={tag}>{tag}</Badge>
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       </Link>
     </motion.article>
   );

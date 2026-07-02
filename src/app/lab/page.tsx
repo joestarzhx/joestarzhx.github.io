@@ -14,7 +14,7 @@ export default function LabPage() {
   return (
     <PageContainer>
       <section className="container-shell section-space min-w-0 max-w-full">
-        <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(300px,420px)] xl:items-end">
+        <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(280px,400px)] xl:items-end">
           <div className="min-w-0">
             <SectionHeading
               eyebrow="Lab"
@@ -23,14 +23,14 @@ export default function LabPage() {
               spacing="none"
             />
           </div>
-          <div className="grid w-full min-w-0 max-w-full grid-cols-2 gap-3 justify-self-stretch rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-5 text-sm text-[var(--text-secondary)] xl:max-w-[420px] xl:justify-self-end">
+          <div className="grid w-full min-w-0 max-w-full grid-cols-2 gap-3 justify-self-stretch rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 text-sm text-[var(--text-body)] xl:max-w-[400px] xl:justify-self-end">
             <strong className="text-3xl text-[var(--text-primary)]">08</strong>
             <span>个实验</span>
             <span>GSAP</span>
             <span>Lottie / Manim / Live2D</span>
           </div>
         </div>
-        <div className="mt-12 grid min-w-0 gap-12">
+        <div className="mt-10 grid min-w-0 gap-10">
           <LottieDemo />
           <LabHorizontalShowcase items={labItems} />
         </div>
