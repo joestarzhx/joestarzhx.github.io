@@ -1,0 +1,19 @@
+{
+  "format": "animated WebP",
+  "canvas": "480x360",
+  "ratio": "4:3",
+  "frames": 18,
+  "frame_duration_ms": 100,
+  "loop": true,
+  "files": [
+    "lab-ai-visual.webp",
+    "lab-gsap-envelope.webp",
+    "lab-gsap-timeline.webp",
+    "lab-ink-transition.webp",
+    "lab-live2d-character.webp",
+    "lab-lottie-brand.webp",
+    "lab-manim-quantum.webp",
+    "lab-manim-statistics.webp"
+  ],
+  "target_directory": "public/images/lab/"
+}

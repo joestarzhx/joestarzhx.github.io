@@ -1,0 +1,38 @@
+{
+  "branding": [
+    "public/images/branding/site-og-cover.webp",
+    "public/images/branding/favicon-512.png",
+    "public/images/branding/apple-touch-icon.png",
+    "public/images/branding/brand-mark.svg"
+  ],
+  "profile": [
+    "public/images/profile/profile-card-template.webp"
+  ],
+  "posts": [
+    "public/images/posts/post-next-letter-cover.webp",
+    "public/images/posts/post-ink-blog-cover.webp",
+    "public/images/posts/post-quantum-cover.webp",
+    "public/images/posts/post-live2d-cover.webp",
+    "public/images/posts/post-ai-workflow-cover.webp"
+  ],
+  "lab": [
+    "public/images/lab/lab-gsap-envelope.webp",
+    "public/images/lab/lab-gsap-timeline.webp",
+    "public/images/lab/lab-manim-quantum.webp",
+    "public/images/lab/lab-manim-statistics.webp",
+    "public/images/lab/lab-live2d-character.webp",
+    "public/images/lab/lab-ai-visual.webp",
+    "public/images/lab/lab-ink-transition.webp",
+    "public/images/lab/lab-lottie-brand.webp"
+  ],
+  "lottieFallbacks": [
+    "public/images/lottie-fallbacks/brand-intro-static.svg",
+    "public/images/lottie-fallbacks/hero-orbit-static.svg",
+    "public/images/lottie-fallbacks/projects-stack-static.svg",
+    "public/images/lottie-fallbacks/resume-timeline-static.svg",
+    "public/images/lottie-fallbacks/article-writing-static.svg",
+    "public/images/lottie-fallbacks/lab-modules-static.svg",
+    "public/images/lottie-fallbacks/message-success-static.svg",
+    "public/images/lottie-fallbacks/lost-dot-404-static.svg"
+  ]
+}

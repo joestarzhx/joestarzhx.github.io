@@ -1,0 +1,8 @@
+{
+  "name": "macOS-inspired cursor for Haoxuan Zhang blog",
+  "desktop_only": true,
+  "fine_pointer_only": true,
+  "reduced_motion_safe": true,
+  "native_text_cursor": true,
+  "click_ripple_ms": 420
+}
