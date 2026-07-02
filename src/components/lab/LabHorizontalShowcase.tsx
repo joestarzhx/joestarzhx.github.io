@@ -40,7 +40,7 @@ export function LabHorizontalShowcase({ items }: { items: LabItem[] }) {
           setActive(index);
           cards.forEach((card, cardIndex) => {
             gsap.to(card, {
-              scale: cardIndex === index ? 1.025 : 1,
+              y: cardIndex === index ? -4 : 0,
               opacity: cardIndex === index ? 1 : 0.72,
               duration: 0.18,
               overwrite: "auto",
@@ -50,12 +50,15 @@ export function LabHorizontalShowcase({ items }: { items: LabItem[] }) {
 
         setActiveCard(0);
 
+        const getNavOffset = () =>
+          Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-height")) || 72;
+
         const tween = gsap.to(track, {
           x: () => -getDistance(),
           ease: "none",
           scrollTrigger: {
             trigger: section,
-            start: "top top+=96",
+            start: () => `top top+=${getNavOffset() + 16}`,
             end: () => `+=${Math.min(getDistance() * 0.85, 1200)}`,
             pin: true,
             scrub: 0.8,
@@ -75,11 +78,17 @@ export function LabHorizontalShowcase({ items }: { items: LabItem[] }) {
       },
     );
 
-    return () => mm.revert();
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener("resize", refresh);
+
+    return () => {
+      window.removeEventListener("resize", refresh);
+      mm.revert();
+    };
   }, [items.length]);
 
   return (
-    <section ref={sectionRef} className="overflow-hidden">
+    <section ref={sectionRef} className="overflow-x-clip overflow-y-visible px-[10px]">
       <div className="mb-5 flex items-end justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-[var(--accent)]">Experiments</p>
@@ -92,8 +101,9 @@ export function LabHorizontalShowcase({ items }: { items: LabItem[] }) {
       <div ref={trackRef} className="grid gap-5 sm:grid-cols-2 lg:flex lg:w-max lg:gap-5">
         {items.map((item) => (
           <article
-            className="rounded-[20px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 lg:w-[360px]"
+            className="rounded-[20px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 transition-shadow lg:w-[360px] data-[active=true]:shadow-[var(--shadow-soft)]"
             data-lab-card
+            data-active={active === items.indexOf(item)}
             key={item.title}
           >
             <ProjectImage

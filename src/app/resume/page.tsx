@@ -60,7 +60,7 @@ export default function ResumePage() {
         </div>
       </section>
 
-      <section className="container-shell section-space pt-0">
+      <section className="container-shell section-space-bottom">
         <SectionHeading eyebrow="Timeline" title="经历以时间轴展开。" />
         <ExperienceTimeline />
       </section>
@@ -106,7 +106,7 @@ export default function ResumePage() {
         </div>
       </section>
 
-      <section className="container-shell section-space pt-0">
+      <section className="container-shell section-space-bottom">
         <div className="grid gap-6 rounded-[28px] bg-[var(--text-primary)] p-8 text-[var(--background)] lg:grid-cols-2">
           <div>
             <h2 className="text-3xl font-semibold">个人优势</h2>

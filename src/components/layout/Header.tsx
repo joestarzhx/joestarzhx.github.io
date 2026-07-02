@@ -23,6 +23,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -37,24 +38,53 @@ export function Header() {
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    const previousOverflow = document.body.style.overflow;
+    if (open) document.body.style.overflow = "hidden";
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
         triggerRef.current?.focus();
+        return;
+      }
+
+      if (event.key === "Tab" && open && panelRef.current) {
+        const focusable = Array.from(
+          panelRef.current.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          ),
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first || !last) return;
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKey);
     };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const timeout = window.setTimeout(() => {
+      panelRef.current?.querySelector<HTMLElement>("a[href]")?.focus();
+    }, 80);
+    return () => window.clearTimeout(timeout);
   }, [open]);
 
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-[var(--z-nav)] isolate transition-all duration-300",
         scrolled ? "py-3" : "py-5",
       )}
     >
@@ -107,14 +137,14 @@ export function Header() {
       <AnimatePresence>
         {open ? (
           <motion.div
-            className="fixed inset-0 z-[-1] md:hidden"
+            className="fixed inset-0 z-0 md:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <button
               aria-label="关闭菜单遮罩"
-              className="absolute inset-0 bg-black/20"
+              className="absolute inset-0 z-0 bg-black/20"
               type="button"
               onClick={() => {
                 setOpen(false);
@@ -122,7 +152,8 @@ export function Header() {
               }}
             />
             <motion.nav
-              className="glass absolute inset-x-4 top-20 rounded-[24px] p-5"
+              ref={panelRef}
+              className="glass absolute inset-x-4 top-20 z-10 max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain rounded-[24px] p-4 shadow-[var(--shadow-soft)]"
               initial={{ y: -18, scale: 0.98, opacity: 0 }}
               animate={{ y: 0, scale: 1, opacity: 1 }}
               exit={{ y: -18, scale: 0.98, opacity: 0 }}

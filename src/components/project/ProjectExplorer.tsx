@@ -16,11 +16,14 @@ export function ProjectExplorer() {
 
   return (
     <div>
-      <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
+      <div className="relative mb-8">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-[var(--background)] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-[var(--background)] to-transparent" />
+        <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {projectCategories.map((category) => (
           <button
             className={cn(
-              "focus-ring relative min-h-10 shrink-0 rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)]",
+              "focus-ring relative min-h-10 shrink-0 rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-secondary)] whitespace-nowrap",
               active === category && "text-[var(--text-primary)]",
             )}
             key={category}
@@ -37,12 +40,18 @@ export function ProjectExplorer() {
             <span className="relative">{category}</span>
           </button>
         ))}
+        </div>
       </div>
       <AnimatePresence mode="popLayout">
         {filtered.length > 0 ? (
           <motion.div layout className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((project, index) => (
-              <ProjectCard project={project} key={project.slug} priority={index === 0} featured={index === 0} />
+              <ProjectCard
+                project={project}
+                key={project.slug}
+                priority={index === 0}
+                featured={active === projectCategories[0] && index === 0}
+              />
             ))}
           </motion.div>
         ) : (

@@ -38,7 +38,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="container-shell section-space pt-0">
+      <section className="container-shell section-space-bottom">
         <div className="grid gap-5 md:grid-cols-3">
           {[
             ["正在进行", "整理个人项目、文章系统与实验室作品片段。"],
@@ -58,7 +58,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section id="contact" className="container-shell section-space pt-0">
+      <section id="contact" className="container-shell section-space-bottom">
         <div className="rounded-[28px] border border-[var(--border)] p-8">
           <h2 className="text-3xl font-semibold">合作与交流</h2>
           <p className="mt-4 max-w-2xl leading-8 text-[var(--text-secondary)]">
