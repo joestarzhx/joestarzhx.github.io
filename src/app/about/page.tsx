@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
-import { ThemedLottie } from "@/components/animation/ThemedLottie";
 import { PageContainer } from "@/components/layout/PageContainer";
+import { ProfileCard } from "@/components/profile/ProfileCard";
 import { Button } from "@/components/ui/Button";
 import { getLottieItem } from "@/data/lottie";
 import { profile } from "@/data/profile";
@@ -20,7 +20,9 @@ export default function AboutPage() {
       <section className="container-shell section-space">
         <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[1fr_260px] lg:items-center">
           <div>
-            <p className="mb-5 text-sm font-medium text-[var(--accent)]">About</p>
+            <p className="mb-5 text-sm font-medium text-[var(--accent)]">
+              About
+            </p>
             <h1 className="text-4xl font-semibold leading-tight tracking-normal sm:text-6xl">
               我想做的，是让技术表达变得清楚、克制，但有记忆点。
             </h1>
@@ -30,23 +32,12 @@ export default function AboutPage() {
                 我喜欢把项目看成一段叙事：用户先看到什么，什么时候获得反馈，哪些信息应该安静地退后，哪些细节值得被强调。好的界面不需要一直解释自己，它应该让人自然地继续往下看。
               </p>
               <p>
-                近期我关注前端动效系统、AI 视觉工作流、Manim 科普动画和 Live2D 角色展示。这些方向表面上很分散，但核心都指向同一件事：把复杂内容变成更易理解、更有质感的数字作品。
+                近期我关注前端动效系统、AI 视觉工作流、Manim 科普动画和 Live2D
+                角色展示。这些方向表面上很分散，但核心都指向同一件事：把复杂内容变成更易理解、更有质感的数字作品。
               </p>
             </div>
           </div>
-          <div className="relative mx-auto aspect-square w-56 rounded-[28px] border border-[var(--border)] bg-[var(--surface-solid)] p-5">
-            <ThemedLottie
-              light={brandIntro.light}
-              dark={brandIntro.dark}
-              shared={brandIntro.shared}
-              fallbackSrc={brandIntro.fallback}
-              loop={false}
-              autoplay={false}
-              className="pointer-events-none size-full"
-              decorative
-            />
-            <span className="absolute inset-x-0 bottom-7 text-center text-2xl font-semibold">HZ</span>
-          </div>
+          <ProfileCard photo={profile.photo} brandIntro={brandIntro} />
         </div>
       </section>
 
@@ -57,9 +48,14 @@ export default function AboutPage() {
             ["可交流方向", "个人网站、交互方案、动效落地、视觉叙事。"],
             ["创作原则", "少一点噪声，多一点结构；少一点炫技，多一点可用。"],
           ].map(([title, text]) => (
-            <div className="rounded-[20px] border border-[var(--border)] bg-[var(--surface-solid)] p-6" key={title}>
+            <div
+              className="rounded-[20px] border border-[var(--border)] bg-[var(--surface-solid)] p-6"
+              key={title}
+            >
               <h2 className="text-2xl font-semibold">{title}</h2>
-              <p className="mt-4 leading-7 text-[var(--text-secondary)]">{text}</p>
+              <p className="mt-4 leading-7 text-[var(--text-secondary)]">
+                {text}
+              </p>
             </div>
           ))}
         </div>
@@ -73,7 +69,12 @@ export default function AboutPage() {
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             {socials.map((social) => (
-              <Button href={social.href} variant="secondary" key={social.label} ariaLabel={social.ariaLabel}>
+              <Button
+                href={social.href}
+                variant="secondary"
+                key={social.label}
+                ariaLabel={social.ariaLabel}
+              >
                 <social.icon size={16} />
                 {social.label}
               </Button>

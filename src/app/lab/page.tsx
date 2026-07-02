@@ -36,29 +36,32 @@ export default function LabPage() {
             hideWhenReducedMotion
           />
         </div>
-        <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid gap-8">
           <LottieDemo />
-          <div className="grid gap-5 sm:grid-cols-2">
-            {labItems
-              .filter((item) => !item.lottie)
-              .slice(0, 4)
-              .map((item) => (
-                <article className="rounded-[20px] border border-[var(--border)] bg-[var(--surface-solid)] p-4" key={item.title}>
-                  <ProjectImage
-                    src={item.preview}
-                    alt={`${item.title} 实验预览`}
-                    title={item.title}
-                    sizes="(max-width: 768px) 50vw, 280px"
-                    className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-[var(--surface-muted)]"
-                    imageClassName="object-cover"
-                  />
-                  <p className="mt-4 text-sm text-[var(--text-secondary)]">
-                    {item.type} · {item.year}
-                  </p>
-                  <h2 className="mt-2 text-xl font-semibold">{item.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">{item.description}</p>
-                </article>
-              ))}
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {labItems.map((item) => (
+              <article
+                className="rounded-[20px] border border-[var(--border)] bg-[var(--surface-solid)] p-4"
+                key={item.title}
+              >
+                <ProjectImage
+                  src={item.preview}
+                  alt={`${item.title} 实验预览`}
+                  title={item.title}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+                  className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-[var(--surface-muted)]"
+                  imageClassName="object-cover"
+                  unoptimized
+                />
+                <p className="mt-4 text-sm text-[var(--text-secondary)]">
+                  {item.type} · {item.year}
+                </p>
+                <h2 className="mt-2 text-xl font-semibold">{item.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+                  {item.description}
+                </p>
+              </article>
+            ))}
           </div>
         </div>
       </section>

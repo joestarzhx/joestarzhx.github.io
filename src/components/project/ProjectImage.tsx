@@ -11,6 +11,7 @@ type ProjectImageProps = {
   className?: string;
   sizes: string;
   priority?: boolean;
+  unoptimized?: boolean;
   imageClassName?: string;
 };
 
@@ -21,6 +22,7 @@ export function ProjectImage({
   className = "",
   sizes,
   priority = false,
+  unoptimized = false,
   imageClassName = "object-cover",
 }: ProjectImageProps) {
   const [failed, setFailed] = useState(false);
@@ -35,6 +37,7 @@ export function ProjectImage({
           alt={alt}
           fill
           priority={priority}
+          unoptimized={unoptimized}
           sizes={sizes}
           className={imageClassName}
           onError={() => setFailed(true)}
