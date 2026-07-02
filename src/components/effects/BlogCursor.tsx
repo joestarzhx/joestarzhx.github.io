@@ -171,8 +171,8 @@ export function BlogCursor() {
       <span className="blog-cursor__halo" />
       <svg
         className="blog-cursor__arrow"
-        width="28"
-        height="38"
+        width="20"
+        height="27"
         viewBox="0 0 28 38"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

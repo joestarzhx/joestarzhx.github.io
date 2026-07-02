@@ -1,6 +1,6 @@
 export const profile = {
   name: "Haoxuan Zhang",
-  photo: "/images/profile/profile-card.webp",
+  photo: "/images/profile/profile-card-template.webp",
   chineseName: "张颢轩",
   displayName: "Haoxuan Zhang（张颢轩）",
   role: "Developer · Designer · Visual Creator",

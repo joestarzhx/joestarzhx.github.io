@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ThemedLottie } from "@/components/animation/ThemedLottie";
 import { ExperienceTimeline } from "@/components/resume/ExperienceTimeline";
@@ -24,21 +25,38 @@ export default function ResumePage() {
     <PageContainer>
       <section className="container-shell section-space">
         <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-end">
-          <SectionHeading eyebrow="Resume" title="在线简历，像作品一样说明能力。" text={profile.bio} />
+          <SectionHeading
+            eyebrow="Resume"
+            title="在线简历，像作品一样说明能力。"
+            text={profile.bio}
+          />
           <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-6">
-            <ThemedLottie
-              light={resumeTimeline.light}
-              dark={resumeTimeline.dark}
-              shared={resumeTimeline.shared}
-              fallbackSrc={resumeTimeline.fallback}
-              loop={false}
-              speed={resumeTimeline.speed}
-              className="pointer-events-none mb-4 aspect-square w-[130px] sm:w-40"
-              decorative
-            />
+            <div className="mb-5 flex items-center gap-4">
+              <div className="relative h-28 w-24 overflow-hidden rounded-[20px] bg-[var(--surface-muted)]">
+                <Image
+                  src={profile.photo}
+                  alt="???????"
+                  fill
+                  sizes="96px"
+                  className="object-contain object-center"
+                />
+              </div>
+              <ThemedLottie
+                light={resumeTimeline.light}
+                dark={resumeTimeline.dark}
+                shared={resumeTimeline.shared}
+                fallbackSrc={resumeTimeline.fallback}
+                loop={false}
+                speed={resumeTimeline.speed}
+                className="pointer-events-none aspect-square w-20 opacity-70"
+                decorative
+              />
+            </div>
             <p className="text-sm text-[var(--text-secondary)]">当前身份</p>
             <h2 className="mt-2 text-2xl font-semibold">{profile.current}</h2>
-            <p className="mt-4 leading-7 text-[var(--text-secondary)]">教育方向：{profile.education}</p>
+            <p className="mt-4 leading-7 text-[var(--text-secondary)]">
+              教育方向：{profile.education}
+            </p>
             <div className="mt-6">
               <ResumeDownload />
             </div>
@@ -65,7 +83,9 @@ export default function ResumePage() {
                   {project.category} · {project.year}
                 </p>
                 <h3 className="mt-2 text-xl font-semibold">{project.title}</h3>
-                <p className="mt-2 text-[var(--text-secondary)]">{project.description}</p>
+                <p className="mt-2 text-[var(--text-secondary)]">
+                  {project.description}
+                </p>
               </Link>
             ))}
           </div>
@@ -74,7 +94,10 @@ export default function ResumePage() {
           <SectionHeading eyebrow="Skills" title="技能与工具" />
           <div className="grid gap-4">
             {skillGroups.map((group) => (
-              <div className="rounded-[20px] border border-[var(--border)] p-5" key={group.title}>
+              <div
+                className="rounded-[20px] border border-[var(--border)] p-5"
+                key={group.title}
+              >
                 <h3 className="text-xl font-semibold">{group.title}</h3>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {group.items.map((item) => (

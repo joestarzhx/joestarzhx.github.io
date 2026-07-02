@@ -32,7 +32,7 @@ export function ProfileCard({ photo, brandIntro }: ProfileCardProps) {
             fill
             priority
             sizes="(max-width: 1024px) 360px, 320px"
-            className="object-cover object-center"
+            className="object-contain object-center"
             onError={() => setFailed(true)}
           />
         )}

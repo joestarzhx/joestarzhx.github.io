@@ -4,15 +4,19 @@ import { Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { postCategories, posts } from "@/data/posts";
+import type { Post, PostCategory } from "@/types/content";
 import { cn } from "@/lib/utils";
 import { PostCard } from "./PostCard";
 
-const allTags = Array.from(new Set(posts.flatMap((post) => post.tags)));
+type BlogExplorerProps = {
+  posts: Post[];
+  categories: Array<"全部" | PostCategory>;
+  tags: string[];
+};
 
-export function BlogExplorer() {
+export function BlogExplorer({ posts, categories, tags }: BlogExplorerProps) {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<(typeof postCategories)[number]>("全部");
+  const [category, setCategory] = useState<(typeof categories)[number]>("全部");
   const [tag, setTag] = useState("全部标签");
   const [focused, setFocused] = useState(false);
 
@@ -40,7 +44,7 @@ export function BlogExplorer() {
           .includes(term);
       return categoryMatch && tagMatch && queryMatch;
     });
-  }, [category, query, tag]);
+  }, [category, posts, query, tag]);
 
   return (
     <div>
@@ -50,7 +54,10 @@ export function BlogExplorer() {
           className="flex items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--surface-solid)] px-4 py-3"
         >
           <Search
-            className={cn("text-[var(--text-tertiary)] transition-transform", focused && "translate-x-1")}
+            className={cn(
+              "text-[var(--text-tertiary)] transition-transform",
+              focused && "translate-x-1",
+            )}
             size={18}
           />
           <input
@@ -82,7 +89,7 @@ export function BlogExplorer() {
       </div>
 
       <div className="mb-5 flex gap-2 overflow-x-auto pb-2">
-        {postCategories.map((item) => (
+        {categories.map((item) => (
           <button
             className={cn(
               "focus-ring shrink-0 rounded-full border border-[var(--border)] px-4 py-2 text-sm",
@@ -99,11 +106,13 @@ export function BlogExplorer() {
         ))}
       </div>
       <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
-        {["全部标签", ...allTags].map((item) => (
+        {["全部标签", ...tags].map((item) => (
           <button
             className={cn(
               "focus-ring shrink-0 rounded-full px-3 py-1 text-sm",
-              tag === item ? "bg-[var(--accent-soft)] text-[var(--accent)]" : "text-[var(--text-secondary)]",
+              tag === item
+                ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+                : "text-[var(--text-secondary)]",
             )}
             key={item}
             type="button"
@@ -133,7 +142,7 @@ export function BlogExplorer() {
         ) : (
           <EmptyState
             title="没有找到文章"
-            text="文章正在整理中。这里将记录项目复盘、技术实践与创作思考。"
+            text="文章正在整理中。这里会记录项目复盘、技术实践与创作思考。"
           />
         )}
       </AnimatePresence>

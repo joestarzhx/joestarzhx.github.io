@@ -12,9 +12,9 @@ import { cn } from "@/lib/utils";
 const nav = [
   { href: "/", label: "首页" },
   { href: "/projects", label: "项目" },
+  { href: "/resume", label: "简历" },
   { href: "/blog", label: "文章" },
   { href: "/lab", label: "实验室" },
-  { href: "/resume", label: "简历" },
   { href: "/about", label: "关于" },
 ];
 
@@ -52,24 +52,35 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-300", scrolled ? "py-3" : "py-5")}>
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled ? "py-3" : "py-5",
+      )}
+    >
       <div
         className={cn(
           "container-shell flex items-center justify-between rounded-full px-4 transition-all duration-300",
           scrolled ? "glass h-12 shadow-sm" : "h-12",
         )}
       >
-        <Link className="focus-ring rounded-full text-sm font-semibold" href="/">
+        <Link
+          className="focus-ring rounded-full text-sm font-semibold"
+          href="/"
+        >
           {profile.name}
         </Link>
         <nav className="hidden items-center gap-1 md:flex" aria-label="主导航">
           {nav.map((item) => {
-            const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+            const active =
+              pathname === item.href ||
+              (item.href !== "/" && pathname.startsWith(item.href));
             return (
               <Link
                 className={cn(
                   "focus-ring rounded-full px-3 py-2 text-sm text-[var(--text-secondary)] transition-colors",
-                  active && "bg-[var(--surface-muted)] text-[var(--text-primary)]",
+                  active &&
+                    "bg-[var(--surface-muted)] text-[var(--text-primary)]",
                 )}
                 href={item.href}
                 key={item.href}
