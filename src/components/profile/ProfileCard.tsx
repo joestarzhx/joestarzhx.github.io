@@ -11,7 +11,7 @@ export function ProfileCard({ photo }: ProfileCardProps) {
   const [failed, setFailed] = useState(false);
 
   return (
-    <div className="relative mx-auto w-full max-w-[360px] overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface-solid)] shadow-[var(--shadow-soft)]">
+    <div className="relative mx-auto w-full max-w-[min(100%,380px)] overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface-solid)] shadow-[var(--shadow-soft)]">
       <div className="relative aspect-[4/5] bg-[var(--surface-muted)]">
         {failed ? (
           <div className="grid size-full place-items-center">
@@ -25,16 +25,16 @@ export function ProfileCard({ photo }: ProfileCardProps) {
         ) : (
           <Image
             src={photo}
-            alt="张颢轩个人照片"
+            alt="张颢轩的个人照片"
             fill
             priority
-            sizes="(max-width: 1024px) 360px, 320px"
+            sizes="(max-width: 640px) calc(100vw - 36px), 360px"
             className="object-contain object-center"
             onError={() => setFailed(true)}
           />
         )}
       </div>
-      <div className="pointer-events-none absolute bottom-4 right-4 grid size-16 place-items-center rounded-[18px] border border-[var(--border)] bg-[var(--surface)] p-2 shadow-[var(--shadow-soft)] backdrop-blur-md">
+      <div className="pointer-events-none absolute bottom-4 right-4 grid size-14 place-items-center rounded-[16px] border border-[var(--border)] bg-[var(--surface)] p-2 shadow-[var(--shadow-soft)] backdrop-blur-md sm:size-16 sm:rounded-[18px]">
         <Image
           src="/images/lottie-fallbacks/brand-intro-static.svg"
           alt=""

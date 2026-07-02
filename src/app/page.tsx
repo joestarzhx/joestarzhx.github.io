@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <PageContainer>
-      <section className="container-shell grid items-center gap-10 py-8 sm:py-10 lg:min-h-[calc(100svh-var(--nav-height))] lg:grid-cols-[1.05fr_0.95fr]">
+      <section className="container-shell grid items-center gap-10 py-8 sm:py-10 lg:grid-cols-[1.02fr_0.98fr]">
         <Reveal>
           <p className="mb-4 text-sm font-medium text-[var(--accent)]">
             {profile.role}
@@ -38,22 +38,23 @@ export default function Home() {
           <p className="mt-3 text-[clamp(1.75rem,8vw,3rem)] font-semibold leading-tight lg:text-5xl">
             {profile.chineseName}
           </p>
-          <p className="mt-6 max-w-2xl text-[17px] leading-[1.7] text-[var(--text-secondary)] sm:text-2xl">
+          <p className="mt-6 max-w-2xl text-[17px] leading-[1.7] text-[var(--text-body)] sm:text-2xl">
             {profile.summary}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button href="/projects">
-              查看作品 <ArrowRight size={16} />
+              查看项目 <ArrowRight size={16} />
             </Button>
             <Button href="/resume" variant="secondary">
               查看简历
             </Button>
           </div>
         </Reveal>
+
         <Reveal className="relative">
-            <div className="relative mx-auto max-w-[288px] rounded-[28px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 shadow-[var(--shadow-soft)] sm:max-w-[420px] sm:rounded-[32px] sm:p-5">
+          <div className="relative mx-auto w-[min(78vw,320px)] rounded-[28px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 shadow-[var(--shadow-soft)] sm:w-full sm:max-w-[450px] sm:rounded-[32px] sm:p-5">
             <ThemedLottie
-              className="pointer-events-none absolute -right-8 -top-8 z-0 aspect-square w-44 opacity-30 sm:-right-16 sm:-top-16 sm:w-72"
+              className="pointer-events-none absolute -right-6 -top-8 z-0 aspect-square w-44 opacity-30 sm:-right-10 sm:-top-16 sm:w-64 lg:right-0"
               light={heroOrbit.light}
               dark={heroOrbit.dark}
               shared={heroOrbit.shared}
@@ -66,28 +67,28 @@ export default function Home() {
             <div className="relative z-10 aspect-[4/5] overflow-hidden rounded-[24px] bg-[var(--surface-muted)]">
               <Image
                 src={profile.photo}
-                alt="张颢轩个人照片"
+                alt="张颢轩的个人照片"
                 fill
                 priority
-                sizes="(max-width: 640px) 320px, 420px"
+                sizes="(max-width: 640px) 320px, 450px"
                 className="object-contain object-center"
               />
             </div>
-            <div className="relative z-20 mt-4 rounded-[20px] border border-[var(--border)] bg-[var(--surface)] p-4 backdrop-blur">
-              <p className="text-sm text-[var(--text-secondary)]">
-                {profile.status}
+            <div className="relative z-20 mt-4 rounded-[18px] border border-[var(--border)] bg-[var(--surface)] px-4 py-3 backdrop-blur">
+              <p className="text-sm leading-6 text-[var(--text-body)]">
+                前端开发 · 交互设计 · 视觉创作
               </p>
             </div>
           </div>
         </Reveal>
       </section>
 
-      <section className="section-space container-shell">
+      <section className="section-space-compact container-shell">
         <div className="flex items-start justify-between gap-6">
           <SectionHeading
             eyebrow="精选项目"
             title="把想法做成可以被触摸的界面。"
-            text="这里记录我完成或持续迭代的网页、动画与视觉项目。每个项目都包含设计目标、实现过程与最终成果。"
+            text="这里记录已完成或持续迭代的网页、动画与视觉项目。"
           />
           <ThemedLottie
             light={projectsStack.light}
@@ -103,7 +104,7 @@ export default function Home() {
         <div className="grid gap-5 md:grid-cols-2">
           {featuredProjects.map((project, index) => (
             <Link
-              className="group focus-ring surface block overflow-hidden rounded-[22px]"
+              className="focus-ring group block overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface-solid)] transition-[border-color,box-shadow,transform] hover:-translate-y-[3px] hover:border-[var(--accent)] hover:shadow-[var(--shadow-soft)] active:scale-[0.985] motion-reduce:hover:translate-y-0"
               href={`/projects/${project.slug}`}
               key={project.slug}
             >
@@ -114,9 +115,9 @@ export default function Home() {
                 priority={index < 2}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="relative aspect-[16/10] overflow-hidden bg-[var(--surface-muted)]"
-                imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.035]"
+                imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />
-              <div className="p-6">
+              <div className="p-5 sm:p-6">
                 <div className="flex items-center justify-between gap-3 text-sm text-[var(--text-secondary)]">
                   <span>{project.category}</span>
                   <span>{project.year}</span>
@@ -128,7 +129,7 @@ export default function Home() {
                     size={18}
                   />
                 </h3>
-                <p className="mt-3 leading-7 text-[var(--text-secondary)]">
+                <p className="mt-3 line-clamp-3 leading-7 text-[var(--text-body)]">
                   {project.description}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
@@ -142,25 +143,28 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section-space bg-[var(--surface-solid)]">
+      <section className="section-space-compact bg-[var(--surface-solid)]">
         <div className="container-shell">
           <SectionHeading
             eyebrow="能力方向"
-            title="工程、审美和叙事放在同一张桌上。"
+            title="工程、审美和叙事放在同一张桌面。"
           />
           <CapabilityPath items={capabilities} />
         </div>
       </section>
 
-      <section className="section-space container-shell">
+      <section className="section-space-compact container-shell">
         <div className="flex items-start justify-between gap-6">
           <SectionHeading eyebrow="最新文章" title="记录每次取舍背后的判断。" />
-          <div className="hidden h-12 w-28 shrink-0 border-b border-[var(--accent)] opacity-55 md:block" aria-hidden="true" />
+          <div
+            className="hidden h-12 w-28 shrink-0 border-b border-[var(--accent)] opacity-55 md:block"
+            aria-hidden="true"
+          />
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
           {latestPosts.map((post) => (
             <Link
-              className="focus-ring group overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)] transition-transform hover:-translate-y-1"
+              className="focus-ring group overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)] transition-[border-color,box-shadow,transform] hover:-translate-y-[3px] hover:border-[var(--accent)] hover:shadow-[var(--shadow-soft)] active:scale-[0.985] motion-reduce:hover:translate-y-0"
               href={`/blog/${post.slug}`}
               key={post.slug}
             >
@@ -170,7 +174,7 @@ export default function Home() {
                 title={post.title}
                 sizes="(max-width: 1024px) 100vw, 360px"
                 className="relative aspect-[2/1] overflow-hidden bg-[var(--surface-muted)]"
-                imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.035]"
+                imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />
               <div className="p-5">
                 <p className="text-sm text-[var(--text-secondary)]">
@@ -179,7 +183,7 @@ export default function Home() {
                 <h3 className="mt-4 text-xl font-semibold leading-7">
                   {post.title}
                 </h3>
-                <p className="mt-3 line-clamp-3 text-sm leading-6 text-[var(--text-secondary)]">
+                <p className="mt-3 line-clamp-3 text-sm leading-6 text-[var(--text-body)]">
                   {post.description}
                 </p>
               </div>
@@ -188,13 +192,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section-space container-shell grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <Reveal className="rounded-[28px] bg-[var(--text-primary)] p-8 text-[var(--background)]">
-          <Download className="mb-10" size={28} />
+      <section className="section-space-bottom container-shell grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <Reveal className="rounded-[24px] bg-[var(--text-primary)] p-6 text-[var(--background)] sm:p-8">
+          <Download className="mb-8" size={28} />
           <h2 className="text-3xl font-semibold">简历摘要</h2>
-          <p className="mt-4 leading-8 opacity-80">
-            {profile.current}。教育方向：{profile.education}
-            。主要关注前端工程、交互动效、AI 视觉创作与科普动画。
+          <p className="mt-4 leading-8 opacity-85">
+            {profile.current}。教育方向：{profile.education}。主要关注前端工程、交互动效、AI 视觉创作与科普动画。
           </p>
           <div className="mt-8">
             <Button href="/resume" variant="secondary">
@@ -202,10 +205,10 @@ export default function Home() {
             </Button>
           </div>
         </Reveal>
-        <Reveal className="rounded-[28px] border border-[var(--border)] p-8">
+        <Reveal className="rounded-[24px] border border-[var(--border)] p-6 sm:p-8">
           <h2 className="text-3xl font-semibold">保持联系</h2>
-          <p className="mt-4 max-w-2xl leading-8 text-[var(--text-secondary)]">
-            如果你对前端、视觉叙事、动画解释或虚拟角色项目感兴趣，可以从这些入口找到我。
+          <p className="mt-4 max-w-2xl leading-8 text-[var(--text-body)]">
+            如果你对前端、视觉叙事、动画解释或数字作品整理感兴趣，可以从这些入口找到我。
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             {socials.map((social) => (

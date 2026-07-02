@@ -8,7 +8,7 @@ export function PostCard({ post }: { post: Post }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="focus-ring group grid gap-5 rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 transition-transform hover:-translate-y-1 sm:grid-cols-[220px_1fr]"
+      className="focus-ring group grid gap-5 rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 transition-[border-color,box-shadow,transform] hover:-translate-y-[3px] hover:border-[var(--accent)] hover:shadow-[var(--shadow-soft)] active:scale-[0.985] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:grid-cols-[220px_1fr]"
     >
       <ProjectImage
         src={post.cover}
@@ -26,7 +26,7 @@ export function PostCard({ post }: { post: Post }) {
         <h2 className="mt-4 text-2xl font-semibold leading-tight">
           {post.title}
         </h2>
-        <p className="mt-3 leading-7 text-[var(--text-secondary)]">
+        <p className="mt-3 line-clamp-3 leading-7 text-[var(--text-body)]">
           {post.description}
         </p>
         {post.date ? (

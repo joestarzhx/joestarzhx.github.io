@@ -82,9 +82,9 @@ export function CapabilityPathMotion({ children }: { children: React.ReactNode }
   }, []);
 
   return (
-    <div ref={scope} className="relative isolate">
+    <div ref={scope} className="relative isolate overflow-hidden">
       <svg
-        className="pointer-events-none absolute inset-x-10 top-8 z-0 hidden h-[calc(100%-4rem)] opacity-45 md:block"
+        className="pointer-events-none absolute inset-x-0 top-8 z-0 hidden h-[calc(100%-4rem)] w-full opacity-45 md:block"
         viewBox="0 0 760 420"
         preserveAspectRatio="none"
         aria-hidden="true"
