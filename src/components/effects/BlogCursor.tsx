@@ -61,8 +61,8 @@ export function BlogCursor() {
     const html = document.documentElement;
     html.dataset.customCursor = "ready";
 
-    let nextX = -100;
-    let nextY = -100;
+    let nextX = 0;
+    let nextY = 0;
     let frame = 0;
 
     const render = () => {

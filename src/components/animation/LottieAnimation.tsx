@@ -5,6 +5,7 @@ import { useInView, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { assetPath } from "@/lib/assets";
+import { cn } from "@/lib/utils";
 
 export type LottieAnimationProps = {
   src: string | string[];
@@ -235,7 +236,7 @@ export function LottieAnimation({
   return (
     <div
       ref={containerRef}
-      className={className}
+      className={cn("lottie-container min-w-0 max-w-full", className)}
       aria-hidden={decorative ? "true" : undefined}
       aria-label={!decorative ? ariaLabel : undefined}
       onMouseEnter={() => {
