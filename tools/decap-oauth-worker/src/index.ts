@@ -38,18 +38,38 @@ function getCookie(request: Request, name: string) {
     ?.slice(name.length + 1);
 }
 
-function html(message: string, origin: string, status = 200) {
+function html(
+  script: string,
+  origin: string,
+  status = 200,
+  headers?: HeadersInit,
+) {
   return new Response(
-    `<!doctype html><meta charset="utf-8"><script>${message}</script>`,
+    `<!doctype html><meta charset="utf-8"><script>${script}</script>`,
     {
       status,
       headers: noStore({
+        ...headers,
         "Content-Type": "text/html; charset=utf-8",
         "Content-Security-Policy":
           "default-src 'none'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; style-src 'none'; base-uri 'none'; frame-ancestors 'none'",
         "Access-Control-Allow-Origin": origin,
       }),
     },
+  );
+}
+
+function errorHtml(
+  error: { message: string },
+  origin: string,
+  status = 400,
+  headers?: HeadersInit,
+) {
+  return html(
+    `window.opener && window.opener.postMessage('authorization:github:error:${JSON.stringify(error)}', ${JSON.stringify(origin)}); window.close();`,
+    origin,
+    status,
+    headers,
   );
 }
 
@@ -69,13 +89,37 @@ async function auth(request: Request, env: Env) {
     scope: "public_repo",
     state,
   });
-  return new Response(null, {
-    status: 302,
-    headers: noStore({
-      Location: `https://github.com/login/oauth/authorize?${params}`,
+  const authorizeUrl = `https://github.com/login/oauth/authorize?${params}`;
+  const handshakeScript = `
+const message = 'authorizing:github';
+const parentOrigin = ${JSON.stringify(env.ALLOWED_ORIGIN)};
+const authorizeUrl = ${JSON.stringify(authorizeUrl)};
+let started = false;
+function beginAuthorization() {
+  if (started) return;
+  started = true;
+  window.location.href = authorizeUrl;
+}
+window.addEventListener('message', function(event) {
+  if (event.origin === parentOrigin && event.data === message) {
+    beginAuthorization();
+  }
+});
+if (window.opener) {
+  window.opener.postMessage(message, parentOrigin);
+  window.setTimeout(beginAuthorization, 1500);
+} else {
+  beginAuthorization();
+}
+`;
+  return html(
+    handshakeScript,
+    env.ALLOWED_ORIGIN,
+    200,
+    {
       "Set-Cookie": `${stateCookie}=${state}; Path=/; Max-Age=600; HttpOnly; Secure; SameSite=Lax`,
-    }),
-  });
+    },
+  );
 }
 
 async function callback(request: Request, env: Env) {
@@ -86,10 +130,12 @@ async function callback(request: Request, env: Env) {
   const clearCookie = `${stateCookie}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`;
 
   if (!code || !state || !expectedState || state !== expectedState) {
-    return new Response("Invalid OAuth state", {
-      status: 400,
-      headers: noStore({ "Set-Cookie": clearCookie }),
-    });
+    return errorHtml(
+      { message: "Invalid OAuth state. Please retry login." },
+      env.ALLOWED_ORIGIN,
+      400,
+      { "Set-Cookie": clearCookie },
+    );
   }
 
   const tokenResponse = await fetch(
@@ -104,6 +150,7 @@ async function callback(request: Request, env: Env) {
         client_id: env.GITHUB_CLIENT_ID,
         client_secret: env.GITHUB_CLIENT_SECRET,
         code,
+        redirect_uri: new URL("/callback", request.url).toString(),
       }),
     },
   );
@@ -112,10 +159,12 @@ async function callback(request: Request, env: Env) {
     error?: string;
   };
   if (!tokenResponse.ok || !tokenJson.access_token) {
-    return new Response("OAuth token exchange failed", {
-      status: 401,
-      headers: noStore({ "Set-Cookie": clearCookie }),
-    });
+    return errorHtml(
+      { message: tokenJson.error ?? "OAuth token exchange failed." },
+      env.ALLOWED_ORIGIN,
+      401,
+      { "Set-Cookie": clearCookie },
+    );
   }
 
   const userResponse = await fetch("https://api.github.com/user", {
@@ -127,10 +176,12 @@ async function callback(request: Request, env: Env) {
   });
   const user = (await userResponse.json()) as { login?: string };
   if (!userResponse.ok || user.login !== env.ALLOWED_GITHUB_LOGIN) {
-    return new Response("Forbidden GitHub user", {
-      status: 403,
-      headers: noStore({ "Set-Cookie": clearCookie }),
-    });
+    return errorHtml(
+      { message: "This GitHub account is not allowed to publish this site." },
+      env.ALLOWED_ORIGIN,
+      403,
+      { "Set-Cookie": clearCookie },
+    );
   }
 
   const payload = {
@@ -140,6 +191,8 @@ async function callback(request: Request, env: Env) {
   return html(
     `window.opener && window.opener.postMessage('authorization:github:success:${JSON.stringify(payload)}', ${JSON.stringify(env.ALLOWED_ORIGIN)}); window.close();`,
     env.ALLOWED_ORIGIN,
+    200,
+    { "Set-Cookie": clearCookie },
   );
 }
 
