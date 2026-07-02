@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { BrandIntro } from "@/components/animation/BrandIntro";
+import { BlogCursor } from "@/components/effects/BlogCursor";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -27,7 +28,16 @@ export const metadata: Metadata = {
   },
   description:
     "张颢轩的个人博客与数字作品集，记录前端开发、交互动效、视觉设计、Manim 科普动画、AI 视觉创作与 Live2D 项目。",
-  keywords: ["个人博客", "作品集", "前端开发", "交互设计", "动效设计", "Manim", "Live2D", "Next.js"],
+  keywords: [
+    "个人博客",
+    "作品集",
+    "前端开发",
+    "交互设计",
+    "动效设计",
+    "Manim",
+    "Live2D",
+    "Next.js",
+  ],
   authors: [{ name: "Haoxuan Zhang" }],
   creator: "Haoxuan Zhang",
   manifest: "/manifest.json",
@@ -65,10 +75,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <Providers>
           <div className="noise" />
           <BrandIntro />
+          <BlogCursor />
           <Header />
           {children}
           <Footer />

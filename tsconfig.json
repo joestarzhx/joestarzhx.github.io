@@ -30,5 +30,19 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "about",
+    "blog",
+    "images",
+    "lab",
+    "lottie",
+    "lottie-preview",
+    "personal-blog-lottie-json-only",
+    "projects",
+    "resume",
+    "博客Lab动态WebP素材包",
+    "博客macOS风格光标与点击效果",
+    "张颢轩正式博客-剩余图片素材包"
+  ]
 }
