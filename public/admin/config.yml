@@ -2,7 +2,7 @@ backend:
   name: github
   repo: joestarzhx/joestarzhx.github.io
   branch: main
-  base_url: https://replace-with-your-oauth-worker.example.workers.dev
+  base_url: https://joestarzhx-decap-oauth.joestarzhx.workers.dev
   auth_endpoint: auth
   auth_scope: public_repo
 
