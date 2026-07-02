@@ -57,7 +57,7 @@ export default async function PostDetailPage({ params }: Props) {
   const related = getRelatedPosts(post, 2);
 
   return (
-    <main className="pt-[var(--nav-height)]">
+    <main id="top" className="pt-[var(--nav-height)]">
       <ReadingProgress />
       <article className="container-shell section-space">
         <Link
@@ -94,7 +94,7 @@ export default async function PostDetailPage({ params }: Props) {
       </article>
 
       <div className="container-shell grid gap-10 pb-24 xl:grid-cols-[1fr_minmax(0,720px)_1fr]">
-        <div />
+        <span aria-hidden="true" />
         <div className="prose-custom">
           <MarkdownContent content={post.content} />
         </div>
@@ -115,9 +115,7 @@ export default async function PostDetailPage({ params }: Props) {
                 {adjacent.previous.title}
               </p>
             </Link>
-          ) : (
-            <div />
-          )}
+          ) : null}
           {adjacent.next ? (
             <Link
               className="focus-ring rounded-[20px] border border-[var(--border)] p-5 text-right"
@@ -151,7 +149,7 @@ export default async function PostDetailPage({ params }: Props) {
         ) : null}
         <a
           className="focus-ring mt-10 inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-2 text-sm"
-          href="#"
+          href="#top"
         >
           <ChevronUp size={16} /> 返回顶部
         </a>

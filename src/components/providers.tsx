@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
+import { InteractiveAudit } from "@/components/dev/InteractiveAudit";
 
 type ThemeChoice = "light" | "dark" | "system";
 type ResolvedTheme = "light" | "dark";
@@ -74,6 +75,7 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider value={value}>
+      <InteractiveAudit />
       {children}
     </ThemeContext.Provider>
   );
