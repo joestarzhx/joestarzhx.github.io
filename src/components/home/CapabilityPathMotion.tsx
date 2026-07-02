@@ -28,8 +28,24 @@ export function CapabilityPathMotion({ children }: { children: React.ReactNode }
         const dot = dotRef.current;
         const cards = gsap.utils.toArray<HTMLElement>("[data-capability-card]", scope.current);
         const length = path.getTotalLength();
+        let previousActive = -1;
 
         gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+
+        const setActiveCard = (active: number) => {
+          if (active === previousActive) return;
+          previousActive = active;
+          cards.forEach((card, index) => {
+            gsap.to(card, {
+              scale: index === active ? 1.012 : 1,
+              opacity: index === active ? 1 : 0.86,
+              duration: 0.18,
+              overwrite: "auto",
+            });
+          });
+        };
+
+        setActiveCard(0);
 
         const tween = gsap.to(path, {
           strokeDashoffset: 0,
@@ -43,14 +59,7 @@ export function CapabilityPathMotion({ children }: { children: React.ReactNode }
               const point = path.getPointAtLength(length * self.progress);
               gsap.set(dot, { attr: { cx: point.x, cy: point.y } });
               const active = Math.min(cards.length - 1, Math.round(self.progress * (cards.length - 1)));
-              cards.forEach((card, index) => {
-                gsap.to(card, {
-                  scale: index === active ? 1.012 : 1,
-                  opacity: index === active ? 1 : 0.86,
-                  duration: 0.18,
-                  overwrite: "auto",
-                });
-              });
+              setActiveCard(active);
             },
           },
         });

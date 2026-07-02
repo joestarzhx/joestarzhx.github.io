@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ThemedLottie } from "@/components/animation/ThemedLottie";
 import { getLottieItem } from "@/data/lottie";
 import { profile } from "@/data/profile";
@@ -14,24 +14,49 @@ export function BrandIntro() {
   const reducedMotion = useReducedMotion();
   const [visible, setVisible] = useState(false);
   const [ready, setReady] = useState(false);
+  const fallbackTimerRef = useRef<number | null>(null);
+  const showTimerRef = useRef<number | null>(null);
+
+  const clearFallbackTimer = useCallback(() => {
+    if (fallbackTimerRef.current !== null) {
+      window.clearTimeout(fallbackTimerRef.current);
+      fallbackTimerRef.current = null;
+    }
+  }, []);
+
+  const clearShowTimer = useCallback(() => {
+    if (showTimerRef.current !== null) {
+      window.clearTimeout(showTimerRef.current);
+      showTimerRef.current = null;
+    }
+  }, []);
+
+  const closeIntro = useCallback(() => {
+    clearFallbackTimer();
+    clearShowTimer();
+    setVisible(false);
+  }, [clearFallbackTimer, clearShowTimer]);
 
   useEffect(() => {
-    if (pathname !== "/" || reducedMotion) return;
+    if (pathname !== "/" || reducedMotion) {
+      const closeTimer = window.setTimeout(closeIntro, 0);
+      return () => window.clearTimeout(closeTimer);
+    }
     const played = window.sessionStorage.getItem("haoxuan-brand-intro-played");
     if (played) return;
 
     window.sessionStorage.setItem("haoxuan-brand-intro-played", "true");
-    const showTimeout = window.setTimeout(() => {
+    showTimerRef.current = window.setTimeout(() => {
+      showTimerRef.current = null;
       setReady(false);
       setVisible(true);
     }, 0);
 
-    const fallbackTimeout = window.setTimeout(() => setVisible(false), 3000);
+    fallbackTimerRef.current = window.setTimeout(closeIntro, 3000);
     return () => {
-      window.clearTimeout(showTimeout);
-      window.clearTimeout(fallbackTimeout);
+      closeIntro();
     };
-  }, [pathname, reducedMotion]);
+  }, [closeIntro, pathname, reducedMotion]);
 
   return (
     <AnimatePresence>
@@ -55,9 +80,9 @@ export function BrandIntro() {
               className="aspect-square w-[150px] sm:w-48"
               decorative
               onDataReady={() => setReady(true)}
-              onComplete={() => setVisible(false)}
+              onComplete={closeIntro}
               onLoadStateChange={(state) => {
-                if (state === "error") setVisible(false);
+                if (state === "error") closeIntro();
               }}
             />
             <div className="text-center">

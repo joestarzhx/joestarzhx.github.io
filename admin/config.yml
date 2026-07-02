@@ -1,0 +1,65 @@
+backend:
+  name: github
+  repo: joestarzhx/joestarzhx.github.io
+  branch: main
+  base_url: https://joestarzhx-decap-oauth.joestarzhx.workers.dev
+  auth_endpoint: auth
+  auth_scope: public_repo
+
+publish_mode: simple
+media_folder: public/images/posts
+public_folder: /images/posts
+locale: zh_Hans
+
+collections:
+  - name: posts
+    label: 文章
+    label_singular: 文章
+    folder: content/posts
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    summary: "{{title}}"
+    fields:
+      - { label: 标题, name: title, widget: string, required: true }
+      - label: URL Slug
+        name: slug
+        widget: string
+        required: true
+        pattern:
+          - "^[a-z0-9-]+$"
+          - "只能使用小写英文、数字和连字符"
+      - { label: 摘要, name: description, widget: text, required: true }
+      - {
+          label: 发布时间,
+          name: date,
+          widget: datetime,
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: true,
+        }
+      - {
+          label: 更新时间,
+          name: updated,
+          widget: datetime,
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: false,
+        }
+      - label: 分类
+        name: category
+        widget: select
+        required: true
+        options: [技术开发, 视觉设计, 物理与数学, AI 创作, 项目复盘, 随笔思考]
+      - { label: 标签, name: tags, widget: list, required: false, default: [] }
+      - label: 封面
+        name: cover
+        widget: image
+        required: true
+        hint: 请上传 2:1 WebP 封面，建议 1600×800，控制在 500KB 内。
+      - { label: 首页精选, name: featured, widget: boolean, default: false }
+      - { label: 草稿状态, name: draft, widget: boolean, default: true }
+      - { label: 正文, name: body, widget: markdown, required: true }

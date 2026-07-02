@@ -21,7 +21,7 @@ export const lottieItems: LottieItem[] = [
     fallback: "/images/lottie-fallbacks/brand-intro-static.svg",
     loop: false,
     speed: 1,
-    placement: "首页首次进入",
+    placement: "首页首次进入时的品牌开场",
   },
   {
     key: "hero-orbit",
@@ -32,7 +32,7 @@ export const lottieItems: LottieItem[] = [
     fallback: "/images/lottie-fallbacks/hero-orbit-static.svg",
     loop: true,
     speed: 0.72,
-    placement: "首页首屏姓名侧后方",
+    placement: "首页 Hero 人物卡片装饰",
   },
   {
     key: "projects-stack",
@@ -43,7 +43,7 @@ export const lottieItems: LottieItem[] = [
     fallback: "/images/lottie-fallbacks/projects-stack-static.svg",
     loop: false,
     speed: 0.9,
-    placement: "首页精选项目、Projects 页面顶部",
+    placement: "仅用于首页精选项目标题区域",
   },
   {
     key: "resume-timeline",
@@ -54,7 +54,7 @@ export const lottieItems: LottieItem[] = [
     fallback: "/images/lottie-fallbacks/resume-timeline-static.svg",
     loop: false,
     speed: 0.9,
-    placement: "Resume 页面首屏",
+    placement: "动画素材预览或后续时间轴实验，正式 Resume 页面暂不使用",
   },
   {
     key: "article-writing",
@@ -65,7 +65,7 @@ export const lottieItems: LottieItem[] = [
     fallback: "/images/lottie-fallbacks/article-writing-static.svg",
     loop: false,
     speed: 0.9,
-    placement: "首页最新文章、Blog 页面 Hero",
+    placement: "仅用于 Blog 页面 Hero",
   },
   {
     key: "lab-modules",
@@ -76,7 +76,7 @@ export const lottieItems: LottieItem[] = [
     fallback: "/images/lottie-fallbacks/lab-modules-static.svg",
     loop: true,
     speed: 0.6,
-    placement: "Lab 页面首屏",
+    placement: "仅用于 Lab 页面 LottieDemo",
   },
   {
     key: "message-success",
@@ -87,7 +87,7 @@ export const lottieItems: LottieItem[] = [
     fallback: "/images/lottie-fallbacks/message-success-static.svg",
     loop: false,
     speed: 1,
-    placement: "Lottie 预览页",
+    placement: "状态动画素材，正式功能暂未使用",
   },
   {
     key: "lost-dot-404",
@@ -98,7 +98,7 @@ export const lottieItems: LottieItem[] = [
     fallback: "/images/lottie-fallbacks/lost-dot-404-static.svg",
     loop: true,
     speed: 0.65,
-    placement: "not-found.tsx",
+    placement: "404 页面",
   },
 ];
 

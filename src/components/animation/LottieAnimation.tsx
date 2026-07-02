@@ -9,15 +9,18 @@ import { assetPath } from "@/lib/assets";
 export type LottieAnimationProps = {
   src: string | string[];
   className?: string;
+  contentClassName?: string;
   loop?: boolean;
   autoplay?: boolean;
   speed?: number;
+  fit?: "contain" | "cover";
   playOnView?: boolean;
   pauseWhenHidden?: boolean;
   ariaLabel?: string;
   decorative?: boolean;
   replayOnHover?: boolean;
   hideWhenReducedMotion?: boolean;
+  preserveSpaceWhenHidden?: boolean;
   fallbackSrc?: string;
   onComplete?: () => void;
   onDOMLoaded?: () => void;
@@ -56,19 +59,33 @@ function loadLottie(src: string) {
   return promise;
 }
 
-function StaticFallback({ className, fallbackSrc, title }: { className?: string; fallbackSrc?: string; title?: string }) {
+function StaticFallback({
+  className,
+  fallbackSrc,
+  title,
+  decorative,
+}: {
+  className?: string;
+  fallbackSrc?: string;
+  title?: string;
+  decorative: boolean;
+}) {
+  const semanticProps = decorative
+    ? { "aria-hidden": "true" as const }
+    : { role: "img" as const, "aria-label": title };
+
   if (fallbackSrc) {
     return (
-      <div className={className} aria-hidden="true">
+      <div className={className} {...semanticProps}>
         <div className="relative size-full min-h-24">
-          <Image src={fallbackSrc} alt={title ?? ""} fill sizes="240px" className="object-contain" />
+          <Image src={fallbackSrc} alt="" fill sizes="240px" className="object-contain" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className={className} aria-hidden="true">
+    <div className={className} {...semanticProps}>
       <div className="grid size-full min-h-24 place-items-center rounded-[20px] border border-[var(--border)] bg-[var(--surface-muted)]">
         <div className="relative aspect-square w-20 rounded-full border border-[var(--border)]">
           <span className="absolute inset-5 rounded-full border border-[var(--accent)] opacity-55" />
@@ -82,15 +99,18 @@ function StaticFallback({ className, fallbackSrc, title }: { className?: string;
 export function LottieAnimation({
   src,
   className,
+  contentClassName,
   loop = true,
   autoplay = true,
   speed = 1,
+  fit = "contain",
   playOnView = true,
   pauseWhenHidden = true,
   ariaLabel,
   decorative = true,
   replayOnHover = false,
   hideWhenReducedMotion = false,
+  preserveSpaceWhenHidden = false,
   fallbackSrc,
   onComplete,
   onDOMLoaded,
@@ -109,6 +129,7 @@ export function LottieAnimation({
   );
   const resolvedFallback = useMemo(() => (fallbackSrc ? assetPath(fallbackSrc) : undefined), [fallbackSrc]);
   const shouldLoad = (!playOnView || inView) && resolvedSources.length > 0;
+  const preserveAspectRatio = fit === "cover" ? "xMidYMid slice" : "xMidYMid meet";
 
   useEffect(() => {
     if (!shouldLoad || reducedMotion) {
@@ -171,13 +192,18 @@ export function LottieAnimation({
   }, [autoplay, inView, playOnView, reducedMotion]);
 
   if (reducedMotion && hideWhenReducedMotion) {
-    return <div ref={containerRef} className={className} aria-hidden="true" />;
+    return preserveSpaceWhenHidden ? <div ref={containerRef} className={className} aria-hidden="true" /> : null;
   }
 
   if (reducedMotion || failed || !data) {
     return (
       <div ref={containerRef}>
-        <StaticFallback className={className} fallbackSrc={resolvedFallback} title={ariaLabel} />
+        <StaticFallback
+          className={className}
+          fallbackSrc={resolvedFallback}
+          title={ariaLabel}
+          decorative={decorative}
+        />
       </div>
     );
   }
@@ -193,6 +219,13 @@ export function LottieAnimation({
       }}
     >
       <Lottie
+        className={contentClassName ?? "size-full"}
+        style={{ width: "100%", height: "100%" }}
+        rendererSettings={{
+          preserveAspectRatio,
+          progressiveLoad: false,
+          hideOnTransparent: true,
+        }}
         lottieRef={lottieRef}
         animationData={data}
         loop={loop}

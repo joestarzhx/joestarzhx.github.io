@@ -37,6 +37,12 @@ jobs:
       - name: Build static site
         run: npm run build
 
+      - name: Verify static export
+        run: npm run verify:static
+
+      - name: Verify Lottie layout
+        run: npm run verify:lottie
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

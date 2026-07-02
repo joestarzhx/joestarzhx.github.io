@@ -42,6 +42,17 @@ export default function BlogPage() {
             decorative
           />
         </div>
+        <div className="mt-8 grid gap-3 text-sm text-[var(--text-secondary)] sm:grid-cols-3">
+          <p className="rounded-2xl border border-[var(--border)] bg-[var(--surface-solid)] px-4 py-3">
+            精选文章 · {featured.length}
+          </p>
+          <p className="rounded-2xl border border-[var(--border)] bg-[var(--surface-solid)] px-4 py-3">
+            全部文章 · {posts.length}
+          </p>
+          <p className="rounded-2xl border border-[var(--border)] bg-[var(--surface-solid)] px-4 py-3">
+            标签索引 · {tags.length}
+          </p>
+        </div>
         <div className="my-12 grid gap-4 lg:grid-cols-2">
           {featured.map((post, index) => (
             <Link

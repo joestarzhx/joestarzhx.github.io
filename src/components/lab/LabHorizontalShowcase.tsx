@@ -32,6 +32,23 @@ export function LabHorizontalShowcase({ items }: { items: LabItem[] }) {
 
         const cards = gsap.utils.toArray<HTMLElement>("[data-lab-card]", section);
         const getDistance = () => Math.max(0, track.scrollWidth - section.clientWidth);
+        let previousIndex = -1;
+
+        const setActiveCard = (index: number) => {
+          if (index === previousIndex) return;
+          previousIndex = index;
+          setActive(index);
+          cards.forEach((card, cardIndex) => {
+            gsap.to(card, {
+              scale: cardIndex === index ? 1.025 : 1,
+              opacity: cardIndex === index ? 1 : 0.72,
+              duration: 0.18,
+              overwrite: "auto",
+            });
+          });
+        };
+
+        setActiveCard(0);
 
         const tween = gsap.to(track, {
           x: () => -getDistance(),
@@ -45,15 +62,7 @@ export function LabHorizontalShowcase({ items }: { items: LabItem[] }) {
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               const index = Math.min(items.length - 1, Math.round(self.progress * (items.length - 1)));
-              setActive(index);
-              cards.forEach((card, cardIndex) => {
-                gsap.to(card, {
-                  scale: cardIndex === index ? 1.025 : 1,
-                  opacity: cardIndex === index ? 1 : 0.72,
-                  duration: 0.18,
-                  overwrite: "auto",
-                });
-              });
+              setActiveCard(index);
             },
           },
         });
@@ -76,7 +85,7 @@ export function LabHorizontalShowcase({ items }: { items: LabItem[] }) {
           <p className="text-sm font-medium text-[var(--accent)]">Experiments</p>
           <h2 className="mt-2 text-3xl font-semibold">实验轨道</h2>
         </div>
-        <p className="hidden text-sm text-[var(--text-secondary)] lg:block">
+        <p className="hidden text-sm text-[var(--text-secondary)] lg:block" data-progress-label="01 / 08">
           {String(active + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
         </p>
       </div>

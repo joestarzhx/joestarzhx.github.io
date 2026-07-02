@@ -22,6 +22,7 @@ export function ProjectStoryNavigation({ sections }: { sections: ProjectStorySec
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const triggers: ScrollTrigger[] = [];
+    const tweens: gsap.core.Tween[] = [];
 
     sections.forEach((section) => {
       const target = document.getElementById(section.id);
@@ -40,23 +41,28 @@ export function ProjectStoryNavigation({ sections }: { sections: ProjectStorySec
 
     const story = document.querySelector<HTMLElement>("[data-project-story]");
     if (story && progressRef.current && !reduce) {
-      triggers.push(
-        ScrollTrigger.create({
-          trigger: story,
-          start: "top 38%",
-          end: "bottom 62%",
-          scrub: true,
-          onUpdate: (self) => {
-            gsap.set(progressRef.current, { scaleY: self.progress, transformOrigin: "top center" });
+      const tween = gsap.fromTo(
+        progressRef.current,
+        { scaleY: 0, transformOrigin: "top center" },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: story,
+            start: "top 38%",
+            end: "bottom 62%",
+            scrub: true,
           },
-        }),
+        },
       );
+      tweens.push(tween);
     } else if (progressRef.current) {
       gsap.set(progressRef.current, { scaleY: 1, transformOrigin: "top center" });
     }
 
     return () => {
       triggers.forEach((trigger) => trigger.kill());
+      tweens.forEach((tween) => tween.kill());
     };
   }, [sections]);
 
