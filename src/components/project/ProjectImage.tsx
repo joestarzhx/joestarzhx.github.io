@@ -1,8 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
-import { ProjectImageFallback } from "@/components/project/ProjectImageFallback";
+import { ImageWithLoader } from "@/components/media/ImageWithLoader";
 
 type ProjectImageProps = {
   src: string;
@@ -25,24 +23,17 @@ export function ProjectImage({
   unoptimized = false,
   imageClassName = "object-cover",
 }: ProjectImageProps) {
-  const [failed, setFailed] = useState(false);
-
   return (
     <div className={className}>
-      {failed ? (
-        <ProjectImageFallback title={title} />
-      ) : (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          unoptimized={unoptimized}
-          sizes={sizes}
-          className={imageClassName}
-          onError={() => setFailed(true)}
-        />
-      )}
+      <ImageWithLoader
+        src={src}
+        alt={alt || title}
+        fill
+        priority={priority}
+        unoptimized={unoptimized}
+        sizes={sizes}
+        className={imageClassName}
+      />
     </div>
   );
 }

@@ -24,16 +24,22 @@ export function Button({ children, href, variant = "primary", className, ariaLab
     className,
   );
 
-  if (href) {
-    const external = /^https?:\/\//.test(href);
+  const validHref = href && href.trim() && href.trim() !== "#" ? href.trim() : "";
+
+  if (validHref) {
+    const external = /^https?:\/\//.test(validHref);
     return (
-      <motion.span whileTap={{ scale: 0.975 }} transition={motionTokens.spring}>
+      <motion.span
+        whileHover={{ scale: 1.015, y: -1 }}
+        whileTap={{ scale: 0.965, y: 0 }}
+        transition={motionTokens.spring}
+      >
         {external ? (
-          <a className={classes} href={href} target="_blank" rel="noopener noreferrer" aria-label={ariaLabel}>
+          <a className={classes} href={validHref} target="_blank" rel="noopener noreferrer" aria-label={ariaLabel}>
             {children}
           </a>
         ) : (
-          <Link className={classes} href={href} aria-label={ariaLabel}>
+          <Link className={classes} href={validHref} aria-label={ariaLabel}>
             {children}
           </Link>
         )}
@@ -41,10 +47,15 @@ export function Button({ children, href, variant = "primary", className, ariaLab
     );
   }
 
+  if (!props.onClick && !props.type) {
+    return <span className={classes}>{children}</span>;
+  }
+
   return (
     <motion.button
       className={classes}
-      whileTap={{ scale: 0.975 }}
+      whileHover={{ scale: 1.015, y: -1 }}
+      whileTap={{ scale: 0.965, y: 0 }}
       transition={motionTokens.spring}
       {...props}
     >

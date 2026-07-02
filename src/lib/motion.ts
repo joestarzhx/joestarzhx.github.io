@@ -2,22 +2,23 @@ import type { Transition, Variants } from "motion/react";
 
 export const motionTokens = {
   duration: {
-    fast: 0.18,
-    normal: 0.32,
-    slow: 0.55,
+    fast: 0.16,
+    normal: 0.26,
+    slow: 0.42,
   },
   spring: {
     type: "spring",
-    stiffness: 380,
+    stiffness: 420,
     damping: 30,
-    mass: 0.8,
+    mass: 0.75,
   } satisfies Transition,
   gentleSpring: {
     type: "spring",
-    stiffness: 220,
-    damping: 26,
-    mass: 1,
+    stiffness: 260,
+    damping: 28,
+    mass: 0.9,
   } satisfies Transition,
+  ease: [0.22, 1, 0.36, 1] as const,
 };
 
 export const fadeUp: Variants = {
@@ -40,6 +41,7 @@ export const staggerParent: Variants = {
 };
 
 export const scalePress = {
-  whileTap: { scale: 0.975 },
+  whileHover: { scale: 1.015, y: -1 },
+  whileTap: { scale: 0.965, y: 0 },
   transition: motionTokens.spring,
 };
