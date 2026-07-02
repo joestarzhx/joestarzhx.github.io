@@ -37,7 +37,7 @@ export function CapabilityPathMotion({ children }: { children: React.ReactNode }
           previousActive = active;
           cards.forEach((card, index) => {
             gsap.to(card, {
-              scale: index === active ? 1.012 : 1,
+              scale: index === active ? 1.008 : 1,
               opacity: index === active ? 1 : 0.86,
               duration: 0.18,
               overwrite: "auto",
@@ -72,13 +72,19 @@ export function CapabilityPathMotion({ children }: { children: React.ReactNode }
       },
     );
 
-    return () => mm.revert();
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener("resize", refresh);
+
+    return () => {
+      window.removeEventListener("resize", refresh);
+      mm.revert();
+    };
   }, []);
 
   return (
-    <div ref={scope} className="relative">
+    <div ref={scope} className="relative isolate">
       <svg
-        className="pointer-events-none absolute inset-x-10 top-8 hidden h-[calc(100%-4rem)] opacity-70 md:block"
+        className="pointer-events-none absolute inset-x-10 top-8 z-0 hidden h-[calc(100%-4rem)] opacity-45 md:block"
         viewBox="0 0 760 420"
         preserveAspectRatio="none"
         aria-hidden="true"

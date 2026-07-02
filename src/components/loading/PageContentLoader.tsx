@@ -27,7 +27,7 @@ export function PageContentLoader({
         <LottieAnimation
           src="/lottie/loading/page-content-loading.json"
           fallbackSrc="/lottie/fallback/page-content-loading-static.svg"
-          className="size-32 sm:size-44"
+          className="size-24 sm:size-28"
           decorative
         />
         {showLabel ? (

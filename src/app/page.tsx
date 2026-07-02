@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <PageContainer>
-      <section className="container-shell grid min-h-[calc(100svh-var(--nav-height))] items-center gap-8 py-6 sm:py-10 lg:grid-cols-[1.05fr_0.95fr]">
+      <section className="container-shell grid items-center gap-10 py-8 sm:py-10 lg:min-h-[calc(100svh-var(--nav-height))] lg:grid-cols-[1.05fr_0.95fr]">
         <Reveal>
           <p className="mb-4 text-sm font-medium text-[var(--accent)]">
             {profile.role}
@@ -51,9 +51,9 @@ export default function Home() {
           </div>
         </Reveal>
         <Reveal className="relative">
-          <div className="relative mx-auto max-w-[320px] rounded-[28px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 shadow-[var(--shadow-soft)] sm:max-w-[420px] sm:rounded-[32px] sm:p-5">
+            <div className="relative mx-auto max-w-[288px] rounded-[28px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 shadow-[var(--shadow-soft)] sm:max-w-[420px] sm:rounded-[32px] sm:p-5">
             <ThemedLottie
-              className="pointer-events-none absolute -right-8 -top-8 aspect-square w-44 opacity-30 sm:-right-16 sm:-top-16 sm:w-72"
+              className="pointer-events-none absolute -right-8 -top-8 z-0 aspect-square w-44 opacity-30 sm:-right-16 sm:-top-16 sm:w-72"
               light={heroOrbit.light}
               dark={heroOrbit.dark}
               shared={heroOrbit.shared}
@@ -63,7 +63,7 @@ export default function Home() {
               decorative
               hideWhenReducedMotion
             />
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] bg-[var(--surface-muted)]">
+            <div className="relative z-10 aspect-[4/5] overflow-hidden rounded-[24px] bg-[var(--surface-muted)]">
               <Image
                 src={profile.photo}
                 alt="张颢轩个人照片"
@@ -73,7 +73,7 @@ export default function Home() {
                 className="object-contain object-center"
               />
             </div>
-            <div className="absolute bottom-4 left-4 right-4 rounded-[20px] border border-[var(--border)] bg-[var(--surface)] p-4 backdrop-blur sm:bottom-5 sm:left-5 sm:right-5">
+            <div className="relative z-20 mt-4 rounded-[20px] border border-[var(--border)] bg-[var(--surface)] p-4 backdrop-blur">
               <p className="text-sm text-[var(--text-secondary)]">
                 {profile.status}
               </p>

@@ -15,6 +15,7 @@ export type LottieAnimationProps = {
   speed?: number;
   fit?: "contain" | "cover";
   playOnView?: boolean;
+  eager?: boolean;
   pauseWhenHidden?: boolean;
   ariaLabel?: string;
   decorative?: boolean;
@@ -25,6 +26,7 @@ export type LottieAnimationProps = {
   onComplete?: () => void;
   onDOMLoaded?: () => void;
   onDataReady?: () => void;
+  onPlayStarted?: () => void;
   onLoadStateChange?: (state: "loading" | "success" | "error") => void;
 };
 
@@ -105,6 +107,7 @@ export function LottieAnimation({
   speed = 1,
   fit = "contain",
   playOnView = true,
+  eager = false,
   pauseWhenHidden = true,
   ariaLabel,
   decorative = true,
@@ -115,10 +118,12 @@ export function LottieAnimation({
   onComplete,
   onDOMLoaded,
   onDataReady,
+  onPlayStarted,
   onLoadStateChange,
 }: LottieAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const lottieRef = useRef<LottieRefCurrentProps>(null);
+  const playStartedRef = useRef(false);
   const inView = useInView(containerRef, { margin: "-80px" });
   const reducedMotion = useReducedMotion();
   const [data, setData] = useState<LottieData | null>(null);
@@ -128,8 +133,17 @@ export function LottieAnimation({
     [src],
   );
   const resolvedFallback = useMemo(() => (fallbackSrc ? assetPath(fallbackSrc) : undefined), [fallbackSrc]);
-  const shouldLoad = (!playOnView || inView) && resolvedSources.length > 0;
+  const shouldLoad = (eager || !playOnView || inView) && resolvedSources.length > 0;
   const preserveAspectRatio = fit === "cover" ? "xMidYMid slice" : "xMidYMid meet";
+
+  useEffect(() => {
+    playStartedRef.current = false;
+    const resetTimer = window.setTimeout(() => {
+      setData(null);
+      setFailed(false);
+    }, 0);
+    return () => window.clearTimeout(resetTimer);
+  }, [resolvedSources]);
 
   useEffect(() => {
     if (!shouldLoad || reducedMotion) {
@@ -186,10 +200,20 @@ export function LottieAnimation({
   }, [autoplay, inView, pauseWhenHidden, playOnView]);
 
   useEffect(() => {
-    if (!lottieRef.current || reducedMotion || !playOnView) return;
-    if (inView && autoplay) lottieRef.current.play();
-    else lottieRef.current.pause();
-  }, [autoplay, inView, playOnView, reducedMotion]);
+    if (!data || !lottieRef.current || reducedMotion) return;
+
+    if (autoplay && (!playOnView || inView)) {
+      if (!playStartedRef.current) {
+        lottieRef.current.goToAndPlay(0, true);
+        playStartedRef.current = true;
+        onPlayStarted?.();
+      } else {
+        lottieRef.current.play();
+      }
+    } else {
+      lottieRef.current.pause();
+    }
+  }, [autoplay, data, inView, onPlayStarted, playOnView, reducedMotion]);
 
   if (reducedMotion && hideWhenReducedMotion) {
     return preserveSpaceWhenHidden ? <div ref={containerRef} className={className} aria-hidden="true" /> : null;

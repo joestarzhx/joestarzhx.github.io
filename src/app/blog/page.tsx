@@ -42,23 +42,21 @@ export default function BlogPage() {
             decorative
           />
         </div>
-        <div className="mt-8 grid gap-3 text-sm text-[var(--text-secondary)] sm:grid-cols-3">
-          <p className="rounded-2xl border border-[var(--border)] bg-[var(--surface-solid)] px-4 py-3">
+        <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-y border-[var(--border)] py-4 text-sm text-[var(--text-secondary)]">
+          <p>
             精选文章 · {featured.length}
           </p>
-          <p className="rounded-2xl border border-[var(--border)] bg-[var(--surface-solid)] px-4 py-3">
+          <p>
             全部文章 · {posts.length}
           </p>
-          <p className="rounded-2xl border border-[var(--border)] bg-[var(--surface-solid)] px-4 py-3">
+          <p>
             标签索引 · {tags.length}
           </p>
         </div>
-        <div className="my-12 grid gap-4 lg:grid-cols-2">
-          {featured.map((post, index) => (
+        <div className="my-12 grid gap-4 lg:grid-cols-3">
+          {featured.map((post) => (
             <Link
-              className={`focus-ring group overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)] ${
-                index === 0 ? "lg:row-span-2" : ""
-              }`}
+              className="focus-ring group flex h-full flex-col overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--surface-solid)]"
               href={`/blog/${post.slug}`}
               key={post.slug}
             >
@@ -67,17 +65,17 @@ export default function BlogPage() {
                 alt={`${post.title} 文章封面`}
                 title={post.title}
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className={`relative overflow-hidden bg-[var(--surface-muted)] ${index === 0 ? "aspect-[16/10] lg:aspect-[16/13]" : "aspect-[2/1]"}`}
+                className="relative aspect-[16/10] overflow-hidden bg-[var(--surface-muted)]"
                 imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.035]"
               />
-              <div className="p-6">
+              <div className="flex flex-1 flex-col p-6">
                 <span className="text-sm text-[var(--accent)]">
                   {post.category}
                 </span>
                 <h2 className="mt-5 text-2xl font-semibold leading-tight">
                   {post.title}
                 </h2>
-                <p className="mt-3 leading-7 text-[var(--text-secondary)]">
+                <p className="mt-3 line-clamp-3 leading-7 text-[var(--text-secondary)]">
                   {post.description}
                 </p>
               </div>
