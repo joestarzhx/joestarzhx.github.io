@@ -32,37 +32,41 @@ export default function ResumePage() {
   return (
     <PageContainer>
       <section className="container-shell section-space-top">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_0.78fr] lg:items-end">
-          <SectionHeading
-            eyebrow="Resume"
-            title="在线简历，用项目和技能说明能力。"
-            text="这里整理当前身份、创作轨迹、项目经历和工具栈，尽量用事实和作品呈现能力边界。"
-          />
-          <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-5 sm:p-6">
-            <div className="mb-5 flex items-center gap-4">
-              <div className="relative h-[116px] w-[88px] overflow-hidden rounded-[20px] bg-[var(--surface-muted)] sm:h-[132px] sm:w-[104px]">
+        <div className="grid grid-cols-1 gap-10 min-[1120px]:grid-cols-[minmax(0,1.15fr)_minmax(420px,0.85fr)] min-[1120px]:items-center">
+          <div className="min-w-0">
+            <SectionHeading
+              eyebrow="Resume"
+              title="在线简历，用项目和技能说明能力。"
+              text="这里整理当前身份、创作轨迹、项目经历和工具栈，尽量用事实和作品呈现能力边界。"
+            />
+          </div>
+          <article className="min-w-0 rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-5 sm:p-6">
+            <div className="grid grid-cols-[76px_minmax(0,1fr)] items-center gap-5 sm:grid-cols-[96px_minmax(0,1fr)]">
+              <div className="relative h-[96px] w-[76px] overflow-hidden rounded-[20px] bg-[var(--surface-muted)] sm:h-[124px] sm:w-[96px]">
                 <Image
                   src={profile.photo}
                   alt="张颢轩的个人照片"
                   fill
-                  sizes="(max-width: 640px) 88px, 104px"
-                  className="object-contain object-center"
+                  sizes="(max-width: 640px) 76px, 96px"
+                  className="object-cover object-top"
                 />
               </div>
-              <div>
-                <p className="text-sm text-[var(--text-secondary)]">
+              <div className="min-w-0">
+                <p className="text-xs text-[var(--text-secondary)] sm:text-sm">
                   当前身份
                 </p>
-                <h2 className="mt-2 text-2xl font-semibold">
+                <h2 className="mt-2 text-[clamp(1.25rem,2vw,1.7rem)] font-semibold leading-[1.28] tracking-[-0.025em] [overflow-wrap:anywhere]">
                   {profile.current}
                 </h2>
-                <p className="mt-3 leading-7 text-[var(--text-body)]">
+                <p className="mt-3 text-[0.95rem] leading-[1.6] text-[var(--text-body)] sm:text-base">
                   教育方向：{profile.education}
                 </p>
               </div>
             </div>
-            <ResumeDownload />
-          </div>
+            <div className="mt-6 sm:mt-7">
+              <ResumeDownload />
+            </div>
+          </article>
         </div>
       </section>
 
