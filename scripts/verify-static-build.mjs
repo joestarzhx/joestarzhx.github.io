@@ -2,7 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 const outDir = path.resolve("out");
+const repoRoot = process.cwd();
 const failures = [];
+const verifyDeploymentRoot = process.env.VERIFY_DEPLOY_ROOT === "1";
 
 function exists(...parts) {
   return fs.existsSync(path.join(outDir, ...parts));
@@ -21,6 +23,35 @@ function expect(condition, message) {
   if (!condition) failures.push(message);
 }
 
+function readIfExists(file) {
+  return fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "";
+}
+
+function extractScriptSources(html) {
+  return [...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)].map((match) => match[1]);
+}
+
+function resolveExportPath(baseDir, src) {
+  const cleanSrc = src.split("?")[0];
+  const relativeSrc = cleanSrc.startsWith("/") ? cleanSrc.slice(1) : cleanSrc;
+  return path.join(baseDir, relativeSrc);
+}
+
+function readReferencedScripts(baseDir, html, label) {
+  const sources = extractScriptSources(html);
+  const chunks = [];
+
+  for (const src of sources) {
+    if (!src.includes("/_next/")) continue;
+    const file = resolveExportPath(baseDir, src);
+    expect(fs.existsSync(file), `${label} references missing Next.js chunk: ${src}`);
+    const text = readIfExists(file);
+    if (text) chunks.push({ src, file, text });
+  }
+
+  return chunks;
+}
+
 const index = readFirst([["index.html"]]);
 const blog = readFirst([["blog.html"], ["blog", "index.html"]]);
 const lab = readFirst([["lab.html"], ["lab", "index.html"]]);
@@ -30,6 +61,15 @@ const brandLightPath = path.join(outDir, "lottie", "light", "brand-intro.json");
 const brandDarkPath = path.join(outDir, "lottie", "dark", "brand-intro.json");
 const brandLight = fs.existsSync(brandLightPath) ? fs.readFileSync(brandLightPath, "utf8") : "";
 const brandDark = fs.existsSync(brandDarkPath) ? fs.readFileSync(brandDarkPath, "utf8") : "";
+const outChunks = readReferencedScripts(outDir, index, "out/index.html");
+const rootIndexPath = path.join(repoRoot, "index.html");
+const rootIndex = verifyDeploymentRoot ? readIfExists(rootIndexPath) : "";
+const rootChunks = rootIndex ? readReferencedScripts(repoRoot, rootIndex, "root index.html") : [];
+const exportedChunkText = outChunks.map((chunk) => chunk.text).join("\n");
+const brandIntroChunk = outChunks.find((chunk) => chunk.text.includes("haoxuan-blog-brand-intro-played"));
+const deployedBrandIntroChunk = rootChunks.find((chunk) => chunk.text.includes("haoxuan-blog-brand-intro-played"));
+const brandIntroChunkText = brandIntroChunk?.text ?? "";
+const deployedBrandIntroChunkText = deployedBrandIntroChunk?.text ?? "";
 
 expect(exists("index.html"), "out/index.html is missing.");
 expect(exists("blog.html") || exists("blog", "index.html"), "Blog export is missing.");
@@ -52,6 +92,36 @@ expect(!exists("lottie", "shared"), "out/lottie/shared still exists.");
 expect(projectDetail.includes("data-project-story"), "Project detail export does not contain data-project-story.");
 expect(index.includes("data-capability-card"), "Home export does not contain data-capability-card.");
 expect(lab.includes("data-lab-card"), "Lab export does not contain data-lab-card.");
+expect(outChunks.length > 0, "out/index.html does not reference any Next.js chunks.");
+expect(Boolean(brandIntroChunk), "Exported chunks do not contain haoxuan-blog-brand-intro-played.");
+expect(exportedChunkText.includes("haoxuan-brand-intro-played"), "Exported chunks do not retain the legacy Brand Intro session key.");
+expect(brandIntroChunkText.includes("checking"), "Exported Brand Intro chunk does not contain the checking intro phase.");
+expect(brandIntroChunkText.includes("loading"), "Exported Brand Intro chunk does not contain the loading intro phase.");
+expect(brandIntroChunkText.includes("playing"), "Exported Brand Intro chunk does not contain the playing intro phase.");
+expect(brandIntroChunkText.includes("exiting"), "Exported Brand Intro chunk does not contain the exiting intro phase.");
+expect(brandIntroChunkText.includes("removed"), "Exported Brand Intro chunk does not contain the removed intro phase.");
+expect(brandIntroChunkText.includes("timeout"), "Exported Brand Intro chunk does not contain the timeout close reason.");
+expect(brandIntroChunkText.includes("route-change"), "Exported Brand Intro chunk does not contain the route-change close reason.");
+expect(brandIntroChunkText.includes("load-error"), "Exported Brand Intro chunk does not contain the load-error close reason.");
+expect(!brandIntroChunkText.includes("onAnimationComplete"), "Exported Brand Intro code still references onAnimationComplete.");
+expect(!brandIntroChunkText.includes('"idle"'), "Exported Brand Intro chunk still contains the old idle intro state.");
+expect(!brandIntroChunkText.includes('"closed"'), "Exported Brand Intro chunk still contains the old closed intro state.");
+expect(
+  (brandIntroChunkText.includes("3000") || brandIntroChunkText.includes("3e3")) && brandIntroChunkText.includes("340"),
+  "Exported chunks do not contain the 3000ms max duration and exit failsafe timing.",
+);
+
+if (verifyDeploymentRoot) {
+  expect(Boolean(rootIndex), "root index.html is missing.");
+  expect(rootChunks.length > 0, "root index.html does not reference any Next.js chunks.");
+  expect(Boolean(deployedBrandIntroChunk), "Root deployment chunks do not contain haoxuan-blog-brand-intro-played.");
+  expect(deployedBrandIntroChunkText.includes("timeout"), "Root deployment Brand Intro chunk does not contain the timeout close reason.");
+  expect(
+    !deployedBrandIntroChunkText.includes("onAnimationComplete"),
+    "Root deployment Brand Intro chunk still references onAnimationComplete.",
+  );
+  expect(rootIndex === index, "Root index.html differs from out/index.html after deployment.");
+}
 
 if (failures.length) {
   console.error("Static build verification failed:");
@@ -62,5 +132,7 @@ if (failures.length) {
     const fullPath = path.join(outDir, entry.toString());
     return fs.existsSync(fullPath) && fs.statSync(fullPath).isFile();
   }).length;
+  const brandChunkName = brandIntroChunk ? path.relative(outDir, brandIntroChunk.file).replaceAll(path.sep, "/") : "unknown";
   console.log(`Static build verification passed. out files: ${fileCount}`);
+  console.log(`Brand Intro chunk: ${brandChunkName}`);
 }

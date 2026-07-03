@@ -51,7 +51,14 @@ export function BrandIntro() {
   const reducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<IntroPhase>("checking");
   const closedRef = useRef(false);
+  const maxDurationTimerRef = useRef<number | null>(null);
   const pathnameRef = useRef(pathname);
+
+  const clearMaxDurationTimer = useCallback(() => {
+    if (maxDurationTimerRef.current === null) return;
+    window.clearTimeout(maxDurationTimerRef.current);
+    maxDurationTimerRef.current = null;
+  }, []);
 
   const markPlayed = useCallback(() => {
     try {
@@ -64,13 +71,15 @@ export function BrandIntro() {
 
   const removeImmediately = useCallback(() => {
     closedRef.current = true;
+    clearMaxDurationTimer();
     setPhase("removed");
-  }, []);
+  }, [clearMaxDurationTimer]);
 
   const closeIntro = useCallback(
     (reason: CloseReason) => {
       if (closedRef.current) return;
       closedRef.current = true;
+      clearMaxDurationTimer();
       markPlayed();
 
       if (reason === "already-played" || reason === "reduced-motion") {
@@ -80,8 +89,17 @@ export function BrandIntro() {
 
       setPhase("exiting");
     },
-    [markPlayed],
+    [clearMaxDurationTimer, markPlayed],
   );
+
+  const startMaxDurationTimer = useCallback(() => {
+    if (maxDurationTimerRef.current !== null || closedRef.current) return;
+
+    maxDurationTimerRef.current = window.setTimeout(() => {
+      maxDurationTimerRef.current = null;
+      closeIntro("timeout");
+    }, MAX_INTRO_DURATION);
+  }, [closeIntro]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -107,21 +125,12 @@ export function BrandIntro() {
         // Continue to play; unavailable storage is not a fatal condition.
       }
 
+      startMaxDurationTimer();
       setPhase((current) => (current === "checking" ? "loading" : current));
     }, 0);
 
     return () => window.clearTimeout(timer);
-  }, [closeIntro, pathname, reducedMotion, removeImmediately]);
-
-  useEffect(() => {
-    if (phase === "checking" || phase === "removed") return;
-
-    const timer = window.setTimeout(() => {
-      closeIntro("timeout");
-    }, MAX_INTRO_DURATION);
-
-    return () => window.clearTimeout(timer);
-  }, [closeIntro, phase]);
+  }, [closeIntro, pathname, reducedMotion, removeImmediately, startMaxDurationTimer]);
 
   useEffect(() => {
     if (phase !== "exiting") return;
@@ -142,6 +151,12 @@ export function BrandIntro() {
       document.body.style.overflow = previousOverflow;
     };
   }, [phase]);
+
+  useEffect(() => {
+    return () => {
+      clearMaxDurationTimer();
+    };
+  }, [clearMaxDurationTimer]);
 
   useEffect(() => {
     if (pathnameRef.current !== pathname && phase !== "removed") {
