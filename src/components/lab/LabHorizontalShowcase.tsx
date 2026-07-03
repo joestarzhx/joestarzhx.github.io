@@ -49,7 +49,10 @@ export function LabHorizontalShowcase({ items }: { items: LabItem[] }) {
           <p className="text-sm font-medium text-[var(--accent)]">Experiments</p>
           <h2 className="mt-2 text-3xl font-semibold">实验轨道</h2>
         </div>
-        <p className="hidden shrink-0 text-sm text-[var(--text-secondary)] lg:block">
+        <p
+          className="hidden shrink-0 text-sm text-[var(--text-secondary)] lg:block"
+          data-progress-label={`01 / ${String(items.length).padStart(2, "0")}`}
+        >
           01 / {String(items.length).padStart(2, "0")}
         </p>
       </div>
