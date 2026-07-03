@@ -1,7 +1,7 @@
 {
-  "name": "??????????????",
-  "short_name": "???",
-  "description": "????????????????????????????",
+  "name": "张颢轩（Haoxuan Zhang）｜个人博客与作品集",
+  "short_name": "张颢轩",
+  "description": "张颢轩的个人博客与数字作品集，记录前端开发、交互动效、视觉设计、Manim 科普动画、AI 视觉创作与 Live2D 项目。",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f5f7",
@@ -9,12 +9,12 @@
   "lang": "zh-CN",
   "icons": [
     {
-      "src": "/images/branding/favicon-512.png",
+      "src": "/favicon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/images/branding/apple-touch-icon.png",
+      "src": "/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
     }

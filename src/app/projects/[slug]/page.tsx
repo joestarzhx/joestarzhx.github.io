@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { ProjectImage } from "@/components/project/ProjectImage";
+import { ProjectVideoPreview } from "@/components/project/ProjectVideoPreview";
 import { ProjectStoryMotion } from "@/components/project/ProjectStoryMotion";
 import {
   ProjectStoryNavigation,
@@ -171,6 +172,17 @@ export default async function ProjectDetailPage({ params }: Props) {
             </ul>
           </div>
         </section>
+
+        {project.video ? (
+          <section className="container-shell pb-16">
+            <ProjectVideoPreview
+              title={project.title}
+              webm={project.video.webm}
+              mp4={project.video.mp4}
+              poster={project.video.poster ?? project.cover}
+            />
+          </section>
+        ) : null}
 
         <section className="container-shell pb-20" data-story-gallery>
           <div className="mb-6 flex flex-wrap gap-2">

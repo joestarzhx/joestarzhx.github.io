@@ -23,6 +23,12 @@ export type Project = {
   results: string[];
   gallery: string[];
   demo?: string;
+  github?: string;
+  video?: {
+    webm?: string;
+    mp4?: string;
+    poster?: string;
+  };
 };
 
 export type PostCategory =

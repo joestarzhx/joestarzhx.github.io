@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local material source packages
+/blog_materials_template/
+/materials/blog_materials_template/
+/张颢轩博客_素材替换模板包/

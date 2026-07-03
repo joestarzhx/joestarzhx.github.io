@@ -27,6 +27,7 @@ export type LottieAnimationProps = {
   onComplete?: () => void;
   onDOMLoaded?: () => void;
   onDataReady?: () => void;
+  onDataFailed?: (error?: unknown) => void;
   onPlayStarted?: () => void;
   onLoadStateChange?: (state: "loading" | "success" | "error") => void;
 };
@@ -119,6 +120,7 @@ export function LottieAnimation({
   onComplete,
   onDOMLoaded,
   onDataReady,
+  onDataFailed,
   onPlayStarted,
   onLoadStateChange,
 }: LottieAnimationProps) {
@@ -148,7 +150,10 @@ export function LottieAnimation({
 
   useEffect(() => {
     if (!shouldLoad || reducedMotion) {
-      if (!resolvedSources.length) onLoadStateChange?.("error");
+      if (!resolvedSources.length) {
+        onLoadStateChange?.("error");
+        onDataFailed?.(new Error("No Lottie source provided"));
+      }
       return;
     }
     let cancelled = false;
@@ -158,6 +163,7 @@ export function LottieAnimation({
     onLoadStateChange?.("loading");
 
     async function loadFirstAvailable() {
+      let lastError: unknown;
       for (const candidate of resolvedSources) {
         try {
           const json = await loadLottie(candidate);
@@ -166,13 +172,15 @@ export function LottieAnimation({
             onLoadStateChange?.("success");
           }
           return;
-        } catch {
+        } catch (error) {
+          lastError = error;
           // Try the next candidate.
         }
       }
       if (!cancelled) {
         setFailed(true);
         onLoadStateChange?.("error");
+        onDataFailed?.(lastError);
       }
     }
 
@@ -182,7 +190,7 @@ export function LottieAnimation({
       cancelled = true;
       window.clearTimeout(resetFailedTimeout);
     };
-  }, [onLoadStateChange, reducedMotion, resolvedSources, shouldLoad]);
+  }, [onDataFailed, onLoadStateChange, reducedMotion, resolvedSources, shouldLoad]);
 
   useEffect(() => {
     lottieRef.current?.setSpeed(speed);

@@ -1,6 +1,7 @@
 import type { Project, ProjectCategory } from "@/types/content";
+import { generatedProjectPatches } from "@/generated/projects.generated";
 
-export const projects: Project[] = [
+const baseProjects: Project[] = [
   {
     slug: "next-generation-letter",
     title: "下一代，来信了",
@@ -230,6 +231,33 @@ export const projects: Project[] = [
     ],
   },
 ];
+
+function mergeProject(project: Project): Project {
+  const patch = generatedProjectPatches.find((item) => item.slug === project.slug);
+  if (!patch) return project;
+
+  return {
+    ...project,
+    title: patch.title ?? project.title,
+    subtitle: patch.subtitle ?? project.subtitle,
+    description: patch.description ?? project.description,
+    year: patch.year ?? project.year,
+    cover: patch.cover ?? project.cover,
+    tags: patch.tags?.length ? patch.tags : project.tags,
+    responsibilities: patch.responsibilities?.length ? patch.responsibilities : project.responsibilities,
+    background: patch.background ?? project.background,
+    goals: patch.goals?.length ? patch.goals : project.goals,
+    process: patch.process?.length ? patch.process : project.process,
+    challenges: patch.challenges?.length ? patch.challenges : project.challenges,
+    results: patch.results?.length ? patch.results : project.results,
+    gallery: patch.gallery?.length ? patch.gallery : project.gallery,
+    demo: patch.demo ?? project.demo,
+    github: patch.github ?? project.github,
+    video: patch.video ?? project.video,
+  };
+}
+
+export const projects: Project[] = baseProjects.map(mergeProject);
 
 export const projectCategories: Array<"全部" | ProjectCategory> = [
   "全部",

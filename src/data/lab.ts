@@ -1,4 +1,6 @@
-export const labItems = [
+import { generatedLabPatches } from "@/generated/lab.generated";
+
+const baseLabItems = [
   {
     title: "信封滚动动效",
     type: "GSAP 交互动效",
@@ -57,3 +59,19 @@ export const labItems = [
     lottie: "/lottie/lab-demo.json",
   },
 ];
+
+export const labItems = baseLabItems.map((item) => {
+  const patch = generatedLabPatches.find((candidate) => candidate.title === item.title);
+  if (!patch) return item;
+  return {
+    ...item,
+    type: patch.type ?? item.type,
+    year: patch.year ?? item.year,
+    description: patch.description ?? item.description,
+    preview: patch.preview ?? item.preview,
+    demo: patch.demo,
+    github: patch.github,
+    video: patch.video,
+    technologies: patch.technologies,
+  };
+});

@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "sync:materials": "node scripts/sync-blog-materials.mjs",
+    "check:materials": "node scripts/sync-blog-materials.mjs --check",
     "verify:static": "node scripts/verify-static-build.mjs",
     "verify:lottie": "node scripts/verify-lottie-layout.mjs",
     "deploy:static": "powershell -ExecutionPolicy Bypass -File ./scripts/deploy-static.ps1",

@@ -1,23 +1,16 @@
 "use client";
 
 import { Download } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { generatedMaterials } from "@/generated/materials.generated";
 
 export function ResumeDownload() {
-  const [exists, setExists] = useState(false);
-  const path = "/resume/haoxuan-zhang-resume.pdf";
+  const path = generatedMaterials.resumePdf;
 
-  useEffect(() => {
-    fetch(path, { method: "HEAD" })
-      .then((res) => setExists(res.ok))
-      .catch(() => setExists(false));
-  }, []);
-
-  if (!exists) return null;
+  if (!path) return null;
 
   return (
-    <Button href={path}>
+    <Button href={path} ariaLabel="下载张颢轩的 PDF 简历">
       <Download size={16} /> 下载 PDF 简历
     </Button>
   );
