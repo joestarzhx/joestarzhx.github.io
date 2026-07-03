@@ -2,13 +2,22 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { experiences } from "@/data/experience";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function ExperienceTimeline() {
   const scope = useRef<HTMLDivElement>(null);
+  const grouped = useMemo(
+    () =>
+      experiences.reduce<Record<string, typeof experiences>>((groups, item) => {
+        groups[item.time] = groups[item.time] ?? [];
+        groups[item.time].push(item);
+        return groups;
+      }, {}),
+    [],
+  );
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -27,9 +36,9 @@ export function ExperienceTimeline() {
       });
       gsap.from(".timeline-item", {
         opacity: 0,
-        y: 28,
-        stagger: 0.12,
-        duration: 0.6,
+        y: 24,
+        stagger: 0.1,
+        duration: 0.55,
         ease: "power3.out",
         scrollTrigger: {
           trigger: scope.current,
@@ -42,23 +51,46 @@ export function ExperienceTimeline() {
 
   return (
     <div ref={scope} className="relative">
-      <div className="timeline-line absolute left-3 top-2 hidden h-full w-px bg-[var(--accent)] md:block" />
-      <div className="grid gap-6">
-        {experiences.map((item) => (
-          <article className="timeline-item grid gap-4 md:grid-cols-[120px_1fr]" key={item.title}>
+      <div className="timeline-line absolute left-3 top-11 hidden h-[calc(100%-44px)] w-px bg-[var(--accent)] md:block" />
+      <div className="grid gap-8">
+        {Object.entries(grouped).map(([year, items]) => (
+          <section
+            className="grid gap-4 md:grid-cols-[120px_1fr]"
+            key={year}
+          >
             <div className="relative">
               <span className="hidden size-6 rounded-full border-4 border-[var(--background)] bg-[var(--accent)] md:block" />
-              <p className="mt-2 text-sm font-medium text-[var(--accent)] md:ml-10">{item.time}</p>
+              <p className="mt-2 text-sm font-semibold text-[var(--accent)] md:ml-10">
+                {year}
+              </p>
             </div>
-            <div className="rounded-[26px] border border-[var(--border)] bg-[var(--surface-solid)] p-6">
-              <p className="text-sm text-[var(--text-secondary)]">{item.place}</p>
-              <h3 className="mt-2 text-2xl font-semibold">{item.title}</h3>
-              <p className="mt-3 leading-7 text-[var(--text-secondary)]">{item.description}</p>
-              <ul className="mt-4 grid gap-2 text-sm text-[var(--text-secondary)]">
-                {item.points.map((point) => <li key={point}>· {point}</li>)}
-              </ul>
+            <div className="grid gap-4">
+              {items.map((item) => (
+                <article
+                  className="timeline-item rounded-[22px] border border-[var(--border)] bg-[var(--surface-solid)] p-5"
+                  key={item.title}
+                >
+                  <p className="text-sm text-[var(--text-secondary)]">
+                    {item.place}
+                  </p>
+                  <h3 className="mt-2 text-2xl font-semibold">{item.title}</h3>
+                  <p className="mt-3 leading-7 text-[var(--text-body)]">
+                    {item.description}
+                  </p>
+                  <ul className="mt-4 flex flex-wrap gap-2 text-sm text-[var(--text-secondary)]">
+                    {item.points.map((point) => (
+                      <li
+                        className="rounded-full border border-[var(--border)] px-3 py-1"
+                        key={point}
+                      >
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
             </div>
-          </article>
+          </section>
         ))}
       </div>
     </div>

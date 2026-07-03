@@ -5,21 +5,24 @@ export const experiences: Experience[] = [
     time: "2026",
     title: "个人博客与作品集升级",
     place: "Personal Project",
-    description: "将个人项目、文章、实验和在线简历整理为可公开访问的静态作品集。",
-    points: ["Next.js App Router", "GitHub Pages 静态部署", "项目复盘与文章系统"],
+    description:
+      "把项目、文章、实验和在线简历收束到同一个静态站点，建立更清晰的公开展示入口。",
+    points: ["信息架构整理", "静态部署流程", "作品复盘结构"],
   },
   {
     time: "2026",
-    title: "交互式 H5 与古风博客项目",
+    title: "交互式 H5 与古风博客探索",
     place: "Personal / Competition Work",
-    description: "围绕历史叙事、古风视觉和滚动动画完成多个可在线访问的网页作品。",
-    points: ["GSAP ScrollTrigger", "移动端适配", "视觉素材整合"],
+    description:
+      "围绕滚动叙事、历史主题和古风视觉语言，持续打磨移动端也能完整阅读的网页体验。",
+    points: ["滚动叙事", "响应式布局", "视觉素材整合"],
   },
   {
     time: "2026",
-    title: "科普动画、AI 视觉与虚拟角色实验",
+    title: "科普动画、AI 视觉与 Live2D 实验",
     place: "Creative Practice",
-    description: "持续整理 Manim 科普动画、AI 视觉工作流和 Live2D 角色结构。",
-    points: ["Manim 动画", "AI 视觉筛选", "Live2D 分层设计"],
+    description:
+      "把程序化动画、图像筛选和角色分层作为实验方向，沉淀可复用的创作方法。",
+    points: ["概念拆解", "视觉筛选", "分层设计"],
   },
 ];
