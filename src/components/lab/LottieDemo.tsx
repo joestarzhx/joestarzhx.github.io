@@ -6,7 +6,7 @@ export function LottieDemo() {
 
   return (
     <div className="grid w-full min-w-0 max-w-full grid-cols-1 gap-5 overflow-clip rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-4 sm:p-5 md:grid-cols-[minmax(0,0.95fr)_minmax(280px,1.05fr)] md:items-center md:gap-8">
-      <div className="relative flex min-h-[220px] min-w-0 max-w-full items-center justify-center overflow-hidden rounded-[18px] bg-[var(--surface-muted)]/30 p-5 sm:min-h-[250px] md:min-h-[320px] md:p-7 lg:min-h-[340px]">
+      <div className="relative flex min-h-[220px] min-w-0 max-w-full items-center justify-center rounded-[18px] bg-[var(--surface-muted)]/30 p-5 sm:min-h-[250px] md:min-h-[320px] md:p-7 lg:min-h-[340px]">
         <div className="mx-auto aspect-square w-[min(68vw,220px)] max-w-[220px] md:w-full md:max-w-[320px]">
           <ThemedLottie
             light={labModules.light}
