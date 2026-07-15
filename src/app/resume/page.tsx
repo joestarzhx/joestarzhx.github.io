@@ -32,7 +32,7 @@ export default function ResumePage() {
   return (
     <PageContainer>
       <section className="container-shell section-space-top">
-        <div className="grid grid-cols-1 gap-10 min-[1120px]:grid-cols-[minmax(0,1.15fr)_minmax(420px,0.85fr)] min-[1120px]:items-center">
+        <div className="grid grid-cols-1 gap-10 min-[1188px]:grid-cols-[minmax(0,1.1fr)_minmax(420px,0.9fr)] min-[1188px]:items-center">
           <div className="min-w-0">
             <SectionHeading
               eyebrow="Resume"
@@ -41,13 +41,13 @@ export default function ResumePage() {
             />
           </div>
           <article className="min-w-0 rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-5 sm:p-6">
-            <div className="grid grid-cols-[76px_minmax(0,1fr)] items-center gap-5 sm:grid-cols-[96px_minmax(0,1fr)]">
-              <div className="relative h-[96px] w-[76px] overflow-hidden rounded-[20px] bg-[var(--surface-muted)] sm:h-[124px] sm:w-[96px]">
+            <div className="grid grid-cols-[84px_minmax(0,1fr)] items-center gap-5 sm:grid-cols-[104px_minmax(0,1fr)] sm:gap-6">
+              <div className="relative h-[104px] w-[84px] overflow-hidden rounded-2xl bg-[var(--surface-muted)] sm:h-[128px] sm:w-[104px]">
                 <Image
                   src={profile.photo}
                   alt="张颢轩的个人照片"
                   fill
-                  sizes="(max-width: 640px) 76px, 96px"
+                  sizes="(max-width: 639px) 84px, 104px"
                   className="object-cover object-top"
                 />
               </div>
