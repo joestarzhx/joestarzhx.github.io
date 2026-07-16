@@ -48,10 +48,10 @@ export function FilterScroller<T extends string>({
     <div className={cn("relative w-full min-w-0", className)}>
       <div
         ref={scrollerRef}
-        className="w-full min-w-0 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="w-full min-w-0 overflow-x-auto pb-2 [scrollbar-width:none] md:overflow-visible [&::-webkit-scrollbar]:hidden"
         aria-label={ariaLabel}
       >
-        <div className="flex w-max min-w-full gap-2 pr-5">
+        <div className="flex w-max min-w-full gap-2 pr-5 md:w-full md:flex-wrap md:pr-0">
           {items.map((item) => {
             const selected = active === item;
             return (
@@ -78,7 +78,7 @@ export function FilterScroller<T extends string>({
       </div>
       <div
         className={cn(
-          "pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[var(--background)] to-transparent transition-opacity",
+          "pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[var(--background)] to-transparent transition-opacity md:hidden",
           atEnd ? "opacity-0" : "opacity-100",
         )}
         aria-hidden="true"

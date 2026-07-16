@@ -33,6 +33,7 @@ export default function BlogPage() {
             title="写下方法，也写下判断。"
             text="这里整理项目复盘、技术实践与创作思考；保留过程，也保留每次选择背后的理由。"
             spacing="none"
+            level={1}
           />
           <ThemedLottie
             light={articleWriting.light}
@@ -40,8 +41,10 @@ export default function BlogPage() {
             shared={articleWriting.shared}
             fallbackSrc={articleWriting.fallback}
             loop={false}
+            eager
             speed={articleWriting.speed}
-            className="pointer-events-none mx-auto h-[112px] w-[150px] lg:ml-auto lg:h-[200px] lg:w-[260px]"
+            className="pointer-events-none mx-auto h-[128px] w-[176px] overflow-hidden lg:ml-auto lg:h-[210px] lg:w-[280px]"
+            contentClassName="article-writing-lottie size-full scale-[1.35]"
             decorative
           />
         </div>
@@ -63,13 +66,15 @@ export default function BlogPage() {
                 src={primaryFeatured.cover}
                 alt={`${primaryFeatured.title} 文章封面`}
                 title={primaryFeatured.title}
+                priority
                 sizes="(max-width: 1024px) 100vw, 56vw"
                 className="relative aspect-[16/10] overflow-hidden bg-[var(--surface-muted)]"
                 imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />
               <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <span className="text-sm text-[var(--accent)]">
-                  {primaryFeatured.category} · {estimateReadingTime(primaryFeatured)}
+                  {primaryFeatured.category} ·{" "}
+                  {estimateReadingTime(primaryFeatured)}
                 </span>
                 <h2 className="mt-4 text-2xl font-semibold leading-tight sm:text-3xl">
                   {primaryFeatured.title}
@@ -99,7 +104,9 @@ export default function BlogPage() {
                     imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   />
                   <div className="min-w-0">
-                    <p className="text-sm text-[var(--accent)]">{post.category}</p>
+                    <p className="text-sm text-[var(--accent)]">
+                      {post.category}
+                    </p>
                     <h3 className="mt-2 text-xl font-semibold leading-tight">
                       {post.title}
                     </h3>

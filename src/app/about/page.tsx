@@ -7,8 +7,7 @@ import { socials } from "@/data/socials";
 
 export const metadata: Metadata = {
   title: "关于",
-  description:
-    "关于 Haoxuan Zhang（张颢轩）的创作方向、当前关注和联系入口。",
+  description: "关于 Haoxuan Zhang（张颢轩）的创作方向、当前关注和联系入口。",
 };
 
 const statusCards = [
@@ -16,14 +15,8 @@ const statusCards = [
     "正在进行",
     "持续完善个人博客，并整理交互式 H5、Manim 动画、AI 视觉与 Live2D 项目案例。",
   ],
-  [
-    "可交流方向",
-    "个人网站、交互方案、网页动效、视觉叙事与科普动画。",
-  ],
-  [
-    "创作原则",
-    "少一点噪声，多一点结构；少一点炫技，多一点可用。",
-  ],
+  ["可交流方向", "个人网站、交互方案、网页动效、视觉叙事与科普动画。"],
+  ["创作原则", "少一点噪声，多一点结构；少一点炫技，多一点可用。"],
 ];
 
 export default function AboutPage() {
@@ -36,8 +29,10 @@ export default function AboutPage() {
               <p className="mb-5 text-sm font-medium text-[var(--accent)]">
                 About
               </p>
-              <h1 className="text-[clamp(2.25rem,10vw,3.4rem)] font-semibold leading-[1.08] tracking-normal sm:text-6xl lg:text-7xl">
-                我想做的，是让技术表达变得清楚、克制，但有记忆点。
+              <h1 className="max-w-[900px] text-[clamp(2.25rem,9.5vw,3.4rem)] font-semibold leading-[1.1] tracking-normal sm:text-[clamp(3.4rem,6vw,4rem)] lg:text-[clamp(3.75rem,4.7vw,4rem)]">
+                <span className="lg:block">我想做的，是让</span>
+                <span className="lg:block">技术表达变得清楚、</span>
+                <span className="lg:whitespace-nowrap">克制，但有记忆点。</span>
               </h1>
               <p className="mt-6 max-w-[720px] text-base leading-8 text-[var(--text-body)] sm:text-lg">
                 我关注前端工程、交互体验、视觉叙事和计算机图形表达。
@@ -56,7 +51,8 @@ export default function AboutPage() {
                 我喜欢把项目看成一段叙事：用户先看到什么，什么时候获得反馈，哪些信息应该安静地退后，哪些细节值得被强调。好的界面不需要一直解释自己，它应该让人自然地继续往下看。
               </p>
               <p>
-                近期我关注前端动效系统、AI 视觉工作流、Manim 科普动画和 Live2D 展示。这些方向表面上分散，但核心都指向同一件事：把复杂内容变成更易理解、更有质感的数字作品。
+                近期我关注前端动效系统、AI 视觉工作流、Manim 科普动画和 Live2D
+                展示。这些方向表面上分散，但核心都指向同一件事：把复杂内容变成更易理解、更有质感的数字作品。
               </p>
             </div>
           </div>
@@ -81,7 +77,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section id="contact" className="container-shell section-space-bottom scroll-offset">
+      <section
+        id="contact"
+        className="container-shell section-space-bottom scroll-offset"
+      >
         <div className="rounded-[24px] border border-[var(--border)] p-6 sm:p-8">
           <h2 className="text-3xl font-semibold">合作与交流</h2>
           <p className="mt-4 max-w-2xl leading-8 text-[var(--text-body)]">

@@ -18,6 +18,7 @@ export default function ProjectsPage() {
             title="作品不是截图集合，而是问题、过程和结果。"
             text="按方向筛选项目，查看每个作品背后的设计目标、实现过程和技术方案。"
             spacing="none"
+            level={1}
           />
         </div>
         <ProjectExplorer />

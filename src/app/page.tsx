@@ -197,7 +197,8 @@ export default function Home() {
           <Download className="mb-8" size={28} />
           <h2 className="text-3xl font-semibold">简历摘要</h2>
           <p className="mt-4 leading-8 opacity-85">
-            {profile.current}。教育方向：{profile.education}。主要关注前端工程、交互动效、AI 视觉创作与科普动画。
+            {profile.current} 教育方向：{profile.education}
+            。主要关注前端工程、交互动效、AI 视觉创作与科普动画。
           </p>
           <div className="mt-8">
             <Button href="/resume" variant="secondary">
