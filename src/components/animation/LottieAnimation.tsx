@@ -65,12 +65,16 @@ function loadLottie(src: string) {
 
 function StaticFallback({
   className,
+  contentClassName,
   fallbackSrc,
+  eager,
   title,
   decorative,
 }: {
   className?: string;
+  contentClassName?: string;
   fallbackSrc?: string;
+  eager: boolean;
   title?: string;
   decorative: boolean;
 }) {
@@ -82,7 +86,14 @@ function StaticFallback({
     return (
       <div className={className} {...semanticProps}>
         <div className="relative size-full min-h-24">
-          <Image src={fallbackSrc} alt="" fill sizes="240px" className="object-contain" />
+          <Image
+            src={fallbackSrc}
+            alt=""
+            fill
+            priority={eager}
+            sizes="240px"
+            className={cn("object-contain", contentClassName)}
+          />
         </div>
       </div>
     );
@@ -132,12 +143,20 @@ export function LottieAnimation({
   const [data, setData] = useState<LottieData | null>(null);
   const [failed, setFailed] = useState(false);
   const resolvedSources = useMemo(
-    () => (Array.isArray(src) ? src : [src]).filter(Boolean).map((item) => assetPath(item)),
+    () =>
+      (Array.isArray(src) ? src : [src])
+        .filter(Boolean)
+        .map((item) => assetPath(item)),
     [src],
   );
-  const resolvedFallback = useMemo(() => (fallbackSrc ? assetPath(fallbackSrc) : undefined), [fallbackSrc]);
-  const shouldLoad = (eager || !playOnView || inView) && resolvedSources.length > 0;
-  const preserveAspectRatio = fit === "cover" ? "xMidYMid slice" : "xMidYMid meet";
+  const resolvedFallback = useMemo(
+    () => (fallbackSrc ? assetPath(fallbackSrc) : undefined),
+    [fallbackSrc],
+  );
+  const shouldLoad =
+    (eager || !playOnView || inView) && resolvedSources.length > 0;
+  const preserveAspectRatio =
+    fit === "cover" ? "xMidYMid slice" : "xMidYMid meet";
 
   useEffect(() => {
     playStartedRef.current = false;
@@ -190,7 +209,13 @@ export function LottieAnimation({
       cancelled = true;
       window.clearTimeout(resetFailedTimeout);
     };
-  }, [onDataFailed, onLoadStateChange, reducedMotion, resolvedSources, shouldLoad]);
+  }, [
+    onDataFailed,
+    onLoadStateChange,
+    reducedMotion,
+    resolvedSources,
+    shouldLoad,
+  ]);
 
   useEffect(() => {
     lottieRef.current?.setSpeed(speed);
@@ -205,7 +230,8 @@ export function LottieAnimation({
     };
 
     document.addEventListener("visibilitychange", syncVisibility);
-    return () => document.removeEventListener("visibilitychange", syncVisibility);
+    return () =>
+      document.removeEventListener("visibilitychange", syncVisibility);
   }, [autoplay, inView, pauseWhenHidden, playOnView]);
 
   useEffect(() => {
@@ -225,7 +251,9 @@ export function LottieAnimation({
   }, [autoplay, data, inView, onPlayStarted, playOnView, reducedMotion]);
 
   if (reducedMotion && hideWhenReducedMotion) {
-    return preserveSpaceWhenHidden ? <div ref={containerRef} className={className} aria-hidden="true" /> : null;
+    return preserveSpaceWhenHidden ? (
+      <div ref={containerRef} className={className} aria-hidden="true" />
+    ) : null;
   }
 
   if (reducedMotion || failed || !data) {
@@ -233,7 +261,9 @@ export function LottieAnimation({
       <div ref={containerRef}>
         <StaticFallback
           className={className}
+          contentClassName={contentClassName}
           fallbackSrc={resolvedFallback}
+          eager={eager}
           title={ariaLabel}
           decorative={decorative}
         />

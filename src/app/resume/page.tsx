@@ -27,7 +27,9 @@ const resumeProjects = [
 export default function ResumePage() {
   const selectedProjects = resumeProjects
     .map((slug) => projects.find((project) => project.slug === slug))
-    .filter((project): project is (typeof projects)[number] => Boolean(project));
+    .filter((project): project is (typeof projects)[number] =>
+      Boolean(project),
+    );
 
   return (
     <PageContainer>
@@ -38,16 +40,17 @@ export default function ResumePage() {
               eyebrow="Resume"
               title="在线简历，用项目和技能说明能力。"
               text="这里整理当前身份、创作轨迹、项目经历和工具栈，尽量用事实和作品呈现能力边界。"
+              level={1}
             />
           </div>
           <article className="min-w-0 rounded-[24px] border border-[var(--border)] bg-[var(--surface-solid)] p-5 sm:p-6">
-            <div className="grid grid-cols-[84px_minmax(0,1fr)] items-center gap-5 sm:grid-cols-[104px_minmax(0,1fr)] sm:gap-6">
-              <div className="relative h-[104px] w-[84px] overflow-hidden rounded-2xl bg-[var(--surface-muted)] sm:h-[128px] sm:w-[104px]">
+            <div className="grid grid-cols-[96px_minmax(0,1fr)] items-center gap-4 sm:grid-cols-[112px_minmax(0,1fr)] sm:gap-6 min-[1188px]:grid-cols-[136px_minmax(0,1fr)]">
+              <div className="relative aspect-[13/16] w-24 overflow-hidden rounded-2xl bg-[var(--surface-muted)] sm:w-28 min-[1188px]:w-[136px]">
                 <Image
                   src={profile.photo}
                   alt="张颢轩的个人照片"
                   fill
-                  sizes="(max-width: 639px) 84px, 104px"
+                  sizes="(max-width: 639px) 96px, (max-width: 1187px) 112px, 136px"
                   className="object-cover object-top"
                 />
               </div>
@@ -55,7 +58,7 @@ export default function ResumePage() {
                 <p className="text-xs text-[var(--text-secondary)] sm:text-sm">
                   当前身份
                 </p>
-                <h2 className="mt-2 text-[clamp(1.25rem,2vw,1.7rem)] font-semibold leading-[1.28] tracking-[-0.025em] [overflow-wrap:anywhere]">
+                <h2 className="mt-2 text-[clamp(1.2rem,1.7vw,1.45rem)] font-semibold leading-[1.3] tracking-[-0.02em] [overflow-wrap:break-word]">
                   {profile.current}
                 </h2>
                 <p className="mt-3 text-[0.95rem] leading-[1.6] text-[var(--text-body)] sm:text-base">

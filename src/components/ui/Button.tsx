@@ -14,7 +14,14 @@ type ButtonProps = {
   ariaLabel?: string;
 } & HTMLMotionProps<"button">;
 
-export function Button({ children, href, variant = "primary", className, ariaLabel, ...props }: ButtonProps) {
+export function Button({
+  children,
+  href,
+  variant = "primary",
+  className,
+  ariaLabel,
+  ...props
+}: ButtonProps) {
   const hasVisibleContent = Children.toArray(children).some((child) => {
     if (typeof child === "string") return child.trim().length > 0;
     if (typeof child === "number") return true;
@@ -25,14 +32,17 @@ export function Button({ children, href, variant = "primary", className, ariaLab
 
   const classes = cn(
     "focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-medium transition-colors",
-    variant === "primary" && "bg-[var(--text-primary)] text-[var(--background)] hover:opacity-90",
+    variant === "primary" &&
+      "bg-[var(--text-primary)] text-[var(--background)] visited:text-[var(--background)] hover:text-[var(--background)] hover:opacity-90 active:text-[var(--background)]",
     variant === "secondary" &&
-      "border border-[var(--border)] bg-[var(--surface-solid)] text-[var(--text-primary)] hover:bg-[var(--surface-muted)]",
-    variant === "ghost" && "text-[var(--text-primary)] hover:bg-[var(--surface-muted)]",
+      "border border-[var(--border)] bg-[var(--surface-solid)] text-[var(--text-primary)] visited:text-[var(--text-primary)] hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)] active:text-[var(--text-primary)]",
+    variant === "ghost" &&
+      "text-[var(--text-primary)] visited:text-[var(--text-primary)] hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)] active:text-[var(--text-primary)]",
     className,
   );
 
-  const validHref = href && href.trim() && href.trim() !== "#" ? href.trim() : "";
+  const validHref =
+    href && href.trim() && href.trim() !== "#" ? href.trim() : "";
 
   if (href !== undefined && !validHref) return null;
 
@@ -45,7 +55,13 @@ export function Button({ children, href, variant = "primary", className, ariaLab
         transition={motionTokens.spring}
       >
         {external ? (
-          <a className={classes} href={validHref} target="_blank" rel="noopener noreferrer" aria-label={ariaLabel}>
+          <a
+            className={classes}
+            href={validHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={ariaLabel}
+          >
             {children}
           </a>
         ) : (
